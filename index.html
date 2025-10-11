@@ -1,0 +1,2502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeAmer IDE Pro - Enhanced</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/loader.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        :root {
+            --primary: #2c3e50;
+            --secondary: #4a69bd;
+            --success: #00b894;
+            --warning: #e17055;
+            --info: #6c5ce7;
+            --dark: #2d3436;
+            --light: #f8f9fa;
+            --html: #e34c26;
+            --css: #264de4;
+            --js: #f0db4f;
+            --python: #3776ab;
+            --php: #777bb4;
+            --java: #007396;
+            --ruby: #cc342d;
+            --csharp: #239120;
+            --cpp: #00599c;
+            --swift: #fa7343;
+            --go: #00add8;
+            --rust: #000000;
+            --sidebar-width: 250px;
+            --git-added: #28a745;
+            --git-modified: #ffc107;
+            --git-deleted: #dc3545;
+            --git-untracked: #6f42c1;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 97vh;
+            flex: 1;
+        }
+        
+        header {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 12px 15px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            gap: 10px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+        
+        .run-btn {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .run-btn:hover {
+            background-color: #009d7a;
+        }
+        
+        .save-btn {
+            background-color: var(--info);
+            color: white;
+        }
+        
+        .save-btn:hover {
+            background-color: #5649c9;
+        }
+        
+        .reset-btn {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .reset-btn:hover {
+            background-color: #d15b3f;
+        }
+        
+        .export-btn {
+            background-color: var(--dark);
+            color: white;
+        }
+        
+        .export-btn:hover {
+            background-color: #1e2223;
+        }
+        
+        .upload-btn {
+            background-color: #8e44ad;
+            color: white;
+        }
+        
+        .upload-btn:hover {
+            background-color: #7d3c98;
+        }
+        
+        .git-btn {
+            background-color: #f1502f;
+            color: white;
+        }
+        
+        .git-btn:hover {
+            background-color: #d03b1c;
+        }
+        
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #f8f9fa;
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                position: absolute;
+                left: -100%;
+                z-index: 100;
+                height: 100%;
+                box-shadow: 3px 0 10px rgba(0,0,0,0.1);
+            }
+            
+            .sidebar.open {
+                left: 0;
+            }
+        }
+        
+        .sidebar-header {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar-toggle {
+                display: block;
+            }
+        }
+        
+        .file-explorer {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .file-item {
+            padding: 8px 10px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        
+        .file-item:hover {
+            background: #e9ecef;
+        }
+        
+        .file-item.active {
+            background: #dee2e6;
+            font-weight: 600;
+        }
+        
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        @media (min-width: 992px) {
+            .editor-container {
+                flex-direction: row;
+            }
+        }
+        
+        .code-editors {
+            flex: 3;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .editor-tabs {
+            display: flex;
+            background-color: var(--light);
+            border-bottom: 1px solid #ddd;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .editor-tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 600;
+            border-right: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            font-size: 0.9rem;
+        }
+        
+        .editor-tab.active {
+            background-color: white;
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        .editor-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        .code-editor {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .editor-header {
+            padding: 10px 12px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .editor-header span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.95rem;
+        }
+        
+        .monaco-editor-container {
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .preview {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid #ddd;
+            overflow: hidden;
+        }
+        
+        @media (min-width: 992px) {
+            .preview {
+                border-top: none;
+                border-left: 1px solid #ddd;
+            }
+        }
+        
+        .preview-header {
+            padding: 10px 12px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .preview-controls {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .preview-controls button {
+            padding: 5px 8px;
+            font-size: 0.8rem;
+        }
+        
+        #preview-frame {
+            flex: 1;
+            border: none;
+            background-color: white;
+        }
+        
+        .output-container {
+            height: 150px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid #ddd;
+        }
+        
+        .output-header {
+            padding: 10px 12px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .output-clear {
+            background: none;
+            border: none;
+            color: var(--dark);
+            cursor: pointer;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        #console-output {
+            background-color: var(--dark);
+            color: #dfe6e9;
+            padding: 10px 12px;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.5;
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        .console-message {
+            margin-bottom: 5px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .console-timestamp {
+            color: #636e72;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+        
+        .console-error {
+            color: #ff7675;
+        }
+        
+        .console-log {
+            color: #74b9ff;
+        }
+        
+        .console-warn {
+            color: #ffeaa7;
+        }
+        
+        .console-info {
+            color: #55efc4;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 8px;
+            color: white;
+            font-size: 0.85rem;
+            background: rgba(0, 0, 0, 0.2);
+            margin-top: 5px;
+            border-radius: 5px;
+        }
+        
+        .resizer {
+            width: 100%;
+            height: 5px;
+            background-color: #ddd;
+            cursor: row-resize;
+            display: none;
+        }
+        
+        @media (min-width: 992px) {
+            .resizer {
+                display: block;
+            }
+        }
+        
+        .resizer-horizontal {
+            width: 5px;
+            height: 100%;
+            background-color: #ddd;
+            cursor: col-resize;
+            display: none;
+        }
+        
+        @media (min-width: 992px) {
+            .resizer-horizontal {
+                display: block;
+            }
+        }
+        
+        .tab-close {
+            margin-left: 5px;
+            cursor: pointer;
+            padding: 2px;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tab-close:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .theme-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+        
+        .theme-selector select {
+            padding: 4px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 0.8rem;
+        }
+        
+        .mobile-tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 5px;
+            padding: 8px;
+            background: #f1f2f6;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        @media (min-width: 768px) {
+            .mobile-tabs {
+                display: none;
+            }
+        }
+        
+        .mobile-tab {
+            padding: 6px 12px;
+            background: #dfe4ea;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        
+        .mobile-tab.active {
+            background: var(--secondary);
+            color: white;
+        }
+        
+        .language-select {
+            display: none;
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background: white;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 767px) {
+            .language-select {
+                display: block;
+            }
+            
+            .editor-tabs {
+                display: none;
+            }
+        }
+        
+        .upload-area {
+            padding: 15px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .drop-zone:hover {
+            border-color: #4a69bd;
+            background: #f8f9fa;
+        }
+        
+        .drop-zone i {
+            font-size: 2rem;
+            color: #4a69bd;
+            margin-bottom: 10px;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        .close-modal {
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background: #f1f2f6;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #00b894, #00a382);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .collapsible {
+            cursor: pointer;
+            padding: 10px;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+        
+        .collapsible-content {
+            padding: 0 10px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+        }
+        
+        .file-tree {
+            padding-left: 20px;
+        }
+        
+        .dark-mode {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --dark: #121212;
+            --light: #2d3436;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #f1f2f6; /* Ensure text is readable in dark mode */
+        }
+        
+        .dark-mode .container {
+            background-color: rgba(45, 52, 54, 0.95);
+            color: #f1f2f6;
+        }
+        
+        .dark-mode .sidebar {
+            background: #2d3436;
+            color: #f1f2f6;
+        }
+        
+        .dark-mode .file-item:hover {
+            background: #3c4345;
+        }
+        
+        .dark-mode .file-item.active {
+            background: #4a5153;
+        }
+        
+        .dark-mode .editor-header, .dark-mode .preview-header, .dark-mode .output-header, .dark-mode .editor-tabs {
+            background: #3c4345;
+            color: #f1f2f6;
+        }
+        
+        .dark-mode .editor-tab.active {
+            background: #2d3436;
+        }
+        
+        .dark-mode .mobile-tab {
+            background: #3c4345;
+            color: #f1f2f6;
+        }
+        
+        .dark-mode .mobile-tab.active {
+            background: var(--secondary);
+        }
+        
+        /* Full screen preview mode */
+        .full-screen-preview .sidebar,
+        .full-screen-preview .code-editors,
+        .full-screen-preview .resizer-horizontal,
+        .full-screen-preview .output-container,
+        .full-screen-preview footer {
+            display: none;
+        }
+        
+        .full-screen-preview .preview {
+            flex: 1;
+            border: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1000;
+            height: 100vh;
+            width: 100vw;
+        }
+        
+        .full-screen-preview .preview-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1001;
+        }
+        
+        .full-screen-preview #preview-frame {
+            position: absolute;
+            top: 45px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: calc(100vh - 45px);
+            width: 100vw;
+        }
+        
+        /* Git Integration Styles */
+        .git-panel {
+            border-top: 1px solid #ddd;
+            padding: 15px;
+            background: #f8f9fa;
+        }
+        
+        .git-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .git-branch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        
+        .git-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .git-action-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 8px;
+            font-size: 0.8rem;
+        }
+        
+        .git-status {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            background: white;
+        }
+        
+        .git-status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .git-status-item:last-child {
+            border-bottom: none;
+        }
+        
+        .git-status-added {
+            color: var(--git-added);
+        }
+        
+        .git-status-modified {
+            color: var(--git-modified);
+        }
+        
+        .git-status-deleted {
+            color: var(--git-deleted);
+        }
+        
+        .git-status-untracked {
+            color: var(--git-untracked);
+        }
+        
+        .git-commit-message {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
+        
+        /* Git Icon Indicators */
+        .git-icon-added::before {
+            content: "•";
+            color: var(--git-added);
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .git-icon-modified::before {
+            content: "•";
+            color: var(--git-modified);
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .git-icon-deleted::before {
+            content: "•";
+            color: var(--git-deleted);
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .git-icon-untracked::before {
+            content: "•";
+            color: var(--git-untracked);
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        /* File upload area */
+        .file-upload-area {
+            padding: 15px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .uploaded-files {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .uploaded-file {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            background: white;
+        }
+        
+        .uploaded-file-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .file-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .file-action-btn {
+            padding: 4px 8px;
+            font-size: 0.75rem;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+        
+        .file-action-btn:hover {
+            background: #e9ecef;
+        }
+        
+        /* Error message styling */
+        .error-message {
+            color: #dc3545;
+            padding: 8px;
+            border-radius: 4px;
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            margin: 10px 0;
+        }
+        
+        /* Success message styling */
+        .success-message {
+            color: #155724;
+            padding: 8px;
+            border-radius: 4px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            margin: 10px 0;
+        }
+        
+        /* Git Repository Modal */
+        .git-repo-modal .modal-content {
+            max-width: 600px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #4a69bd;
+            box-shadow: 0 0 0 2px rgba(74, 105, 189, 0.2);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                height: 95vh;
+            }
+            
+            header {
+                padding: 8px 10px;
+            }
+            
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+            
+            .controls {
+                gap: 5px;
+            }
+            
+            button {
+                padding: 6px 8px;
+                font-size: 0.75rem;
+            }
+            
+            .preview-header {
+                padding: 8px 10px;
+            }
+            
+            .preview-controls button {
+                padding: 4px 6px;
+                font-size: 0.7rem;
+            }
+            
+            .output-container {
+                height: 120px;
+            }
+            
+            .output-header {
+                padding: 8px 10px;
+            }
+            
+            #console-output {
+                padding: 8px 10px;
+                font-size: 12px;
+            }
+            
+            .console-timestamp {
+                font-size: 0.7rem;
+            }
+            
+            footer {
+                padding: 6px;
+                font-size: 0.75rem;
+                margin-top: 3px;
+            }
+            
+            .git-actions {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .git-action-btn {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-code"></i>
+                <h1>SupremeAmer IDE Pro</h1>
+            </div>
+            <div class="controls">
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button class="run-btn" id="run-btn">
+                    <i class="fas fa-play"></i> Run
+                </button>
+                <button class="save-btn" id="save-btn">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button class="git-btn" id="git-btn">
+                    <i class="fab fa-git-alt"></i> Git
+                </button>
+                <button class="upload-btn" id="upload-btn">
+                    <i class="fas fa-upload"></i> Upload
+                </button>
+                <button class="export-btn" id="export-btn">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <button class="reset-btn" id="reset-btn">
+                    <i class="fas fa-redo"></i> Reset
+                </button>
+                <button class="theme-toggle" id="theme-toggle">
+                    <i class="fas fa-moon"></i> Dark
+                </button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <h3>File Explorer</h3>
+                    <button class="sidebar-toggle" id="close-sidebar">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="file-explorer">
+                    <div class="collapsible">
+                        <span>Project Files</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="file-tree">
+                            <div class="file-item active" data-file="index.html">
+                                <i class="fab fa-html5" style="color: var(--html);"></i> index.html
+                            </div>
+                            <div class="file-item" data-file="style.css">
+                                <i class="fab fa-css3-alt" style="color: var(--css);"></i> style.css
+                            </div>
+                            <div class="file-item" data-file="script.js">
+                                <i class="fab fa-js-square" style="color: var(--js);"></i> script.js
+                            </div>
+                            <div class="collapsible">
+                                <span><i class="fas fa-folder"></i> Assets</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="collapsible-content">
+                                <div class="file-tree" id="assets-folder">
+                                    <div class="file-item" data-file="d1.pdf">
+                                        <i class="fas fa-file-pdf" style="color: #e74c3c;"></i> d1.pdf
+                                    </div>
+                                    <div class="file-item" data-file="d2.pdf">
+                                        <i class="fas fa-file-pdf" style="color: #e74c3c;"></i> d2.pdf
+                                    </div>
+                                    <!-- Add more PDF files as needed -->
+                                </div>
+                            </div>
+                            <div class="file-item">
+                                <i class="fas fa-folder"></i> components
+                            </div>
+                        </div>
+                    </div>
+                    <div class="collapsible">
+                        <span>External Libraries</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="file-tree">
+                            <div class="file-item" data-file="react.js">
+                                <i class="fab fa-js-square" style="color: var(--js);"></i> react.js
+                            </div>
+                            <div class="file-item" data-file="vue.js">
+                                <i class="fab fa-js-square" style="color: var(--js);"></i> vue.js
+                            </div>
+                            <div class="file-item" data-file="jquery.js">
+                                <i class="fab fa-js-square" style="color: var(--js);"></i> jquery.js
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Git Integration Panel -->
+                <div class="git-panel">
+                    <div class="git-header">
+                        <div class="git-branch">
+                            <i class="fas fa-code-branch"></i>
+                            <span id="current-branch">main</span>
+                        </div>
+                        <button class="git-btn git-action-btn" id="git-init">
+                            <i class="fas fa-plus"></i> Init
+                        </button>
+                    </div>
+                    
+                    <div class="git-actions">
+                        <button class="git-action-btn" id="git-status-btn">
+                            <i class="fas fa-list"></i> Status
+                        </button>
+                        <button class="git-action-btn" id="git-add-btn">
+                            <i class="fas fa-plus-square"></i> Add All
+                        </button>
+                        <button class="git-action-btn" id="git-commit-btn">
+                            <i class="fas fa-check"></i> Commit
+                        </button>
+                        <button class="git-action-btn" id="git-push-btn">
+                            <i class="fas fa-upload"></i> Push
+                        </button>
+                        <button class="git-action-btn" id="git-pull-btn">
+                            <i class="fas fa-download"></i> Pull
+                        </button>
+                        <button class="git-action-btn" id="git-repo-btn">
+                            <i class="fas fa-cloud"></i> Connect Repo
+                        </button>
+                    </div>
+                    
+                    <textarea class="git-commit-message" id="git-commit-message" placeholder="Commit message..."></textarea>
+                    
+                    <div class="git-status" id="git-status">
+                        <div class="git-status-item">
+                            <span class="git-icon-untracked"></span>
+                            <span>No changes detected</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- File Upload Area -->
+                <div class="file-upload-area">
+                    <h4>Uploaded Files</h4>
+                    <div class="uploaded-files" id="uploaded-files">
+                        <div class="uploaded-file">
+                            <div class="uploaded-file-info">
+                                <i class="fas fa-file-code"></i>
+                                <span>example.js</span>
+                            </div>
+                            <div class="file-actions">
+                                <button class="file-action-btn edit-file">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="file-action-btn delete-file">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <label for="file-upload" class="drop-zone" id="drop-zone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag & drop files or folders here</p>
+                        <p>or click to browse</p>
+                    </label>
+                    <input type="file" id="file-upload" class="file-input" multiple>
+                </div>
+            </div>
+
+            <div class="editor-container">
+                <div class="code-editors">
+                    <select class="language-select" id="language-select">
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="js">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="php">PHP</option>
+                        <option value="java">Java</option>
+                        <option value="ruby">Ruby</option>
+                        <option value="csharp">C#</option>
+                        <option value="cpp">C++</option>
+                        <option value="swift">Swift</option>
+                    </select>
+                    <div class="editor-tabs">
+                        <div class="editor-tab active" data-tab="html">
+                            <i class="fab fa-html5" style="color: var(--html);"></i> HTML
+                        </div>
+                        <div class="editor-tab" data-tab="css">
+                            <i class="fab fa-css3-alt" style="color: var(--css);"></i> CSS
+                        </div>
+                        <div class="editor-tab" data-tab="js">
+                            <i class="fab fa-js-square" style="color: var(--js);"></i> JavaScript
+                        </div>
+                        <div class="editor-tab" data-tab="python">
+                            <i class="fab fa-python" style="color: var(--python);"></i> Python
+                        </div>
+                        <div class="editor-tab" data-tab="php">
+                            <i class="fab fa-php" style="color: var(--php);"></i> PHP
+                        </div>
+                    </div>
+                    <div class="mobile-tabs">
+                        <div class="mobile-tab active" data-tab="html">HTML</div>
+                        <div class="mobile-tab" data-tab="css">CSS</div>
+                        <div class="mobile-tab" data-tab="js">JS</div>
+                        <div class="mobile-tab" data-tab="python">Python</div>
+                        <div class="mobile-tab" data-tab="php">PHP</div>
+                    </div>
+                    <div class="editor-content">
+                        <div class="code-editor html-editor" style="display: flex;">
+                            <div class="editor-header">
+                                <span><i class="fab fa-html5" style="color: var(--html);"></i> HTML</span>
+                                <div class="theme-selector">
+                                    <label for="theme">Theme:</label>
+                                    <select id="theme">
+                                        <option value="vs">Light</option>
+                                        <option value="vs-dark">Dark</option>
+                                        <option value="hc-black">High Contrast</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="html-editor" class="monaco-editor-container"></div>
+                        </div>
+                        <div class="code-editor css-editor" style="display: none;">
+                            <div class="editor-header">
+                                <span><i class="fab fa-css3-alt" style="color: var(--css);"></i> CSS</span>
+                            </div>
+                            <div id="css-editor" class="monaco-editor-container"></div>
+                        </div>
+                        <div class="code-editor js-editor" style="display: none;">
+                            <div class="editor-header">
+                                <span><i class="fab fa-js-square" style="color: var(--js);"></i> JavaScript</span>
+                            </div>
+                            <div id="js-editor" class="monaco-editor-container"></div>
+                        </div>
+                        <div class="code-editor python-editor" style="display: none;">
+                            <div class="editor-header">
+                                <span><i class="fab fa-python" style="color: var(--python);"></i> Python</span>
+                            </div>
+                            <div id="python-editor" class="monaco-editor-container"></div>
+                        </div>
+                        <div class="code-editor php-editor" style="display: none;">
+                            <div class="editor-header">
+                                <span><i class="fab fa-php" style="color: var(--php);"></i> PHP</span>
+                            </div>
+                            <div id="php-editor" class="monaco-editor-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resizer-horizontal" id="vertical-resizer"></div>
+
+                <div class="preview">
+                    <div class="preview-header">
+                        <span><i class="fas fa-play-circle" style="color: var(--success);"></i> Live Preview</span>
+                        <div class="preview-controls">
+                            <button id="refresh-btn">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                            <button id="device-toggle">
+                                <i class="fas fa-mobile-alt"></i> Mobile View
+                            </button>
+                            <button id="fullscreen-toggle">
+                                <i class="fas fa-expand"></i> Full Screen
+                            </button>
+                        </div>
+                    </div>
+                    <iframe id="preview-frame"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="resizer" id="horizontal-resizer"></div>
+
+        <div class="output-container">
+            <div class="output-header">
+                <span><i class="fas fa-terminal"></i> Console Output</span>
+                <button class="output-clear" id="clear-console">
+                    <i class="fas fa-trash"></i> Clear Console
+                </button>
+            </div>
+            <div id="console-output"></div>
+        </div>
+
+        <footer>
+            <p>© 2023 SupremeAmer Application Development Organization. All rights reserved.</p>
+        </footer>
+
+        <!-- Upload Modal -->
+        <div class="modal" id="upload-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Upload Files</h3>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <div class="drop-zone" id="modal-drop-zone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Drag & drop files or folders here</p>
+                    <p>or click to browse</p>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress" id="upload-progress"></div>
+                </div>
+                <p id="upload-status">Ready to upload...</p>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="save-btn" id="start-upload">
+                        <i class="fas fa-upload"></i> Start Upload
+                    </button>
+                    <button class="reset-btn" id="cancel-upload">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Git Repository Modal -->
+        <div class="modal git-repo-modal" id="git-repo-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Connect to Git Repository</h3>
+                    <span class="close-modal">&times;</span>
+                </div>
+                <div class="form-group">
+                    <label for="repo-url">Repository URL</label>
+                    <input type="text" id="repo-url" class="form-control" placeholder="https://github.com/username/repository.git">
+                </div>
+                <div class="form-group">
+                    <label for="repo-username">Username</label>
+                    <input type="text" id="repo-username" class="form-control" placeholder="Your username">
+                </div>
+                <div class="form-group">
+                    <label for="repo-token">Access Token/Password</label>
+                    <input type="password" id="repo-token" class="form-control" placeholder="Your access token or password">
+                </div>
+                <div class="form-group">
+                    <label for="repo-branch">Branch</label>
+                    <input type="text" id="repo-branch" class="form-control" placeholder="main" value="main">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button class="save-btn" id="connect-repo">
+                        <i class="fas fa-link"></i> Connect
+                    </button>
+                    <button class="reset-btn" id="cancel-repo">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Monaco Editor
+            require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs' }});
+            
+            // Store editor instances
+            let editors = {};
+            let currentTheme = 'vs';
+            
+            require(['vs/editor/editor.main'], function() {
+                // Initialize editors for each language
+                editors.html = monaco.editor.create(document.getElementById('html-editor'), {
+                    value: `<!DOCTYPE html>
+<html>
+<head>
+    <title>SupremeAmer App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #4a69bd;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #3c5aa6;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to SupremeAmer</h1>
+        <p>This is a sample application built with our Web IDE</p>
+        <button onclick="showMessage()">Click Me!</button>
+        <div id="output"></div>
+    </div>
+</body>
+</html>`,
+                    language: 'html',
+                    theme: currentTheme,
+                    automaticLayout: true,
+                    minimap: { enabled: false }
+                });
+                
+                editors.css = monaco.editor.create(document.getElementById('css-editor'), {
+                    value: `/* Additional CSS styles */
+
+.container {
+    transition: all 0.3s ease;
+}
+
+#output {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    min-height: 50px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    body {
+        margin: 20px;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+}`,
+                    language: 'css',
+                    theme: currentTheme,
+                    automaticLayout: true,
+                    minimap: { enabled: false }
+                });
+                
+                editors.js = monaco.editor.create(document.getElementById('js-editor'), {
+                    value: `// JavaScript code
+
+function showMessage() {
+    const output = document.getElementById('output');
+    output.innerHTML = '<p>Hello from SupremeAmer Web IDE! This code was executed successfully.</p>';
+    output.style.backgroundColor = '#e8f5e9';
+    
+    // Also log to console
+    console.log('Button clicked! Message displayed.');
+}
+
+// Additional demo function
+function calculate(a, b) {
+    return a + b;
+}
+
+// Display initial message
+console.log('Welcome to SupremeAmer Web IDE!');
+console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`,
+                    language: 'javascript',
+                    theme: currentTheme,
+                    automaticLayout: true,
+                    minimap: { enabled: false }
+                });
+                
+                editors.python = monaco.editor.create(document.getElementById('python-editor'), {
+                    value: `# Python code example
+
+def welcome_message():
+    return "Hello from Python in SupremeAmer IDE!"
+
+def calculate(a, b):
+    return a + b
+
+# Main execution
+if __name__ == "__main__":
+    print(welcome_message())
+    print("5 + 3 =", calculate(5, 3))
+    
+    # Demonstrate list comprehension
+    numbers = [1, 2, 3, 4, 5]
+    squares = [x**2 for x in numbers]
+    print("Squares:", squares)`,
+                    language: 'python',
+                    theme: currentTheme,
+                    automaticLayout: true,
+                    minimap: { enabled: false }
+                });
+                
+                editors.php = monaco.editor.create(document.getElementById('php-editor'), {
+                    value: `<?php
+
+// PHP code example
+function welcomeMessage() {
+    return "Hello from PHP in SupremeAmer IDE!";
+}
+
+function calculate($a, $b) {
+    return $a + $b;
+}
+
+// Main execution
+echo welcomeMessage() . "\\n";
+echo "5 + 3 = " . calculate(5, 3) . "\\n";
+
+// Demonstrate array manipulation
+$numbers = [1, 2, 3, 4, 5];
+$squares = array_map(function($x) { return $x * $x; }, $numbers);
+echo "Squares: " . implode(", ", $squares) . "\\n";
+?>`,
+                    language: 'php',
+                    theme: currentTheme,
+                    automaticLayout: true,
+                    minimap: { enabled: false }
+                });
+                
+                // Set theme change handler
+                document.getElementById('theme').addEventListener('change', function() {
+                    currentTheme = this.value;
+                    monaco.editor.setTheme(currentTheme);
+                });
+            });
+            
+            // DOM elements
+            const previewFrame = document.getElementById('preview-frame');
+            const consoleOutput = document.getElementById('console-output');
+            const runBtn = document.getElementById('run-btn');
+            const saveBtn = document.getElementById('save-btn');
+            const exportBtn = document.getElementById('export-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const refreshBtn = document.getElementById('refresh-btn');
+            const clearConsoleBtn = document.getElementById('clear-console');
+            const editorTabs = document.querySelectorAll('.editor-tab');
+            const mobileTabs = document.querySelectorAll('.mobile-tab');
+            const languageSelect = document.getElementById('language-select');
+            const codeEditors = document.querySelectorAll('.code-editor');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebar-toggle');
+            const closeSidebar = document.getElementById('close-sidebar');
+            const uploadBtn = document.getElementById('upload-btn');
+            const uploadModal = document.getElementById('upload-modal');
+            const closeModal = document.querySelectorAll('.close-modal');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            const fileUpload = document.getElementById('file-upload');
+            const themeToggle = document.getElementById('theme-toggle');
+            const deviceToggle = document.getElementById('device-toggle');
+            const fullscreenToggle = document.getElementById('fullscreen-toggle');
+            const collapsibles = document.querySelectorAll('.collapsible');
+            
+            // Git elements
+            const gitBtn = document.getElementById('git-btn');
+            const gitInitBtn = document.getElementById('git-init');
+            const gitStatusBtn = document.getElementById('git-status-btn');
+            const gitAddBtn = document.getElementById('git-add-btn');
+            const gitCommitBtn = document.getElementById('git-commit-btn');
+            const gitPushBtn = document.getElementById('git-push-btn');
+            const gitPullBtn = document.getElementById('git-pull-btn');
+            const gitRepoBtn = document.getElementById('git-repo-btn');
+            const gitCommitMessage = document.getElementById('git-commit-message');
+            const gitStatus = document.getElementById('git-status');
+            const currentBranch = document.getElementById('current-branch');
+            
+            // File elements
+            const uploadedFilesContainer = document.getElementById('uploaded-files');
+            const fileItems = document.querySelectorAll('.file-item');
+            
+            // Git repo modal elements
+            const gitRepoModal = document.getElementById('git-repo-modal');
+            const connectRepoBtn = document.getElementById('connect-repo');
+            const cancelRepoBtn = document.getElementById('cancel-repo');
+
+            // Store original console methods
+            const originalConsole = {
+                log: console.log,
+                error: console.error,
+                warn: console.warn,
+                info: console.info
+            };
+
+            // Override console methods to capture output
+            console.log = function(...args) {
+                originalConsole.log.apply(console, args);
+                logToConsole(args, 'log');
+            };
+
+            console.error = function(...args) {
+                originalConsole.error.apply(console, args);
+                logToConsole(args, 'error');
+            };
+
+            console.warn = function(...args) {
+                originalConsole.warn.apply(console, args);
+                logToConsole(args, 'warn');
+            };
+
+            console.info = function(...args) {
+                originalConsole.info.apply(console, args);
+                logToConsole(args, 'info');
+            };
+
+            function logToConsole(args, type) {
+                const timestamp = new Date().toLocaleTimeString();
+                const message = args.map(arg => {
+                    if (typeof arg === 'object') {
+                        return JSON.stringify(arg);
+                    }
+                    return arg;
+                }).join(' ');
+
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('console-message', `console-${type}`);
+                
+                const timestampElement = document.createElement('span');
+                timestampElement.classList.add('console-timestamp');
+                timestampElement.textContent = `[${timestamp}]`;
+                
+                const contentElement = document.createElement('span');
+                contentElement.textContent = message;
+
+                messageElement.appendChild(timestampElement);
+                messageElement.appendChild(contentElement);
+                consoleOutput.appendChild(messageElement);
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            }
+
+            function runCode() {
+                const html = editors.html.getValue();
+                const css = editors.css.getValue();
+                const js = editors.js.getValue();
+
+                // Clear console
+                consoleOutput.innerHTML = '';
+
+                const previewDocument = previewFrame.contentDocument || previewFrame.contentWindow.document;
+
+                // Write the code to the iframe
+                previewDocument.open();
+                previewDocument.write(`
+                    ${html}
+                    <style>${css}</style>
+                    <script>
+                        // Override console methods in the iframe
+                        const originalConsole = {
+                            log: console.log,
+                            error: console.error,
+                            warn: console.warn,
+                            info: console.info
+                        };
+                        
+                        console.log = function(...args) {
+                            originalConsole.log.apply(console, args);
+                            window.parent.logToConsole(args, 'log');
+                        };
+                        
+                        console.error = function(...args) {
+                            originalConsole.error.apply(console, args);
+                            window.parent.logToConsole(args, 'error');
+                        };
+                        
+                        console.warn = function(...args) {
+                            originalConsole.warn.apply(console, args);
+                            window.parent.logToConsole(args, 'warn');
+                        };
+                        
+                        console.info = function(...args) {
+                            originalConsole.info.apply(console, args);
+                            window.parent.logToConsole(args, 'info');
+                        };
+                    <\/script>
+                    <script>${js}<\/script>
+                `);
+                previewDocument.close();
+            }
+
+            // Run code on button click
+            runBtn.addEventListener('click', runCode);
+            refreshBtn.addEventListener('click', runCode);
+
+            // Save code to localStorage
+            saveBtn.addEventListener('click', function() {
+                try {
+                    localStorage.setItem('supremeamer_html', editors.html.getValue());
+                    localStorage.setItem('supremeamer_css', editors.css.getValue());
+                    localStorage.setItem('supremeamer_js', editors.js.getValue());
+                    
+                    // Save uploaded files
+                    const uploadedFiles = Array.from(uploadedFilesContainer.querySelectorAll('.uploaded-file')).map(file => {
+                        return {
+                            name: file.querySelector('span').textContent,
+                            content: localStorage.getItem(`supremeamer_file_${file.querySelector('span').textContent}`) || ''
+                        };
+                    });
+                    
+                    localStorage.setItem('supremeamer_uploaded_files', JSON.stringify(uploadedFiles));
+                    
+                    console.log('Code saved successfully!');
+                    showSuccessMessage('All files saved successfully!');
+                } catch (error) {
+                    console.error('Error saving files:', error);
+                    showErrorMessage('Failed to save files: ' + error.message);
+                }
+            });
+
+            // Export code as HTML file
+            exportBtn.addEventListener('click', function() {
+                try {
+                    const html = editors.html.getValue();
+                    const css = editors.css.getValue();
+                    const js = editors.js.getValue();
+
+                    const fullHtml = `<!DOCTYPE html>
+<html>
+<head>
+    <title>SupremeAmer App</title>
+    <style>${css}</style>
+</head>
+<body>
+    ${html.replace('</body></html>', '')}
+    <script>${js}<\/script>
+</body>
+</html>`;
+
+                    const blob = new Blob([fullHtml], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'supremeamer_app.html';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    console.log('Code exported as HTML file!');
+                    showSuccessMessage('Project exported successfully!');
+                } catch (error) {
+                    console.error('Error exporting project:', error);
+                    showErrorMessage('Failed to export project: ' + error.message);
+                }
+            });
+
+            // Reset code to default
+            resetBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to reset all code? This cannot be undone.')) {
+                    try {
+                        editors.html.setValue(`<!DOCTYPE html>
+<html>
+<head>
+    <title>SupremeAmer App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #4a69bd;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #3c5aa6;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to SupremeAmer</h1>
+        <p>This is a sample application built with our Web IDE</p>
+        <button onclick="showMessage()">Click Me!</button>
+        <div id="output"></div>
+    </div>
+</body>
+</html>`);
+
+                        editors.css.setValue(`/* Additional CSS styles */
+
+.container {
+    transition: all 0.3s ease;
+}
+
+#output {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    min-height: 50px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    body {
+        margin: 20px;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+}`);
+
+                        editors.js.setValue(`// JavaScript code
+
+function showMessage() {
+    const output = document.getElementById('output');
+    output.innerHTML = '<p>Hello from SupremeAmer Web IDE! This code was executed successfully.</p>';
+    output.style.backgroundColor = '#e8f5e9';
+    
+    // Also log to console
+    console.log('Button clicked! Message displayed.');
+}
+
+// Additional demo function
+function calculate(a, b) {
+    return a + b;
+}
+
+// Display initial message
+console.log('Welcome to SupremeAmer Web IDE!');
+console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`);
+
+                        // Clear uploaded files
+                        uploadedFilesContainer.innerHTML = '';
+                        localStorage.removeItem('supremeamer_uploaded_files');
+                        
+                        runCode();
+                        console.log('Editor reset to default code!');
+                        showSuccessMessage('Editor reset successfully!');
+                    } catch (error) {
+                        console.error('Error resetting editor:', error);
+                        showErrorMessage('Failed to reset editor: ' + error.message);
+                    }
+                }
+            });
+
+            // Clear console
+            clearConsoleBtn.addEventListener('click', function() {
+                consoleOutput.innerHTML = '';
+            });
+
+            // Tab switching for desktop
+            editorTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    // Activate tab
+                    editorTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update mobile tabs
+                    mobileTabs.forEach(t => {
+                        if (t.getAttribute('data-tab') === tabName) {
+                            t.classList.add('active');
+                        } else {
+                            t.classList.remove('active');
+                        }
+                    });
+                    
+                    // Update language select
+                    languageSelect.value = tabName;
+                    
+                    // Show corresponding editor
+                    codeEditors.forEach(editor => {
+                        editor.style.display = 'none';
+                    });
+                    document.querySelector(`.${tabName}-editor`).style.display = 'flex';
+                });
+            });
+
+            // Tab switching for mobile tabs
+            mobileTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    
+                    // Activate tab
+                    mobileTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update desktop tabs
+                    editorTabs.forEach(t => {
+                        if (t.getAttribute('data-tab') === tabName) {
+                            t.classList.add('active');
+                        } else {
+                            t.classList.remove('active');
+                        }
+                    });
+                    
+                    // Update language select
+                    languageSelect.value = tabName;
+                    
+                    // Show corresponding editor
+                    codeEditors.forEach(editor => {
+                        editor.style.display = 'none';
+                    });
+                    document.querySelector(`.${tabName}-editor`).style.display = 'flex';
+                });
+            });
+
+            // Language select change
+            languageSelect.addEventListener('change', function() {
+                const tabName = this.value;
+                
+                // Activate tab
+                editorTabs.forEach(t => {
+                    if (t.getAttribute('data-tab') === tabName) {
+                        t.classList.add('active');
+                    } else {
+                        t.classList.remove('active');
+                    }
+                });
+                
+                // Update mobile tabs
+                mobileTabs.forEach(t => {
+                    if (t.getAttribute('data-tab') === tabName) {
+                        t.classList.add('active');
+                    } else {
+                        t.classList.remove('active');
+                    }
+                });
+                
+                // Show corresponding editor
+                codeEditors.forEach(editor => {
+                    editor.style.display = 'none';
+                });
+                document.querySelector(`.${tabName}-editor`).style.display = 'flex';
+            });
+
+            // Sidebar toggle
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.add('open');
+            });
+
+            closeSidebar.addEventListener('click', function() {
+                sidebar.classList.remove('open');
+            });
+
+            // Upload functionality
+            uploadBtn.addEventListener('click', function() {
+                uploadModal.style.display = 'flex';
+            });
+
+            // Close modals
+            closeModal.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    uploadModal.style.display = 'none';
+                    gitRepoModal.style.display = 'none';
+                });
+            });
+
+            window.addEventListener('click', function(e) {
+                if (e.target === uploadModal) {
+                    uploadModal.style.display = 'none';
+                }
+                if (e.target === gitRepoModal) {
+                    gitRepoModal.style.display = 'none';
+                }
+            });
+
+            // File upload handling
+            dropZones.forEach(zone => {
+                zone.addEventListener('click', function() {
+                    fileUpload.click();
+                });
+
+                zone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.style.borderColor = '#4a69bd';
+                    this.style.background = '#f8f9fa';
+                });
+
+                zone.addEventListener('dragleave', function() {
+                    this.style.borderColor = '#ccc';
+                    this.style.background = '';
+                });
+
+                zone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.style.borderColor = '#ccc';
+                    this.style.background = '';
+                    handleFiles(e.dataTransfer.files);
+                });
+            });
+
+            fileUpload.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+
+            function handleFiles(files) {
+                if (files.length > 0) {
+                    console.log(`Processing ${files.length} files...`);
+                    
+                    // Simulate file processing
+                    const progressBar = document.getElementById('upload-progress');
+                    const uploadStatus = document.getElementById('upload-status');
+                    
+                    let progress = 0;
+                    const interval = setInterval(() => {
+                        progress += 5;
+                        progressBar.style.width = `${progress}%`;
+                        
+                        if (progress >= 100) {
+                            clearInterval(interval);
+                            uploadStatus.textContent = 'Upload completed!';
+                            
+                            // Add files to explorer
+                            for (let i = 0; i < files.length; i++) {
+                                const file = files[i];
+                                const reader = new FileReader();
+                                
+                                reader.onload = function(e) {
+                                    try {
+                                        const content = e.target.result;
+                                        addUploadedFile(file.name, content);
+                                        console.log(`Uploaded: ${file.name}`);
+                                    } catch (error) {
+                                        console.error(`Error processing file ${file.name}:`, error);
+                                        showErrorMessage(`Failed to process ${file.name}: ${error.message}`);
+                                    }
+                                };
+                                
+                                reader.onerror = function() {
+                                    console.error(`Failed to read file: ${file.name}`);
+                                    showErrorMessage(`Failed to read file: ${file.name}`);
+                                };
+                                
+                                reader.readAsText(file);
+                            }
+                            
+                            // Show success message
+                            setTimeout(() => {
+                                uploadModal.style.display = 'none';
+                                console.log('Files uploaded successfully!');
+                                showSuccessMessage('Files uploaded successfully!');
+                            }, 1000);
+                        }
+                    }, 100);
+                }
+            }
+
+            function addUploadedFile(name, content) {
+                try {
+                    // Save file content to localStorage
+                    localStorage.setItem(`supremeamer_file_${name}`, content);
+                    
+                    // Create file element
+                    const fileElement = document.createElement('div');
+                    fileElement.classList.add('uploaded-file');
+                    fileElement.innerHTML = `
+                        <div class="uploaded-file-info">
+                            <i class="fas fa-file-code"></i>
+                            <span>${name}</span>
+                        </div>
+                        <div class="file-actions">
+                            <button class="file-action-btn edit-file">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="file-action-btn delete-file">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    // Add event listeners
+                    fileElement.querySelector('.edit-file').addEventListener('click', function() {
+                        editUploadedFile(name, content);
+                    });
+                    
+                    fileElement.querySelector('.delete-file').addEventListener('click', function() {
+                        deleteUploadedFile(name, fileElement);
+                    });
+                    
+                    uploadedFilesContainer.appendChild(fileElement);
+                    
+                    // Update saved files list
+                    const uploadedFiles = JSON.parse(localStorage.getItem('supremeamer_uploaded_files') || '[]');
+                    uploadedFiles.push({ name, content });
+                    localStorage.setItem('supremeamer_uploaded_files', JSON.stringify(uploadedFiles));
+                } catch (error) {
+                    console.error('Error adding uploaded file:', error);
+                    showErrorMessage('Failed to add uploaded file: ' + error.message);
+                }
+            }
+            
+            function editUploadedFile(name, content) {
+                try {
+                    // Create a new editor tab for the file
+                    const fileExtension = name.split('.').pop().toLowerCase();
+                    let editorType = 'js';
+                    
+                    if (fileExtension === 'html') editorType = 'html';
+                    else if (fileExtension === 'css') editorType = 'css';
+                    else if (['js', 'javascript'].includes(fileExtension)) editorType = 'js';
+                    else if (fileExtension === 'py') editorType = 'python';
+                    else if (fileExtension === 'php') editorType = 'php';
+                    
+                    // Activate the appropriate tab
+                    editorTabs.forEach(tab => {
+                        if (tab.getAttribute('data-tab') === editorType) {
+                            tab.click();
+                        }
+                    });
+                    
+                    // Set the content in the active editor
+                    editors[editorType].setValue(content);
+                    console.log(`Editing file: ${name}`);
+                    showSuccessMessage(`Now editing: ${name}`);
+                } catch (error) {
+                    console.error('Error editing uploaded file:', error);
+                    showErrorMessage('Failed to edit file: ' + error.message);
+                }
+            }
+            
+            function deleteUploadedFile(name, element) {
+                try {
+                    if (confirm(`Are you sure you want to delete ${name}?`)) {
+                        // Remove from DOM
+                        element.remove();
+                        
+                        // Remove from localStorage
+                        localStorage.removeItem(`supremeamer_file_${name}`);
+                        
+                        // Update saved files list
+                        const uploadedFiles = JSON.parse(localStorage.getItem('supremeamer_uploaded_files') || '[]');
+                        const updatedFiles = uploadedFiles.filter(file => file.name !== name);
+                        localStorage.setItem('supremeamer_uploaded_files', JSON.stringify(updatedFiles));
+                        
+                        console.log(`Deleted file: ${name}`);
+                        showSuccessMessage(`File deleted: ${name}`);
+                    }
+                } catch (error) {
+                    console.error('Error deleting uploaded file:', error);
+                    showErrorMessage('Failed to delete file: ' + error.message);
+                }
+            }
+
+            // Theme toggle
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-mode');
+                if (document.body.classList.contains('dark-mode')) {
+                    themeToggle.innerHTML = '<i class="fas fa-sun"></i> Light';
+                    monaco.editor.setTheme('vs-dark');
+                } else {
+                    themeToggle.innerHTML = '<i class="fas fa-moon"></i> Dark';
+                    monaco.editor.setTheme('vs');
+                }
+            });
+
+            // Device preview toggle
+            deviceToggle.addEventListener('click', function() {
+                const previewFrame = document.getElementById('preview-frame');
+                if (previewFrame.style.width === '375px') {
+                    previewFrame.style.width = '100%';
+                    previewFrame.style.maxWidth = '100%';
+                    deviceToggle.innerHTML = '<i class="fas fa-mobile-alt"></i> Mobile View';
+                } else {
+                    previewFrame.style.width = '375px';
+                    previewFrame.style.maxWidth = '375px';
+                    previewFrame.style.margin = '0 auto';
+                    deviceToggle.innerHTML = '<i class="fas fa-desktop"></i> Desktop View';
+                }
+            });
+
+            // Full screen preview toggle
+            let isFullScreen = false;
+            fullscreenToggle.addEventListener('click', function() {
+                const container = document.querySelector('.container');
+                if (!isFullScreen) {
+                    container.classList.add('full-screen-preview');
+                    fullscreenToggle.innerHTML = '<i class="fas fa-compress"></i> Collapse';
+                    isFullScreen = true;
+                } else {
+                    container.classList.remove('full-screen-preview');
+                    fullscreenToggle.innerHTML = '<i class="fas fa-expand"></i> Full Screen';
+                    isFullScreen = false;
+                }
+            });
+
+            // Collapsible sections
+            collapsibles.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;
+                        this.querySelector('i').classList.replace('fa-chevron-up', 'fa-chevron-down');
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                        this.querySelector('i').classList.replace('fa-chevron-down', 'fa-chevron-up');
+                    }
+                });
+            });
+
+            // File item click handling
+            fileItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const fileName = this.getAttribute('data-file');
+                    if (fileName) {
+                        fileItems.forEach(i => i.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Load file content if available
+                        const fileContent = localStorage.getItem(`supremeamer_file_${fileName}`);
+                        if (fileContent) {
+                            const fileExtension = fileName.split('.').pop().toLowerCase();
+                            let editorType = 'js';
+                            
+                            if (fileExtension === 'html') editorType = 'html';
+                            else if (fileExtension === 'css') editorType = 'css';
+                            else if (['js', 'javascript'].includes(fileExtension)) editorType = 'js';
+                            else if (fileExtension === 'py') editorType = 'python';
+                            else if (fileExtension === 'php') editorType = 'php';
+                            
+                            // Activate the appropriate tab
+                            editorTabs.forEach(tab => {
+                                if (tab.getAttribute('data-tab') === editorType) {
+                                    tab.click();
+                                }
+                            });
+                            
+                            // Set the content in the active editor
+                            editors[editorType].setValue(fileContent);
+                        }
+                    }
+                });
+            });
+
+            // Git Integration Functions
+            gitInitBtn.addEventListener('click', function() {
+                try {
+                    console.log('Initializing Git repository...');
+                    // Simulate Git init
+                    setTimeout(() => {
+                        currentBranch.textContent = 'main';
+                        gitStatus.innerHTML = '<div class="git-status-item"><span class="git-icon-untracked"></span><span>Initialized empty Git repository</span></div>';
+                        console.log('Git repository initialized successfully.');
+                        showSuccessMessage('Git repository initialized successfully.');
+                    }, 500);
+                } catch (error) {
+                    console.error('Error initializing Git repository:', error);
+                    showErrorMessage('Failed to initialize Git repository: ' + error.message);
+                }
+            });
+
+            gitStatusBtn.addEventListener('click', function() {
+                try {
+                    console.log('Checking Git status...');
+                    // Simulate Git status
+                    const statusItems = [
+                        { status: 'modified', file: 'index.html' },
+                        { status: 'untracked', file: 'style.css' },
+                        { status: 'added', file: 'script.js' }
+                    ];
+                    
+                    gitStatus.innerHTML = '';
+                    statusItems.forEach(item => {
+                        const statusItem = document.createElement('div');
+                        statusItem.classList.add('git-status-item');
+                        statusItem.innerHTML = `<span class="git-icon-${item.status}"></span><span>${item.file} (${item.status})</span>`;
+                        gitStatus.appendChild(statusItem);
+                    });
+                    
+                    console.log('Git status retrieved successfully.');
+                    showSuccessMessage('Git status retrieved successfully.');
+                } catch (error) {
+                    console.error('Error checking Git status:', error);
+                    showErrorMessage('Failed to check Git status: ' + error.message);
+                }
+            });
+
+            gitAddBtn.addEventListener('click', function() {
+                try {
+                    console.log('Adding all files to Git...');
+                    // Simulate Git add
+                    setTimeout(() => {
+                        gitStatus.innerHTML = '<div class="git-status-item"><span class="git-icon-added"></span><span>All changes staged for commit</span></div>';
+                        console.log('All files added to Git successfully.');
+                        showSuccessMessage('All files added to Git successfully.');
+                    }, 500);
+                } catch (error) {
+                    console.error('Error adding files to Git:', error);
+                    showErrorMessage('Failed to add files to Git: ' + error.message);
+                }
+            });
+
+            gitCommitBtn.addEventListener('click', function() {
+                try {
+                    const message = gitCommitMessage.value.trim();
+                    if (!message) {
+                        throw new Error('Please enter a commit message.');
+                    }
+                    
+                    console.log(`Committing changes with message: "${message}"`);
+                    // Simulate Git commit
+                    setTimeout(() => {
+                        gitStatus.innerHTML = '<div class="git-status-item"><span class="git-icon-untracked"></span><span>No changes to commit</span></div>';
+                        gitCommitMessage.value = '';
+                        console.log('Changes committed successfully.');
+                        showSuccessMessage('Changes committed successfully.');
+                    }, 500);
+                } catch (error) {
+                    console.error('Error committing changes:', error);
+                    showErrorMessage('Failed to commit changes: ' + error.message);
+                }
+            });
+
+            gitPushBtn.addEventListener('click', function() {
+                try {
+                    console.log('Pushing to remote repository...');
+                    // Simulate Git push
+                    setTimeout(() => {
+                        console.log('Changes pushed to remote repository successfully.');
+                        showSuccessMessage('Changes pushed to remote repository successfully.');
+                    }, 1000);
+                } catch (error) {
+                    console.error('Error pushing to remote repository:', error);
+                    showErrorMessage('Failed to push to remote repository: ' + error.message);
+                }
+            });
+
+            gitPullBtn.addEventListener('click', function() {
+                try {
+                    console.log('Pulling from remote repository...');
+                    // Simulate Git pull
+                    setTimeout(() => {
+                        console.log('Changes pulled from remote repository successfully.');
+                        showSuccessMessage('Changes pulled from remote repository successfully.');
+                    }, 1000);
+                } catch (error) {
+                    console.error('Error pulling from remote repository:', error);
+                    showErrorMessage('Failed to pull from remote repository: ' + error.message);
+                }
+            });
+
+            // Git repo connection
+            gitRepoBtn.addEventListener('click', function() {
+                gitRepoModal.style.display = 'flex';
+            });
+
+            cancelRepoBtn.addEventListener('click', function() {
+                gitRepoModal.style.display = 'none';
+            });
+
+            connectRepoBtn.addEventListener('click', function() {
+                try {
+                    const repoUrl = document.getElementById('repo-url').value;
+                    const username = document.getElementById('repo-username').value;
+                    const token = document.getElementById('repo-token').value;
+                    const branch = document.getElementById('repo-branch').value || 'main';
+                    
+                    if (!repoUrl || !username || !token) {
+                        throw new Error('Please fill in all required fields.');
+                    }
+                    
+                    console.log(`Connecting to repository: ${repoUrl}`);
+                    // Simulate repository connection
+                    setTimeout(() => {
+                        currentBranch.textContent = branch;
+                        gitRepoModal.style.display = 'none';
+                        console.log('Successfully connected to repository.');
+                        showSuccessMessage('Successfully connected to repository.');
+                    }, 1000);
+                } catch (error) {
+                    console.error('Error connecting to repository:', error);
+                    showErrorMessage('Failed to connect to repository: ' + error.message);
+                }
+            });
+
+            // Utility functions for messages
+            function showErrorMessage(message) {
+                // Remove any existing error messages
+                const existingErrors = document.querySelectorAll('.error-message');
+                existingErrors.forEach(error => error.remove());
+                
+                const errorElement = document.createElement('div');
+                errorElement.classList.add('error-message');
+                errorElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+                
+                // Insert after the header
+                const header = document.querySelector('header');
+                header.parentNode.insertBefore(errorElement, header.nextSibling);
+                
+                // Auto-remove after 5 seconds
+                setTimeout(() => {
+                    if (errorElement.parentNode) {
+                        errorElement.parentNode.removeChild(errorElement);
+                    }
+                }, 5000);
+            }
+            
+            function showSuccessMessage(message) {
+                // Remove any existing success messages
+                const existingSuccess = document.querySelectorAll('.success-message');
+                existingSuccess.forEach(success => success.remove());
+                
+                const successElement = document.createElement('div');
+                successElement.classList.add('success-message');
+                successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+                
+                // Insert after the header
+                const header = document.querySelector('header');
+                header.parentNode.insertBefore(successElement, header.nextSibling);
+                
+                // Auto-remove after 5 seconds
+                setTimeout(() => {
+                    if (successElement.parentNode) {
+                        successElement.parentNode.removeChild(successElement);
+                    }
+                }, 5000);
+            }
+
+            // Load saved code from localStorage
+            if (localStorage.getItem('supremeamer_html')) {
+                editors.html.setValue(localStorage.getItem('supremeamer_html'));
+                editors.css.setValue(localStorage.getItem('supremeamer_css'));
+                editors.js.setValue(localStorage.getItem('supremeamer_js'));
+                console.log('Previously saved code loaded!');
+            }
+            
+            // Load uploaded files from localStorage
+            const uploadedFiles = JSON.parse(localStorage.getItem('supremeamer_uploaded_files') || '[]');
+            uploadedFiles.forEach(file => {
+                addUploadedFile(file.name, file.content);
+            });
+
+            // Run code on initial load
+            runCode();
+
+            // Add event listeners for Ctrl+S and Ctrl+Enter to run code
+            document.addEventListener('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    saveBtn.click();
+                }
+                
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    runCode();
+                }
+                
+                if (e.key === 'F5') {
+                    e.preventDefault();
+                    runCode();
+                }
+            });
+
+            // Handle mobile view
+            function handleMobileView() {
+                if (window.innerWidth < 768) {
+                    // Mobile-specific adjustments
+                    document.querySelectorAll('.monaco-editor-container').forEach(editor => {
+                        editor.style.fontSize = '16px'; // Prevent zoom on iOS
+                    });
+                }
+            }
+
+            // Initial call
+            handleMobileView();
+
+            // Listen for resize events
+            window.addEventListener('resize', handleMobileView);
+        });
+    </script>
+</body>
+</html>
