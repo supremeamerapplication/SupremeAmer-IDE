@@ -3,9 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SupremeAmer IDE Pro - Enhanced</title>
+    <title>SupremeAmer IDE Pro - PWA</title>
+    
+    <!-- PWA Manifest (generated inline) -->
+    <link rel="manifest" id="app-manifest">
+    
+    <!-- iOS PWA Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SupremeAmer IDE">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjE5MiIgaGVpZ2h0PSIxOTIiIHJ4PSI0MCIgZmlsbD0iIzJjM2U1MCIvPjxwYXRoIGQ9Ik03NiA1MkgxMTZDMTIzLjczMiA1MiAxMzAgNTguMjY4IDEzMCA2NlYxMjZDMTMwIDEzMy43MzIgMTIzLjczMiAxNDAgMTE2IDE0MEg3NkM2OC4yNjc1IDE0MCA2MiAxMzMuNzMyIDYyIDEyNlY2NkM2MiA1OC4yNjggNjguMjY3NSA1MiA3NiA1MloiIGZpbGw9IiNGRkZGRkYiLz48cGF0aCBkPSJNMTIwIDk4SDEyNEMxMjUuNjU3IDk4IDEyNyA5OS4zNDMxIDEyNyAxMDFWMTE5QzEyNyAxMjAuNjU3IDEyNS42NTcgMTIyIDEyNCAxMjJIMTIwQzExOC4zNDMgMTIyIDExNyAxMjAuNjU3IDExNyAxMTlWMTAxQzExNyA5OS4zNDMxIDExOC4zNDMgOTggMTIwIDk4WiIgZmlsbD0iI0ZGRkZGRiIvPjxwYXRoIGQ9Ik02OSA5OEg3M0M3NC42NTcyIDk4IDc2IDk5LjM0MzEgNzYgMTAxVjExOUM3NiAxMjAuNjU3IDc0LjY1NzIgMTIyIDczIDEyMkg2OUM2Ny4zNDI4IDEyMiA2NiAxMjAuNjU3IDY2IDExOVYxMDFDNjYgOTkuMzQzMSA2Ny4zNDI4IDk4IDY5IDk4WiIgZmlsbD0iI0ZGRkZGRiIvPjwvc3ZnPg==">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="msapplication-navbutton-color" content="#2c3e50">
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHJ4PSI2IiBmaWxsPSIjMmMzZTUwIi8+PHBhdGggZD0iTTEyIDhIMjBDMjEuMTA0NiA4IDIyIDguODk1NDMgMjIgMTBWMjJDMjIgMjMuMTA0NiAyMS4xMDQ2IDI0IDIwIDI0SDEyQzEwLjg5NTQgMjQgMTAgMjMuMTA0NiAxMCAyMlYxMEMxMCA4Ljg5NTQzIDEwLjg5NTQgOCAxMiA4WiIgZmlsbD0iI0ZGRkZGRiIvPjxwYXRoIGQ9Ik0xOSAxNkgyMEMyMC41NTIzIDE2IDIxIDE2LjQ0NzcgMjEgMTdWMjBDMjEgMjAuNTUyMyAyMC41NTIzIDIxIDIwIDIxSDE5QzE4LjQ0NzcgMjEgMTggMjAuNTUyMyAxOCAyMFYxN0MxOCAxNi40NDc3IDE4LjQ0NzcgMTYgMTkgMTZaIiBmaWxsPSIjRkZGRkZGIi8+PHBhdGggZD0iTTExIDE2SDEyQzEyLjU1MjMgMTYgMTMgMTYuNDQ3NyAxMyAxN1YyMEMxMyAyMC41NTIzIDEyLjU1MjMgMjEgMTIgMjFIMTFDMTAuNDQ3NyAyMSAxMCAyMC41NTIzIDEwIDIwVjE3QzEwIDE2LjQ0NzcgMTAuNDQ3NyAxNiAxMSAxNloiIGZpbGw9IiNGRkZGRkYiLz48L3N2Zz4=">
+    
+    <!-- CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/loader.js"></script>
+    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
@@ -58,6 +77,502 @@
             flex: 1;
         }
         
+        /* File Management Styles */
+        .file-actions-header {
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            gap: 10px;
+            background: #f8f9fa;
+        }
+        
+        .file-action-btn {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        
+        .file-action-btn:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+        }
+        
+        .new-file-btn {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+        
+        .new-file-btn:hover {
+            background: #00a382;
+        }
+        
+        .new-folder-btn {
+            background: var(--info);
+            color: white;
+            border-color: var(--info);
+        }
+        
+        .new-folder-btn:hover {
+            background: #5649c9;
+        }
+        
+        .delete-file-btn {
+            background: var(--warning);
+            color: white;
+            border-color: var(--warning);
+        }
+        
+        .delete-file-btn:hover {
+            background: #d15b3f;
+        }
+        
+        .file-context-menu {
+            display: none;
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+            min-width: 150px;
+        }
+        
+        .file-context-menu.show {
+            display: block;
+        }
+        
+        .context-menu-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        
+        .context-menu-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .file-item {
+            padding: 8px 10px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .file-item:hover {
+            background: #e9ecef;
+        }
+        
+        .file-item.active {
+            background: #dee2e6;
+            font-weight: 600;
+        }
+        
+        .file-item.editing {
+            background: #e3f2fd;
+        }
+        
+        .file-name-input {
+            flex: 1;
+            padding: 4px 8px;
+            border: 1px solid #4a69bd;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+        
+        .file-name-input:focus {
+            box-shadow: 0 0 0 2px rgba(74, 105, 189, 0.2);
+        }
+        
+        .file-extension {
+            color: #666;
+            font-size: 0.8rem;
+            margin-left: 2px;
+        }
+        
+        .folder-item {
+            padding: 8px 10px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        
+        .folder-item:hover {
+            background: #e9ecef;
+        }
+        
+        .folder-contents {
+            padding-left: 20px;
+            border-left: 2px dashed #dee2e6;
+            margin-left: 15px;
+        }
+        
+        .file-size {
+            font-size: 0.7rem;
+            color: #666;
+            margin-left: auto;
+            padding: 2px 6px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .file-modified {
+            font-size: 0.7rem;
+            color: #666;
+            margin-left: 8px;
+        }
+        
+        /* PWA Installation Banner */
+        .install-banner {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 2000;
+            width: 90%;
+            max-width: 500px;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .install-banner.show {
+            display: flex;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .install-banner button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .install-btn {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .dismiss-btn {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .offline-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: var(--warning);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .offline-indicator.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* PWA Install Guide */
+        .install-guide {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 3000;
+            color: white;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .install-guide.show {
+            display: flex;
+        }
+        
+        .install-steps {
+            background: var(--dark);
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+        }
+        
+        .install-step {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .install-step i {
+            font-size: 2rem;
+            color: var(--info);
+        }
+        
+        /* PWA Info Panel */
+        .pwa-info {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 2000;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .pwa-info.show {
+            display: block;
+        }
+        
+        .pwa-info.dark-mode {
+            background: var(--dark);
+            color: white;
+        }
+        
+        /* PWA Button */
+        .pwa-btn {
+            background-color: #9b59b6;
+            color: white;
+        }
+        
+        .pwa-btn:hover {
+            background-color: #8e44ad;
+        }
+        
+        /* Storage Info */
+        .storage-info {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background: var(--info);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .storage-info.show {
+            display: block;
+        }
+        
+        /* Install Button in Header */
+        #install-button {
+            display: none;
+            background: var(--success);
+            color: white;
+        }
+        
+        #install-button.show {
+            display: flex;
+        }
+        
+        /* Online Status */
+        #online-status {
+            padding: 5px 10px;
+            border-radius: 3px;
+            background: #f8f9fa;
+            margin-left: 10px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .online {
+            color: var(--success) !important;
+        }
+        
+        .offline {
+            color: var(--warning) !important;
+        }
+        
+        /* New File Modal */
+        .new-file-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .new-file-modal.show {
+            display: flex;
+        }
+        
+        .new-file-form {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .new-file-form h3 {
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(74, 105, 189, 0.2);
+        }
+        
+        .language-select-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .language-option {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .language-option:hover {
+            border-color: var(--secondary);
+            background: #f8f9fa;
+        }
+        
+        .language-option.selected {
+            border-color: var(--secondary);
+            background: #e3f2fd;
+            font-weight: 600;
+        }
+        
+        .language-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .create-btn {
+            background: var(--success);
+            color: white;
+        }
+        
+        .create-btn:hover {
+            background: #00a382;
+        }
+        
+        .cancel-btn {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .cancel-btn:hover {
+            background: #545b62;
+        }
+        
+        /* Rest of your existing styles... */
         header {
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             color: white;
@@ -215,26 +730,6 @@
             flex: 1;
             overflow-y: auto;
             padding: 10px;
-        }
-        
-        .file-item {
-            padding: 8px 10px;
-            border-radius: 4px;
-            margin-bottom: 5px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: background 0.2s;
-        }
-        
-        .file-item:hover {
-            background: #e9ecef;
-        }
-        
-        .file-item.active {
-            background: #dee2e6;
-            font-weight: 600;
         }
         
         .editor-container {
@@ -663,7 +1158,7 @@
             --dark: #121212;
             --light: #2d3436;
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: #f1f2f6; /* Ensure text is readable in dark mode */
+            color: #f1f2f6;
         }
         
         .dark-mode .container {
@@ -925,24 +1420,6 @@
             max-width: 600px;
         }
         
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-        
         .form-control:focus {
             outline: none;
             border-color: #4a69bd;
@@ -1013,10 +1490,162 @@
                 flex: 1;
                 min-width: 120px;
             }
+            
+            .language-select-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offline-indicator">
+        <i class="fas fa-wifi-slash"></i>
+        <span>Working Offline</span>
+    </div>
+    
+    <!-- PWA Installation Banner -->
+    <div class="install-banner" id="install-banner">
+        <div class="banner-content">
+            <i class="fas fa-download"></i>
+            <span>Install SupremeAmer IDE for offline use</span>
+        </div>
+        <div class="banner-actions">
+            <button class="install-btn" id="install-button-main">Install</button>
+            <button class="dismiss-btn" id="dismiss-button">Later</button>
+        </div>
+    </div>
+    
+    <!-- Add to Home Screen Instructions -->
+    <div class="install-guide" id="install-guide">
+        <div class="install-steps">
+            <h2>How to Install</h2>
+            <div class="install-step">
+                <i class="fas fa-mobile-alt"></i>
+                <span>Tap the Share button <i class="fas fa-share-alt"></i></span>
+            </div>
+            <div class="install-step">
+                <i class="fas fa-plus-square"></i>
+                <span>Select "Add to Home Screen"</span>
+            </div>
+            <div class="install-step">
+                <i class="fas fa-check-circle"></i>
+                <span>Tap "Add" to install the app</span>
+            </div>
+            <button class="close-install-guide" id="close-install-guide" style="margin-top: 20px; padding: 10px 20px; background: var(--info); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                Got it!
+            </button>
+        </div>
+    </div>
+    
+    <!-- PWA Info Panel -->
+    <div class="pwa-info" id="pwa-info">
+        <div class="modal-header">
+            <h3>PWA Information</h3>
+            <span class="close-modal">&times;</span>
+        </div>
+        <div class="pwa-status">
+            <p><strong>App Status:</strong> <span id="app-status">Checking...</span></p>
+            <p><strong>Storage:</strong> <span id="storage-status">Checking...</span></p>
+            <p><strong>Offline Mode:</strong> <span id="offline-status">Checking...</span></p>
+        </div>
+        <div class="pwa-controls" style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="pwa-btn" id="clear-cache">
+                <i class="fas fa-trash"></i> Clear Cache
+            </button>
+            <button class="pwa-btn" id="update-app">
+                <i class="fas fa-sync-alt"></i> Check for Updates
+            </button>
+            <button class="pwa-btn" id="export-data">
+                <i class="fas fa-download"></i> Export All Data
+            </button>
+        </div>
+    </div>
+
+    <!-- New File Modal -->
+    <div class="new-file-modal" id="new-file-modal">
+        <div class="new-file-form">
+            <h3>Create New File</h3>
+            <div class="form-group">
+                <label for="new-file-name">File Name</label>
+                <input type="text" id="new-file-name" class="form-control" placeholder="myfile" value="newfile">
+                <small style="color: #666; font-size: 0.8rem;">Without extension - it will be added automatically</small>
+            </div>
+            <div class="form-group">
+                <label>File Type</label>
+                <div class="language-select-grid" id="language-options">
+                    <div class="language-option selected" data-type="html">
+                        <div class="language-icon" style="color: var(--html);">
+                            <i class="fab fa-html5"></i>
+                        </div>
+                        <div>.html</div>
+                    </div>
+                    <div class="language-option" data-type="css">
+                        <div class="language-icon" style="color: var(--css);">
+                            <i class="fab fa-css3-alt"></i>
+                        </div>
+                        <div>.css</div>
+                    </div>
+                    <div class="language-option" data-type="js">
+                        <div class="language-icon" style="color: var(--js);">
+                            <i class="fab fa-js-square"></i>
+                        </div>
+                        <div>.js</div>
+                    </div>
+                    <div class="language-option" data-type="python">
+                        <div class="language-icon" style="color: var(--python);">
+                            <i class="fab fa-python"></i>
+                        </div>
+                        <div>.py</div>
+                    </div>
+                    <div class="language-option" data-type="php">
+                        <div class="language-icon" style="color: var(--php);">
+                            <i class="fab fa-php"></i>
+                        </div>
+                        <div>.php</div>
+                    </div>
+                    <div class="language-option" data-type="json">
+                        <div class="language-icon" style="color: var(--info);">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div>.json</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="new-file-folder">Folder (optional)</label>
+                <input type="text" id="new-file-folder" class="form-control" placeholder="Leave empty for root folder">
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel-btn" id="cancel-new-file">Cancel</button>
+                <button class="modal-btn create-btn" id="create-new-file">Create File</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Storage Info -->
+    <div class="storage-info" id="storage-info"></div>
+
+    <!-- File Context Menu -->
+    <div class="file-context-menu" id="file-context-menu">
+        <div class="context-menu-item" id="context-rename">
+            <i class="fas fa-edit"></i>
+            <span>Rename</span>
+        </div>
+        <div class="context-menu-item" id="context-duplicate">
+            <i class="fas fa-copy"></i>
+            <span>Duplicate</span>
+        </div>
+        <div class="context-menu-item" id="context-delete">
+            <i class="fas fa-trash"></i>
+            <span>Delete</span>
+        </div>
+        <div class="context-menu-item" id="context-download">
+            <i class="fas fa-download"></i>
+            <span>Download</span>
+        </div>
+    </div>
+
     <div class="container">
         <header>
             <div class="logo">
@@ -1048,6 +1677,16 @@
                 <button class="theme-toggle" id="theme-toggle">
                     <i class="fas fa-moon"></i> Dark
                 </button>
+                <!-- PWA Button -->
+                <button class="pwa-btn" id="pwa-settings-btn">
+                    <i class="fas fa-mobile-alt"></i> PWA
+                </button>
+                <!-- Install Button -->
+                <button id="install-button" class="install-btn">
+                    <i class="fas fa-download"></i> Install
+                </button>
+                <!-- Online Status -->
+                <span id="online-status" class="online">Online</span>
             </div>
         </header>
 
@@ -1059,59 +1698,22 @@
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div class="file-explorer">
-                    <div class="collapsible">
-                        <span>Project Files</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="collapsible-content">
-                        <div class="file-tree">
-                            <div class="file-item active" data-file="index.html">
-                                <i class="fab fa-html5" style="color: var(--html);"></i> index.html
-                            </div>
-                            <div class="file-item" data-file="style.css">
-                                <i class="fab fa-css3-alt" style="color: var(--css);"></i> style.css
-                            </div>
-                            <div class="file-item" data-file="script.js">
-                                <i class="fab fa-js-square" style="color: var(--js);"></i> script.js
-                            </div>
-                            <div class="collapsible">
-                                <span><i class="fas fa-folder"></i> Assets</span>
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            <div class="collapsible-content">
-                                <div class="file-tree" id="assets-folder">
-                                    <div class="file-item" data-file="d1.pdf">
-                                        <i class="fas fa-file-pdf" style="color: #e74c3c;"></i> d1.pdf
-                                    </div>
-                                    <div class="file-item" data-file="d2.pdf">
-                                        <i class="fas fa-file-pdf" style="color: #e74c3c;"></i> d2.pdf
-                                    </div>
-                                    <!-- Add more PDF files as needed -->
-                                </div>
-                            </div>
-                            <div class="file-item">
-                                <i class="fas fa-folder"></i> components
-                            </div>
-                        </div>
-                    </div>
-                    <div class="collapsible">
-                        <span>External Libraries</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="collapsible-content">
-                        <div class="file-tree">
-                            <div class="file-item" data-file="react.js">
-                                <i class="fab fa-js-square" style="color: var(--js);"></i> react.js
-                            </div>
-                            <div class="file-item" data-file="vue.js">
-                                <i class="fab fa-js-square" style="color: var(--js);"></i> vue.js
-                            </div>
-                            <div class="file-item" data-file="jquery.js">
-                                <i class="fab fa-js-square" style="color: var(--js);"></i> jquery.js
-                            </div>
-                        </div>
-                    </div>
+                
+                <!-- File Actions -->
+                <div class="file-actions-header">
+                    <button class="file-action-btn new-file-btn" id="new-file-btn">
+                        <i class="fas fa-file"></i> New File
+                    </button>
+                    <button class="file-action-btn new-folder-btn" id="new-folder-btn">
+                        <i class="fas fa-folder-plus"></i> New Folder
+                    </button>
+                    <button class="file-action-btn delete-file-btn" id="delete-selected-btn" style="display: none;">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+                
+                <div class="file-explorer" id="file-explorer">
+                    <!-- Files will be loaded here dynamically -->
                 </div>
                 
                 <!-- Git Integration Panel -->
@@ -1159,22 +1761,9 @@
                 
                 <!-- File Upload Area -->
                 <div class="file-upload-area">
-                    <h4>Uploaded Files</h4>
+                    <h4>Upload Files</h4>
                     <div class="uploaded-files" id="uploaded-files">
-                        <div class="uploaded-file">
-                            <div class="uploaded-file-info">
-                                <i class="fas fa-file-code"></i>
-                                <span>example.js</span>
-                            </div>
-                            <div class="file-actions">
-                                <button class="file-action-btn edit-file">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="file-action-btn delete-file">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
+                        <!-- Uploaded files will appear here -->
                     </div>
                     
                     <label for="file-upload" class="drop-zone" id="drop-zone">
@@ -1367,18 +1956,53 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Monaco Editor
-            require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs' }});
+        // === FILE MANAGEMENT SYSTEM ===
+        class FileManager {
+            constructor() {
+                this.files = new Map();
+                this.folders = new Map();
+                this.currentFile = null;
+                this.selectedFile = null;
+                this.contextMenuFile = null;
+                this.init();
+            }
             
-            // Store editor instances
-            let editors = {};
-            let currentTheme = 'vs';
+            init() {
+                this.loadFromStorage();
+                this.renderFileExplorer();
+                this.setupEventListeners();
+            }
             
-            require(['vs/editor/editor.main'], function() {
-                // Initialize editors for each language
-                editors.html = monaco.editor.create(document.getElementById('html-editor'), {
-                    value: `<!DOCTYPE html>
+            loadFromStorage() {
+                try {
+                    const savedFiles = JSON.parse(localStorage.getItem('supremeamer_files') || '{}');
+                    const savedFolders = JSON.parse(localStorage.getItem('supremeamer_folders') || '{}');
+                    
+                    // Load files
+                    Object.entries(savedFiles).forEach(([path, file]) => {
+                        this.files.set(path, file);
+                    });
+                    
+                    // Load folders
+                    Object.entries(savedFolders).forEach(([path, folder]) => {
+                        this.folders.set(path, folder);
+                    });
+                    
+                    console.log(`Loaded ${this.files.size} files and ${this.folders.size} folders from storage`);
+                } catch (error) {
+                    console.error('Error loading files from storage:', error);
+                    this.createDefaultFiles();
+                }
+            }
+            
+            createDefaultFiles() {
+                // Create default files if none exist
+                if (this.files.size === 0) {
+                    const defaultFiles = {
+                        'index.html': {
+                            name: 'index.html',
+                            path: 'index.html',
+                            content: `<!DOCTYPE html>
 <html>
 <head>
     <title>SupremeAmer App</title>
@@ -1425,14 +2049,15 @@
     </div>
 </body>
 </html>`,
-                    language: 'html',
-                    theme: currentTheme,
-                    automaticLayout: true,
-                    minimap: { enabled: false }
-                });
-                
-                editors.css = monaco.editor.create(document.getElementById('css-editor'), {
-                    value: `/* Additional CSS styles */
+                            type: 'html',
+                            size: 0,
+                            modified: Date.now(),
+                            created: Date.now()
+                        },
+                        'style.css': {
+                            name: 'style.css',
+                            path: 'style.css',
+                            content: `/* Additional CSS styles */
 
 .container {
     transition: all 0.3s ease;
@@ -1456,14 +2081,15 @@
         padding: 15px;
     }
 }`,
-                    language: 'css',
-                    theme: currentTheme,
-                    automaticLayout: true,
-                    minimap: { enabled: false }
-                });
-                
-                editors.js = monaco.editor.create(document.getElementById('js-editor'), {
-                    value: `// JavaScript code
+                            type: 'css',
+                            size: 0,
+                            modified: Date.now(),
+                            created: Date.now()
+                        },
+                        'script.js': {
+                            name: 'script.js',
+                            path: 'script.js',
+                            content: `// JavaScript code
 
 function showMessage() {
     const output = document.getElementById('output');
@@ -1482,6 +2108,922 @@ function calculate(a, b) {
 // Display initial message
 console.log('Welcome to SupremeAmer Web IDE!');
 console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`,
+                            type: 'js',
+                            size: 0,
+                            modified: Date.now(),
+                            created: Date.now()
+                        }
+                    };
+                    
+                    Object.entries(defaultFiles).forEach(([path, file]) => {
+                        file.size = new Blob([file.content]).size;
+                        this.files.set(path, file);
+                    });
+                    
+                    this.saveToStorage();
+                }
+            }
+            
+            saveToStorage() {
+                try {
+                    const filesObj = Object.fromEntries(this.files);
+                    const foldersObj = Object.fromEntries(this.folders);
+                    
+                    localStorage.setItem('supremeamer_files', JSON.stringify(filesObj));
+                    localStorage.setItem('supremeamer_folders', JSON.stringify(foldersObj));
+                    
+                    console.log(`Saved ${this.files.size} files and ${this.folders.size} folders to storage`);
+                    
+                    // Update storage info
+                    updateStorageInfo();
+                } catch (error) {
+                    console.error('Error saving files to storage:', error);
+                    showErrorMessage('Failed to save files: ' + error.message);
+                }
+            }
+            
+            createFile(name, type, folder = '', content = '') {
+                const extension = this.getExtensionForType(type);
+                const fileName = name.endsWith(extension) ? name : name + extension;
+                const path = folder ? `${folder}/${fileName}` : fileName;
+                
+                if (this.files.has(path)) {
+                    throw new Error(`File "${fileName}" already exists in this location`);
+                }
+                
+                // Default content based on file type
+                if (!content) {
+                    content = this.getDefaultContent(type, fileName);
+                }
+                
+                const file = {
+                    name: fileName,
+                    path: path,
+                    content: content,
+                    type: type,
+                    size: new Blob([content]).size,
+                    modified: Date.now(),
+                    created: Date.now()
+                };
+                
+                this.files.set(path, file);
+                this.saveToStorage();
+                this.renderFileExplorer();
+                
+                return file;
+            }
+            
+            createFolder(name, parentFolder = '') {
+                const path = parentFolder ? `${parentFolder}/${name}` : name;
+                
+                if (this.folders.has(path)) {
+                    throw new Error(`Folder "${name}" already exists`);
+                }
+                
+                const folder = {
+                    name: name,
+                    path: path,
+                    files: [],
+                    folders: [],
+                    created: Date.now(),
+                    modified: Date.now()
+                };
+                
+                this.folders.set(path, folder);
+                this.saveToStorage();
+                this.renderFileExplorer();
+                
+                return folder;
+            }
+            
+            getExtensionForType(type) {
+                const extensions = {
+                    'html': '.html',
+                    'css': '.css',
+                    'js': '.js',
+                    'javascript': '.js',
+                    'python': '.py',
+                    'php': '.php',
+                    'json': '.json',
+                    'txt': '.txt',
+                    'md': '.md',
+                    'xml': '.xml',
+                    'sql': '.sql',
+                    'java': '.java',
+                    'c': '.c',
+                    'cpp': '.cpp',
+                    'cs': '.cs',
+                    'go': '.go',
+                    'rust': '.rs',
+                    'ruby': '.rb',
+                    'swift': '.swift',
+                    'kotlin': '.kt',
+                    'typescript': '.ts'
+                };
+                
+                return extensions[type] || '.txt';
+            }
+            
+            getDefaultContent(type, fileName) {
+                const defaults = {
+                    'html': `<!DOCTYPE html>
+<html>
+<head>
+    <title>${fileName.replace('.html', '')}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to ${fileName.replace('.html', '')}</h1>
+        <p>Start editing this HTML file!</p>
+    </div>
+</body>
+</html>`,
+                    'css': `/* ${fileName} - CSS Stylesheet */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Add your styles here */`,
+                    'js': `// ${fileName} - JavaScript File
+
+console.log('${fileName} loaded successfully!');
+
+// Main application code
+function init() {
+    console.log('Application initialized');
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', init);
+
+// Utility functions
+function logMessage(message) {
+    console.log(\`[\${new Date().toLocaleTimeString()}] \${message}\`);
+}`,
+                    'python': `# ${fileName} - Python Script
+
+def main():
+    print("Hello from ${fileName}!")
+    print("Python is running successfully.")
+    
+    # Add your code here
+    result = 5 + 3
+    print(f"5 + 3 = {result}")
+
+if __name__ == "__main__":
+    main()`,
+                    'php': `<?php
+// ${fileName} - PHP Script
+
+echo "Hello from ${fileName}!\\n";
+echo "PHP is running successfully.\\n";
+
+// Add your PHP code here
+\$result = 5 + 3;
+echo "5 + 3 = " . \$result . "\\n";
+
+// Database connection example (commented out)
+// \$conn = new mysqli('localhost', 'username', 'password', 'database');
+?>`,
+                    'json': `{
+    "name": "${fileName.replace('.json', '')}",
+    "version": "1.0.0",
+    "description": "JSON configuration file",
+    "settings": {
+        "theme": "light",
+        "language": "en"
+    },
+    "data": []
+}`,
+                    'txt': `This is a plain text file: ${fileName}
+
+You can write anything here.
+
+Created: ${new Date().toLocaleString()}`,
+                    'md': `# ${fileName.replace('.md', '')}
+
+This is a Markdown file.
+
+## Features
+- Easy to read and write
+- Supports formatting
+- Great for documentation
+
+## Usage
+\`\`\`javascript
+console.log('Hello Markdown!');
+\`\`\`
+
+Created: ${new Date().toLocaleString()}`
+                };
+                
+                return defaults[type] || `// ${fileName}\n// File created: ${new Date().toLocaleString()}`;
+            }
+            
+            renameFile(oldPath, newName) {
+                if (!this.files.has(oldPath)) {
+                    throw new Error('File not found');
+                }
+                
+                const file = this.files.get(oldPath);
+                const folderPath = oldPath.substring(0, oldPath.lastIndexOf('/') + 1);
+                const newPath = folderPath + newName;
+                
+                if (this.files.has(newPath) && newPath !== oldPath) {
+                    throw new Error(`File "${newName}" already exists`);
+                }
+                
+                // Update file
+                file.name = newName;
+                file.path = newPath;
+                file.modified = Date.now();
+                
+                // Remove old entry and add new one
+                this.files.delete(oldPath);
+                this.files.set(newPath, file);
+                
+                // Update current file if it was renamed
+                if (this.currentFile && this.currentFile.path === oldPath) {
+                    this.currentFile = file;
+                }
+                
+                this.saveToStorage();
+                this.renderFileExplorer();
+                
+                return file;
+            }
+            
+            deleteFile(path) {
+                if (!this.files.has(path)) {
+                    throw new Error('File not found');
+                }
+                
+                this.files.delete(path);
+                
+                // Clear current file if it was deleted
+                if (this.currentFile && this.currentFile.path === path) {
+                    this.currentFile = null;
+                }
+                
+                this.saveToStorage();
+                this.renderFileExplorer();
+                
+                return true;
+            }
+            
+            deleteFolder(path) {
+                if (!this.folders.has(path)) {
+                    throw new Error('Folder not found');
+                }
+                
+                // Delete all files in this folder
+                const filesToDelete = [];
+                for (const [filePath, file] of this.files.entries()) {
+                    if (filePath.startsWith(path + '/')) {
+                        filesToDelete.push(filePath);
+                    }
+                }
+                
+                filesToDelete.forEach(filePath => {
+                    this.files.delete(filePath);
+                });
+                
+                // Delete the folder
+                this.folders.delete(path);
+                
+                this.saveToStorage();
+                this.renderFileExplorer();
+                
+                return true;
+            }
+            
+            duplicateFile(path) {
+                if (!this.files.has(path)) {
+                    throw new Error('File not found');
+                }
+                
+                const original = this.files.get(path);
+                const folderPath = path.substring(0, path.lastIndexOf('/') + 1);
+                const nameWithoutExt = original.name.substring(0, original.name.lastIndexOf('.'));
+                const extension = original.name.substring(original.name.lastIndexOf('.'));
+                
+                let counter = 1;
+                let newName, newPath;
+                
+                do {
+                    newName = `${nameWithoutExt} - Copy${counter > 1 ? ' ' + counter : ''}${extension}`;
+                    newPath = folderPath + newName;
+                    counter++;
+                } while (this.files.has(newPath));
+                
+                const newFile = {
+                    ...original,
+                    name: newName,
+                    path: newPath,
+                    created: Date.now(),
+                    modified: Date.now()
+                };
+                
+                this.files.set(newPath, newFile);
+                this.saveToStorage();
+                this.renderFileExplorer();
+                
+                return newFile;
+            }
+            
+            getFileByPath(path) {
+                return this.files.get(path);
+            }
+            
+            updateFileContent(path, content) {
+                if (!this.files.has(path)) {
+                    throw new Error('File not found');
+                }
+                
+                const file = this.files.get(path);
+                file.content = content;
+                file.size = new Blob([content]).size;
+                file.modified = Date.now();
+                
+                this.saveToStorage();
+                
+                return file;
+            }
+            
+            downloadFile(path) {
+                const file = this.getFileByPath(path);
+                if (!file) {
+                    throw new Error('File not found');
+                }
+                
+                const blob = new Blob([file.content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = file.name;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                return true;
+            }
+            
+            exportAllFiles() {
+                const project = {
+                    name: 'SupremeAmer Project',
+                    version: '1.0.0',
+                    created: new Date().toISOString(),
+                    files: Object.fromEntries(this.files),
+                    folders: Object.fromEntries(this.folders)
+                };
+                
+                const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `supremeamer-project-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                return true;
+            }
+            
+            importFiles(jsonData) {
+                try {
+                    const project = JSON.parse(jsonData);
+                    
+                    // Clear existing files
+                    this.files.clear();
+                    this.folders.clear();
+                    
+                    // Import files
+                    Object.entries(project.files || {}).forEach(([path, file]) => {
+                        this.files.set(path, file);
+                    });
+                    
+                    // Import folders
+                    Object.entries(project.folders || {}).forEach(([path, folder]) => {
+                        this.folders.set(path, folder);
+                    });
+                    
+                    this.saveToStorage();
+                    this.renderFileExplorer();
+                    
+                    return true;
+                } catch (error) {
+                    throw new Error('Invalid project file format');
+                }
+            }
+            
+            renderFileExplorer() {
+                const explorer = document.getElementById('file-explorer');
+                if (!explorer) return;
+                
+                explorer.innerHTML = '';
+                
+                // Get root files and folders
+                const rootFiles = [];
+                const rootFolders = [];
+                
+                // Group files by folder
+                const filesByFolder = new Map();
+                
+                for (const [path, file] of this.files.entries()) {
+                    if (!path.includes('/')) {
+                        rootFiles.push(file);
+                    } else {
+                        const folder = path.substring(0, path.lastIndexOf('/'));
+                        if (!filesByFolder.has(folder)) {
+                            filesByFolder.set(folder, []);
+                        }
+                        filesByFolder.get(folder).push(file);
+                    }
+                }
+                
+                // Create folder structure
+                for (const [path, folder] of this.folders.entries()) {
+                    const folderElement = this.createFolderElement(path, folder, filesByFolder);
+                    explorer.appendChild(folderElement);
+                }
+                
+                // Add root files
+                rootFiles.forEach(file => {
+                    const fileElement = this.createFileElement(file);
+                    explorer.appendChild(fileElement);
+                });
+                
+                // Update delete button visibility
+                this.updateDeleteButton();
+            }
+            
+            createFolderElement(path, folder, filesByFolder) {
+                const folderDiv = document.createElement('div');
+                folderDiv.className = 'folder-item';
+                folderDiv.innerHTML = `
+                    <i class="fas fa-folder"></i>
+                    <span>${folder.name}</span>
+                    <span class="file-size">${filesByFolder.get(path)?.length || 0} files</span>
+                `;
+                
+                const contentsDiv = document.createElement('div');
+                contentsDiv.className = 'folder-contents';
+                contentsDiv.style.display = 'none';
+                
+                // Add files in this folder
+                const folderFiles = filesByFolder.get(path) || [];
+                folderFiles.forEach(file => {
+                    contentsDiv.appendChild(this.createFileElement(file));
+                });
+                
+                // Add subfolders
+                for (const [subPath, subFolder] of this.folders.entries()) {
+                    if (subPath.startsWith(path + '/') && subPath.split('/').length === path.split('/').length + 1) {
+                        contentsDiv.appendChild(this.createFolderElement(subPath, subFolder, filesByFolder));
+                    }
+                }
+                
+                folderDiv.addEventListener('click', (e) => {
+                    if (e.target === folderDiv || e.target.closest('.folder-item') === folderDiv) {
+                        e.stopPropagation();
+                        const isExpanded = contentsDiv.style.display !== 'none';
+                        contentsDiv.style.display = isExpanded ? 'none' : 'block';
+                        folderDiv.querySelector('i').className = isExpanded ? 'fas fa-folder' : 'fas fa-folder-open';
+                    }
+                });
+                
+                folderDiv.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    this.showContextMenu(e, folder);
+                });
+                
+                const wrapper = document.createElement('div');
+                wrapper.appendChild(folderDiv);
+                wrapper.appendChild(contentsDiv);
+                
+                return wrapper;
+            }
+            
+            createFileElement(file) {
+                const fileDiv = document.createElement('div');
+                fileDiv.className = 'file-item';
+                fileDiv.dataset.path = file.path;
+                
+                const icon = this.getFileIcon(file.type);
+                const size = this.formatFileSize(file.size);
+                const modified = this.formatDate(file.modified);
+                
+                fileDiv.innerHTML = `
+                    <i class="${icon.class}" style="color: ${icon.color};"></i>
+                    <span class="file-name">${file.name}</span>
+                    <span class="file-size">${size}</span>
+                    <span class="file-modified">${modified}</span>
+                `;
+                
+                fileDiv.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'INPUT') return;
+                    this.selectFile(file);
+                });
+                
+                fileDiv.addEventListener('dblclick', () => {
+                    this.openFile(file);
+                });
+                
+                fileDiv.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    this.showContextMenu(e, file);
+                });
+                
+                return fileDiv;
+            }
+            
+            getFileIcon(type) {
+                const icons = {
+                    'html': { class: 'fab fa-html5', color: 'var(--html)' },
+                    'css': { class: 'fab fa-css3-alt', color: 'var(--css)' },
+                    'js': { class: 'fab fa-js-square', color: 'var(--js)' },
+                    'javascript': { class: 'fab fa-js-square', color: 'var(--js)' },
+                    'python': { class: 'fab fa-python', color: 'var(--python)' },
+                    'php': { class: 'fab fa-php', color: 'var(--php)' },
+                    'json': { class: 'fas fa-code', color: 'var(--info)' },
+                    'txt': { class: 'fas fa-file-alt', color: '#666' },
+                    'md': { class: 'fab fa-markdown', color: '#333' },
+                    'xml': { class: 'fas fa-code', color: '#e34c26' },
+                    'sql': { class: 'fas fa-database', color: '#00758f' },
+                    'java': { class: 'fab fa-java', color: '#007396' },
+                    'c': { class: 'fas fa-file-code', color: '#555' },
+                    'cpp': { class: 'fas fa-file-code', color: '#00599c' },
+                    'cs': { class: 'fab fa-microsoft', color: '#239120' },
+                    'go': { class: 'fab fa-golang', color: '#00add8' },
+                    'rust': { class: 'fas fa-cog', color: '#000' },
+                    'ruby': { class: 'fas fa-gem', color: '#cc342d' },
+                    'swift': { class: 'fab fa-swift', color: '#fa7343' },
+                    'default': { class: 'fas fa-file', color: '#666' }
+                };
+                
+                return icons[type] || icons.default;
+            }
+            
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 B';
+                const k = 1024;
+                const sizes = ['B', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+            }
+            
+            formatDate(timestamp) {
+                const date = new Date(timestamp);
+                const now = new Date();
+                const diff = now - date;
+                
+                if (diff < 86400000) { // Less than 1 day
+                    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                } else if (diff < 604800000) { // Less than 1 week
+                    return date.toLocaleDateString([], { weekday: 'short' });
+                } else {
+                    return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+                }
+            }
+            
+            selectFile(file) {
+                // Remove active class from all files
+                document.querySelectorAll('.file-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // Add active class to selected file
+                const fileElement = document.querySelector(`.file-item[data-path="${file.path}"]`);
+                if (fileElement) {
+                    fileElement.classList.add('active');
+                    this.selectedFile = file;
+                    this.updateDeleteButton();
+                }
+            }
+            
+            openFile(file) {
+                this.currentFile = file;
+                
+                // Switch to appropriate editor tab
+                const editorType = this.getEditorType(file.type);
+                const tab = document.querySelector(`.editor-tab[data-tab="${editorType}"]`);
+                if (tab) {
+                    tab.click();
+                }
+                
+                // Set editor content
+                if (window.editors && window.editors[editorType]) {
+                    window.editors[editorType].setValue(file.content);
+                }
+                
+                console.log(`Opened file: ${file.name}`);
+            }
+            
+            getEditorType(fileType) {
+                const mapping = {
+                    'html': 'html',
+                    'css': 'css',
+                    'js': 'js',
+                    'javascript': 'js',
+                    'python': 'python',
+                    'php': 'php',
+                    'json': 'js', // JSON in JS editor
+                    'txt': 'js',  // Text in JS editor
+                    'md': 'js'    // Markdown in JS editor
+                };
+                
+                return mapping[fileType] || 'js';
+            }
+            
+            saveCurrentFile() {
+                if (!this.currentFile) return;
+                
+                const editorType = this.getEditorType(this.currentFile.type);
+                if (window.editors && window.editors[editorType]) {
+                    const content = window.editors[editorType].getValue();
+                    this.updateFileContent(this.currentFile.path, content);
+                    showSuccessMessage(`Saved: ${this.currentFile.name}`);
+                }
+            }
+            
+            showContextMenu(e, item) {
+                this.contextMenuFile = item;
+                const contextMenu = document.getElementById('file-context-menu');
+                contextMenu.style.left = e.pageX + 'px';
+                contextMenu.style.top = e.pageY + 'px';
+                contextMenu.classList.add('show');
+                
+                // Close context menu when clicking elsewhere
+                const closeMenu = () => {
+                    contextMenu.classList.remove('show');
+                    document.removeEventListener('click', closeMenu);
+                };
+                
+                setTimeout(() => {
+                    document.addEventListener('click', closeMenu);
+                }, 100);
+            }
+            
+            updateDeleteButton() {
+                const deleteBtn = document.getElementById('delete-selected-btn');
+                if (deleteBtn) {
+                    deleteBtn.style.display = this.selectedFile ? 'flex' : 'none';
+                }
+            }
+            
+            setupEventListeners() {
+                // New file button
+                document.getElementById('new-file-btn')?.addEventListener('click', () => {
+                    this.showNewFileModal();
+                });
+                
+                // New folder button
+                document.getElementById('new-folder-btn')?.addEventListener('click', () => {
+                    this.showNewFolderModal();
+                });
+                
+                // Delete selected button
+                document.getElementById('delete-selected-btn')?.addEventListener('click', () => {
+                    if (this.selectedFile) {
+                        this.deleteSelectedFile();
+                    }
+                });
+                
+                // Context menu actions
+                document.getElementById('context-rename')?.addEventListener('click', () => {
+                    if (this.contextMenuFile) {
+                        this.renameFilePrompt(this.contextMenuFile);
+                    }
+                });
+                
+                document.getElementById('context-duplicate')?.addEventListener('click', () => {
+                    if (this.contextMenuFile && this.contextMenuFile.path) {
+                        try {
+                            this.duplicateFile(this.contextMenuFile.path);
+                            showSuccessMessage(`Duplicated: ${this.contextMenuFile.name}`);
+                        } catch (error) {
+                            showErrorMessage(error.message);
+                        }
+                    }
+                });
+                
+                document.getElementById('context-delete')?.addEventListener('click', () => {
+                    if (this.contextMenuFile) {
+                        this.deleteFilePrompt(this.contextMenuFile);
+                    }
+                });
+                
+                document.getElementById('context-download')?.addEventListener('click', () => {
+                    if (this.contextMenuFile && this.contextMenuFile.path) {
+                        try {
+                            this.downloadFile(this.contextMenuFile.path);
+                            showSuccessMessage(`Downloaded: ${this.contextMenuFile.name}`);
+                        } catch (error) {
+                            showErrorMessage(error.message);
+                        }
+                    }
+                });
+                
+                // Save current file on Ctrl+S
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                        e.preventDefault();
+                        this.saveCurrentFile();
+                    }
+                });
+            }
+            
+            showNewFileModal() {
+                const modal = document.getElementById('new-file-modal');
+                modal.classList.add('show');
+                
+                // Reset form
+                document.getElementById('new-file-name').value = 'newfile';
+                document.getElementById('new-file-folder').value = '';
+                
+                // Reset language selection
+                document.querySelectorAll('.language-option').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                document.querySelector('.language-option[data-type="html"]').classList.add('selected');
+                
+                // Focus on file name
+                setTimeout(() => {
+                    document.getElementById('new-file-name').focus();
+                    document.getElementById('new-file-name').select();
+                }, 100);
+            }
+            
+            showNewFolderModal() {
+                const folderName = prompt('Enter folder name:', 'New Folder');
+                if (folderName && folderName.trim()) {
+                    try {
+                        this.createFolder(folderName.trim());
+                        showSuccessMessage(`Created folder: ${folderName}`);
+                    } catch (error) {
+                        showErrorMessage(error.message);
+                    }
+                }
+            }
+            
+            deleteSelectedFile() {
+                if (this.selectedFile && confirm(`Are you sure you want to delete "${this.selectedFile.name}"?`)) {
+                    try {
+                        this.deleteFile(this.selectedFile.path);
+                        showSuccessMessage(`Deleted: ${this.selectedFile.name}`);
+                        this.selectedFile = null;
+                    } catch (error) {
+                        showErrorMessage(error.message);
+                    }
+                }
+            }
+            
+            renameFilePrompt(file) {
+                const newName = prompt('Enter new name:', file.name);
+                if (newName && newName.trim() && newName !== file.name) {
+                    try {
+                        this.renameFile(file.path, newName.trim());
+                        showSuccessMessage(`Renamed to: ${newName}`);
+                    } catch (error) {
+                        showErrorMessage(error.message);
+                    }
+                }
+            }
+            
+            deleteFilePrompt(file) {
+                if (confirm(`Are you sure you want to delete "${file.name}"?`)) {
+                    try {
+                        this.deleteFile(file.path);
+                        showSuccessMessage(`Deleted: ${file.name}`);
+                    } catch (error) {
+                        showErrorMessage(error.message);
+                    }
+                }
+            }
+        }
+
+        // Initialize file manager
+        let fileManager;
+
+        // === PWA SERVICE WORKER ===
+        const serviceWorkerScript = `
+        // SupremeAmer IDE Service Worker
+        const CACHE_NAME = 'supremeamer-ide-v1.0.0';
+        
+        self.addEventListener('install', (event) => {
+            event.waitUntil(
+                caches.open(CACHE_NAME)
+                    .then((cache) => cache.addAll([
+                        '/',
+                        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+                        'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/loader.js'
+                    ]))
+                    .then(() => self.skipWaiting())
+            );
+        });
+        
+        self.addEventListener('activate', (event) => {
+            event.waitUntil(
+                caches.keys().then(cacheNames => {
+                    return Promise.all(
+                        cacheNames.map(cacheName => {
+                            if (cacheName !== CACHE_NAME) {
+                                return caches.delete(cacheName);
+                            }
+                        })
+                    );
+                }).then(() => self.clients.claim())
+            );
+        });
+        
+        self.addEventListener('fetch', (event) => {
+            event.respondWith(
+                caches.match(event.request)
+                    .then(response => response || fetch(event.request))
+                    .catch(() => {
+                        // Return offline page for navigation requests
+                        if (event.request.mode === 'navigate') {
+                            return caches.match('/');
+                        }
+                        return new Response('Offline', { status: 503 });
+                    })
+            );
+        });
+        `;
+
+        // === MAIN INITIALIZATION ===
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize file manager
+            fileManager = new FileManager();
+            
+            // Initialize PWA
+            initPWA();
+            
+            // Initialize Monaco Editor
+            require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs' }});
+            
+            let editors = {};
+            let currentTheme = 'vs';
+            
+            require(['vs/editor/editor.main'], function() {
+                // Initialize editors
+                const defaultHTML = fileManager.getFileByPath('index.html')?.content || '';
+                const defaultCSS = fileManager.getFileByPath('style.css')?.content || '';
+                const defaultJS = fileManager.getFileByPath('script.js')?.content || '';
+                
+                editors.html = monaco.editor.create(document.getElementById('html-editor'), {
+                    value: defaultHTML,
+                    language: 'html',
+                    theme: currentTheme,
+                    automaticLayout: true,
+                    minimap: { enabled: false }
+                });
+                
+                editors.css = monaco.editor.create(document.getElementById('css-editor'), {
+                    value: defaultCSS,
+                    language: 'css',
+                    theme: currentTheme,
+                    automaticLayout: true,
+                    minimap: { enabled: false }
+                });
+                
+                editors.js = monaco.editor.create(document.getElementById('js-editor'), {
+                    value: defaultJS,
                     language: 'javascript',
                     theme: currentTheme,
                     automaticLayout: true,
@@ -1500,12 +3042,7 @@ def calculate(a, b):
 # Main execution
 if __name__ == "__main__":
     print(welcome_message())
-    print("5 + 3 =", calculate(5, 3))
-    
-    # Demonstrate list comprehension
-    numbers = [1, 2, 3, 4, 5]
-    squares = [x**2 for x in numbers]
-    print("Squares:", squares)`,
+    print("5 + 3 =", calculate(5, 3))`,
                     language: 'python',
                     theme: currentTheme,
                     automaticLayout: true,
@@ -1526,29 +3063,21 @@ function calculate($a, $b) {
 
 // Main execution
 echo welcomeMessage() . "\\n";
-echo "5 + 3 = " . calculate(5, 3) . "\\n";
-
-// Demonstrate array manipulation
-$numbers = [1, 2, 3, 4, 5];
-$squares = array_map(function($x) { return $x * $x; }, $numbers);
-echo "Squares: " . implode(", ", $squares) . "\\n";
-?>`,
+echo "5 + 3 = " . calculate(5, 3) . "\\n";`,
                     language: 'php',
                     theme: currentTheme,
                     automaticLayout: true,
                     minimap: { enabled: false }
                 });
                 
-                // Set theme change handler
+                // Theme selector
                 document.getElementById('theme').addEventListener('change', function() {
                     currentTheme = this.value;
                     monaco.editor.setTheme(currentTheme);
                 });
             });
             
-            // DOM elements
-            const previewFrame = document.getElementById('preview-frame');
-            const consoleOutput = document.getElementById('console-output');
+            // === DOM ELEMENTS ===
             const runBtn = document.getElementById('run-btn');
             const saveBtn = document.getElementById('save-btn');
             const exportBtn = document.getElementById('export-btn');
@@ -1562,615 +3091,87 @@ echo "Squares: " . implode(", ", $squares) . "\\n";
             const sidebar = document.getElementById('sidebar');
             const sidebarToggle = document.getElementById('sidebar-toggle');
             const closeSidebar = document.getElementById('close-sidebar');
-            const uploadBtn = document.getElementById('upload-btn');
-            const uploadModal = document.getElementById('upload-modal');
-            const closeModal = document.querySelectorAll('.close-modal');
-            const dropZones = document.querySelectorAll('.drop-zone');
-            const fileUpload = document.getElementById('file-upload');
             const themeToggle = document.getElementById('theme-toggle');
             const deviceToggle = document.getElementById('device-toggle');
             const fullscreenToggle = document.getElementById('fullscreen-toggle');
-            const collapsibles = document.querySelectorAll('.collapsible');
+            const previewFrame = document.getElementById('preview-frame');
+            const consoleOutput = document.getElementById('console-output');
             
-            // Git elements
-            const gitBtn = document.getElementById('git-btn');
-            const gitInitBtn = document.getElementById('git-init');
-            const gitStatusBtn = document.getElementById('git-status-btn');
-            const gitAddBtn = document.getElementById('git-add-btn');
-            const gitCommitBtn = document.getElementById('git-commit-btn');
-            const gitPushBtn = document.getElementById('git-push-btn');
-            const gitPullBtn = document.getElementById('git-pull-btn');
-            const gitRepoBtn = document.getElementById('git-repo-btn');
-            const gitCommitMessage = document.getElementById('git-commit-message');
-            const gitStatus = document.getElementById('git-status');
-            const currentBranch = document.getElementById('current-branch');
+            // === EVENT LISTENERS ===
             
-            // File elements
-            const uploadedFilesContainer = document.getElementById('uploaded-files');
-            const fileItems = document.querySelectorAll('.file-item');
-            
-            // Git repo modal elements
-            const gitRepoModal = document.getElementById('git-repo-modal');
-            const connectRepoBtn = document.getElementById('connect-repo');
-            const cancelRepoBtn = document.getElementById('cancel-repo');
-
-            // Store original console methods
-            const originalConsole = {
-                log: console.log,
-                error: console.error,
-                warn: console.warn,
-                info: console.info
-            };
-
-            // Override console methods to capture output
-            console.log = function(...args) {
-                originalConsole.log.apply(console, args);
-                logToConsole(args, 'log');
-            };
-
-            console.error = function(...args) {
-                originalConsole.error.apply(console, args);
-                logToConsole(args, 'error');
-            };
-
-            console.warn = function(...args) {
-                originalConsole.warn.apply(console, args);
-                logToConsole(args, 'warn');
-            };
-
-            console.info = function(...args) {
-                originalConsole.info.apply(console, args);
-                logToConsole(args, 'info');
-            };
-
-            function logToConsole(args, type) {
-                const timestamp = new Date().toLocaleTimeString();
-                const message = args.map(arg => {
-                    if (typeof arg === 'object') {
-                        return JSON.stringify(arg);
-                    }
-                    return arg;
-                }).join(' ');
-
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('console-message', `console-${type}`);
-                
-                const timestampElement = document.createElement('span');
-                timestampElement.classList.add('console-timestamp');
-                timestampElement.textContent = `[${timestamp}]`;
-                
-                const contentElement = document.createElement('span');
-                contentElement.textContent = message;
-
-                messageElement.appendChild(timestampElement);
-                messageElement.appendChild(contentElement);
-                consoleOutput.appendChild(messageElement);
-                consoleOutput.scrollTop = consoleOutput.scrollHeight;
-            }
-
-            function runCode() {
-                const html = editors.html.getValue();
-                const css = editors.css.getValue();
-                const js = editors.js.getValue();
-
-                // Clear console
-                consoleOutput.innerHTML = '';
-
-                const previewDocument = previewFrame.contentDocument || previewFrame.contentWindow.document;
-
-                // Write the code to the iframe
-                previewDocument.open();
-                previewDocument.write(`
-                    ${html}
-                    <style>${css}</style>
-                    <script>
-                        // Override console methods in the iframe
-                        const originalConsole = {
-                            log: console.log,
-                            error: console.error,
-                            warn: console.warn,
-                            info: console.info
-                        };
-                        
-                        console.log = function(...args) {
-                            originalConsole.log.apply(console, args);
-                            window.parent.logToConsole(args, 'log');
-                        };
-                        
-                        console.error = function(...args) {
-                            originalConsole.error.apply(console, args);
-                            window.parent.logToConsole(args, 'error');
-                        };
-                        
-                        console.warn = function(...args) {
-                            originalConsole.warn.apply(console, args);
-                            window.parent.logToConsole(args, 'warn');
-                        };
-                        
-                        console.info = function(...args) {
-                            originalConsole.info.apply(console, args);
-                            window.parent.logToConsole(args, 'info');
-                        };
-                    <\/script>
-                    <script>${js}<\/script>
-                `);
-                previewDocument.close();
-            }
-
-            // Run code on button click
+            // Run code
             runBtn.addEventListener('click', runCode);
             refreshBtn.addEventListener('click', runCode);
-
-            // Save code to localStorage
-            saveBtn.addEventListener('click', function() {
+            
+            // Save current file
+            saveBtn.addEventListener('click', () => {
+                fileManager.saveCurrentFile();
+            });
+            
+            // Export all files
+            exportBtn.addEventListener('click', () => {
                 try {
-                    localStorage.setItem('supremeamer_html', editors.html.getValue());
-                    localStorage.setItem('supremeamer_css', editors.css.getValue());
-                    localStorage.setItem('supremeamer_js', editors.js.getValue());
-                    
-                    // Save uploaded files
-                    const uploadedFiles = Array.from(uploadedFilesContainer.querySelectorAll('.uploaded-file')).map(file => {
-                        return {
-                            name: file.querySelector('span').textContent,
-                            content: localStorage.getItem(`supremeamer_file_${file.querySelector('span').textContent}`) || ''
-                        };
-                    });
-                    
-                    localStorage.setItem('supremeamer_uploaded_files', JSON.stringify(uploadedFiles));
-                    
-                    console.log('Code saved successfully!');
-                    showSuccessMessage('All files saved successfully!');
+                    fileManager.exportAllFiles();
+                    showSuccessMessage('All files exported successfully!');
                 } catch (error) {
-                    console.error('Error saving files:', error);
-                    showErrorMessage('Failed to save files: ' + error.message);
+                    showErrorMessage('Failed to export files: ' + error.message);
                 }
             });
-
-            // Export code as HTML file
-            exportBtn.addEventListener('click', function() {
-                try {
-                    const html = editors.html.getValue();
-                    const css = editors.css.getValue();
-                    const js = editors.js.getValue();
-
-                    const fullHtml = `<!DOCTYPE html>
-<html>
-<head>
-    <title>SupremeAmer App</title>
-    <style>${css}</style>
-</head>
-<body>
-    ${html.replace('</body></html>', '')}
-    <script>${js}<\/script>
-</body>
-</html>`;
-
-                    const blob = new Blob([fullHtml], { type: 'text/html' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'supremeamer_app.html';
-                    a.click();
-                    URL.revokeObjectURL(url);
-                    console.log('Code exported as HTML file!');
-                    showSuccessMessage('Project exported successfully!');
-                } catch (error) {
-                    console.error('Error exporting project:', error);
-                    showErrorMessage('Failed to export project: ' + error.message);
+            
+            // Reset editor
+            resetBtn.addEventListener('click', () => {
+                if (confirm('Reset all editors to default? This will not delete your files.')) {
+                    editors.html.setValue(fileManager.getFileByPath('index.html')?.content || '');
+                    editors.css.setValue(fileManager.getFileByPath('style.css')?.content || '');
+                    editors.js.setValue(fileManager.getFileByPath('script.js')?.content || '');
+                    showSuccessMessage('Editors reset to default content');
                 }
             });
-
-            // Reset code to default
-            resetBtn.addEventListener('click', function() {
-                if (confirm('Are you sure you want to reset all code? This cannot be undone.')) {
-                    try {
-                        editors.html.setValue(`<!DOCTYPE html>
-<html>
-<head>
-    <title>SupremeAmer App</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            text-align: center;
-            background-color: #f5f5f5;
-        }
-        h1 {
-            color: #2c3e50;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        button {
-            background-color: #4a69bd;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 10px;
-            transition: all 0.3s;
-        }
-        button:hover {
-            background-color: #3c5aa6;
-            transform: scale(1.05);
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Welcome to SupremeAmer</h1>
-        <p>This is a sample application built with our Web IDE</p>
-        <button onclick="showMessage()">Click Me!</button>
-        <div id="output"></div>
-    </div>
-</body>
-</html>`);
-
-                        editors.css.setValue(`/* Additional CSS styles */
-
-.container {
-    transition: all 0.3s ease;
-}
-
-#output {
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 5px;
-    background-color: #f8f9fa;
-    min-height: 50px;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    body {
-        margin: 20px;
-    }
-    
-    .container {
-        padding: 15px;
-    }
-}`);
-
-                        editors.js.setValue(`// JavaScript code
-
-function showMessage() {
-    const output = document.getElementById('output');
-    output.innerHTML = '<p>Hello from SupremeAmer Web IDE! This code was executed successfully.</p>';
-    output.style.backgroundColor = '#e8f5e9';
-    
-    // Also log to console
-    console.log('Button clicked! Message displayed.');
-}
-
-// Additional demo function
-function calculate(a, b) {
-    return a + b;
-}
-
-// Display initial message
-console.log('Welcome to SupremeAmer Web IDE!');
-console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`);
-
-                        // Clear uploaded files
-                        uploadedFilesContainer.innerHTML = '';
-                        localStorage.removeItem('supremeamer_uploaded_files');
-                        
-                        runCode();
-                        console.log('Editor reset to default code!');
-                        showSuccessMessage('Editor reset successfully!');
-                    } catch (error) {
-                        console.error('Error resetting editor:', error);
-                        showErrorMessage('Failed to reset editor: ' + error.message);
-                    }
-                }
-            });
-
+            
             // Clear console
-            clearConsoleBtn.addEventListener('click', function() {
+            clearConsoleBtn.addEventListener('click', () => {
                 consoleOutput.innerHTML = '';
             });
-
-            // Tab switching for desktop
+            
+            // Tab switching
             editorTabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabName = this.getAttribute('data-tab');
-                    
-                    // Activate tab
-                    editorTabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Update mobile tabs
-                    mobileTabs.forEach(t => {
-                        if (t.getAttribute('data-tab') === tabName) {
-                            t.classList.add('active');
-                        } else {
-                            t.classList.remove('active');
-                        }
-                    });
-                    
-                    // Update language select
-                    languageSelect.value = tabName;
-                    
-                    // Show corresponding editor
-                    codeEditors.forEach(editor => {
-                        editor.style.display = 'none';
-                    });
-                    document.querySelector(`.${tabName}-editor`).style.display = 'flex';
+                    switchTab(tabName);
                 });
             });
-
-            // Tab switching for mobile tabs
+            
             mobileTabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabName = this.getAttribute('data-tab');
-                    
-                    // Activate tab
-                    mobileTabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Update desktop tabs
-                    editorTabs.forEach(t => {
-                        if (t.getAttribute('data-tab') === tabName) {
-                            t.classList.add('active');
-                        } else {
-                            t.classList.remove('active');
-                        }
-                    });
-                    
-                    // Update language select
-                    languageSelect.value = tabName;
-                    
-                    // Show corresponding editor
-                    codeEditors.forEach(editor => {
-                        editor.style.display = 'none';
-                    });
-                    document.querySelector(`.${tabName}-editor`).style.display = 'flex';
+                    switchTab(tabName);
                 });
             });
-
-            // Language select change
+            
             languageSelect.addEventListener('change', function() {
-                const tabName = this.value;
+                switchTab(this.value);
+            });
+            
+            function switchTab(tabName) {
+                // Update tabs
+                editorTabs.forEach(t => t.classList.remove('active'));
+                mobileTabs.forEach(t => t.classList.remove('active'));
                 
-                // Activate tab
-                editorTabs.forEach(t => {
-                    if (t.getAttribute('data-tab') === tabName) {
-                        t.classList.add('active');
-                    } else {
-                        t.classList.remove('active');
-                    }
-                });
+                document.querySelector(`.editor-tab[data-tab="${tabName}"]`)?.classList.add('active');
+                document.querySelector(`.mobile-tab[data-tab="${tabName}"]`)?.classList.add('active');
                 
-                // Update mobile tabs
-                mobileTabs.forEach(t => {
-                    if (t.getAttribute('data-tab') === tabName) {
-                        t.classList.add('active');
-                    } else {
-                        t.classList.remove('active');
-                    }
-                });
+                // Update language select
+                languageSelect.value = tabName;
                 
-                // Show corresponding editor
-                codeEditors.forEach(editor => {
-                    editor.style.display = 'none';
-                });
+                // Show editor
+                codeEditors.forEach(editor => editor.style.display = 'none');
                 document.querySelector(`.${tabName}-editor`).style.display = 'flex';
-            });
-
+            }
+            
             // Sidebar toggle
-            sidebarToggle.addEventListener('click', function() {
-                sidebar.classList.add('open');
-            });
-
-            closeSidebar.addEventListener('click', function() {
-                sidebar.classList.remove('open');
-            });
-
-            // Upload functionality
-            uploadBtn.addEventListener('click', function() {
-                uploadModal.style.display = 'flex';
-            });
-
-            // Close modals
-            closeModal.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    uploadModal.style.display = 'none';
-                    gitRepoModal.style.display = 'none';
-                });
-            });
-
-            window.addEventListener('click', function(e) {
-                if (e.target === uploadModal) {
-                    uploadModal.style.display = 'none';
-                }
-                if (e.target === gitRepoModal) {
-                    gitRepoModal.style.display = 'none';
-                }
-            });
-
-            // File upload handling
-            dropZones.forEach(zone => {
-                zone.addEventListener('click', function() {
-                    fileUpload.click();
-                });
-
-                zone.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    this.style.borderColor = '#4a69bd';
-                    this.style.background = '#f8f9fa';
-                });
-
-                zone.addEventListener('dragleave', function() {
-                    this.style.borderColor = '#ccc';
-                    this.style.background = '';
-                });
-
-                zone.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    this.style.borderColor = '#ccc';
-                    this.style.background = '';
-                    handleFiles(e.dataTransfer.files);
-                });
-            });
-
-            fileUpload.addEventListener('change', function() {
-                handleFiles(this.files);
-            });
-
-            function handleFiles(files) {
-                if (files.length > 0) {
-                    console.log(`Processing ${files.length} files...`);
-                    
-                    // Simulate file processing
-                    const progressBar = document.getElementById('upload-progress');
-                    const uploadStatus = document.getElementById('upload-status');
-                    
-                    let progress = 0;
-                    const interval = setInterval(() => {
-                        progress += 5;
-                        progressBar.style.width = `${progress}%`;
-                        
-                        if (progress >= 100) {
-                            clearInterval(interval);
-                            uploadStatus.textContent = 'Upload completed!';
-                            
-                            // Add files to explorer
-                            for (let i = 0; i < files.length; i++) {
-                                const file = files[i];
-                                const reader = new FileReader();
-                                
-                                reader.onload = function(e) {
-                                    try {
-                                        const content = e.target.result;
-                                        addUploadedFile(file.name, content);
-                                        console.log(`Uploaded: ${file.name}`);
-                                    } catch (error) {
-                                        console.error(`Error processing file ${file.name}:`, error);
-                                        showErrorMessage(`Failed to process ${file.name}: ${error.message}`);
-                                    }
-                                };
-                                
-                                reader.onerror = function() {
-                                    console.error(`Failed to read file: ${file.name}`);
-                                    showErrorMessage(`Failed to read file: ${file.name}`);
-                                };
-                                
-                                reader.readAsText(file);
-                            }
-                            
-                            // Show success message
-                            setTimeout(() => {
-                                uploadModal.style.display = 'none';
-                                console.log('Files uploaded successfully!');
-                                showSuccessMessage('Files uploaded successfully!');
-                            }, 1000);
-                        }
-                    }, 100);
-                }
-            }
-
-            function addUploadedFile(name, content) {
-                try {
-                    // Save file content to localStorage
-                    localStorage.setItem(`supremeamer_file_${name}`, content);
-                    
-                    // Create file element
-                    const fileElement = document.createElement('div');
-                    fileElement.classList.add('uploaded-file');
-                    fileElement.innerHTML = `
-                        <div class="uploaded-file-info">
-                            <i class="fas fa-file-code"></i>
-                            <span>${name}</span>
-                        </div>
-                        <div class="file-actions">
-                            <button class="file-action-btn edit-file">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="file-action-btn delete-file">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    `;
-                    
-                    // Add event listeners
-                    fileElement.querySelector('.edit-file').addEventListener('click', function() {
-                        editUploadedFile(name, content);
-                    });
-                    
-                    fileElement.querySelector('.delete-file').addEventListener('click', function() {
-                        deleteUploadedFile(name, fileElement);
-                    });
-                    
-                    uploadedFilesContainer.appendChild(fileElement);
-                    
-                    // Update saved files list
-                    const uploadedFiles = JSON.parse(localStorage.getItem('supremeamer_uploaded_files') || '[]');
-                    uploadedFiles.push({ name, content });
-                    localStorage.setItem('supremeamer_uploaded_files', JSON.stringify(uploadedFiles));
-                } catch (error) {
-                    console.error('Error adding uploaded file:', error);
-                    showErrorMessage('Failed to add uploaded file: ' + error.message);
-                }
-            }
+            sidebarToggle.addEventListener('click', () => sidebar.classList.add('open'));
+            closeSidebar.addEventListener('click', () => sidebar.classList.remove('open'));
             
-            function editUploadedFile(name, content) {
-                try {
-                    // Create a new editor tab for the file
-                    const fileExtension = name.split('.').pop().toLowerCase();
-                    let editorType = 'js';
-                    
-                    if (fileExtension === 'html') editorType = 'html';
-                    else if (fileExtension === 'css') editorType = 'css';
-                    else if (['js', 'javascript'].includes(fileExtension)) editorType = 'js';
-                    else if (fileExtension === 'py') editorType = 'python';
-                    else if (fileExtension === 'php') editorType = 'php';
-                    
-                    // Activate the appropriate tab
-                    editorTabs.forEach(tab => {
-                        if (tab.getAttribute('data-tab') === editorType) {
-                            tab.click();
-                        }
-                    });
-                    
-                    // Set the content in the active editor
-                    editors[editorType].setValue(content);
-                    console.log(`Editing file: ${name}`);
-                    showSuccessMessage(`Now editing: ${name}`);
-                } catch (error) {
-                    console.error('Error editing uploaded file:', error);
-                    showErrorMessage('Failed to edit file: ' + error.message);
-                }
-            }
-            
-            function deleteUploadedFile(name, element) {
-                try {
-                    if (confirm(`Are you sure you want to delete ${name}?`)) {
-                        // Remove from DOM
-                        element.remove();
-                        
-                        // Remove from localStorage
-                        localStorage.removeItem(`supremeamer_file_${name}`);
-                        
-                        // Update saved files list
-                        const uploadedFiles = JSON.parse(localStorage.getItem('supremeamer_uploaded_files') || '[]');
-                        const updatedFiles = uploadedFiles.filter(file => file.name !== name);
-                        localStorage.setItem('supremeamer_uploaded_files', JSON.stringify(updatedFiles));
-                        
-                        console.log(`Deleted file: ${name}`);
-                        showSuccessMessage(`File deleted: ${name}`);
-                    }
-                } catch (error) {
-                    console.error('Error deleting uploaded file:', error);
-                    showErrorMessage('Failed to delete file: ' + error.message);
-                }
-            }
-
             // Theme toggle
             themeToggle.addEventListener('click', function() {
                 document.body.classList.toggle('dark-mode');
@@ -2182,7 +3183,7 @@ console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`);
                     monaco.editor.setTheme('vs');
                 }
             });
-
+            
             // Device preview toggle
             deviceToggle.addEventListener('click', function() {
                 const previewFrame = document.getElementById('preview-frame');
@@ -2193,11 +3194,10 @@ console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`);
                 } else {
                     previewFrame.style.width = '375px';
                     previewFrame.style.maxWidth = '375px';
-                    previewFrame.style.margin = '0 auto';
                     deviceToggle.innerHTML = '<i class="fas fa-desktop"></i> Desktop View';
                 }
             });
-
+            
             // Full screen preview toggle
             let isFullScreen = false;
             fullscreenToggle.addEventListener('click', function() {
@@ -2212,291 +3212,315 @@ console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`);
                     isFullScreen = false;
                 }
             });
-
-            // Collapsible sections
-            collapsibles.forEach(item => {
-                item.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                    const content = this.nextElementSibling;
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                        this.querySelector('i').classList.replace('fa-chevron-up', 'fa-chevron-down');
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + 'px';
-                        this.querySelector('i').classList.replace('fa-chevron-down', 'fa-chevron-up');
-                    }
+            
+            // New file modal
+            document.getElementById('create-new-file')?.addEventListener('click', createNewFile);
+            document.getElementById('cancel-new-file')?.addEventListener('click', () => {
+                document.getElementById('new-file-modal').classList.remove('show');
+            });
+            
+            // Language selection in new file modal
+            document.querySelectorAll('.language-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.language-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
                 });
             });
-
-            // File item click handling
-            fileItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const fileName = this.getAttribute('data-file');
-                    if (fileName) {
-                        fileItems.forEach(i => i.classList.remove('active'));
-                        this.classList.add('active');
-                        
-                        // Load file content if available
-                        const fileContent = localStorage.getItem(`supremeamer_file_${fileName}`);
-                        if (fileContent) {
-                            const fileExtension = fileName.split('.').pop().toLowerCase();
-                            let editorType = 'js';
+            
+            // Run code on Enter in new file modal
+            document.getElementById('new-file-name')?.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    createNewFile();
+                }
+            });
+            
+            // === FUNCTIONS ===
+            
+            function runCode() {
+                try {
+                    const html = editors.html.getValue();
+                    const css = editors.css.getValue();
+                    const js = editors.js.getValue();
+                    
+                    consoleOutput.innerHTML = '';
+                    
+                    const previewDocument = previewFrame.contentDocument || previewFrame.contentWindow.document;
+                    
+                    previewDocument.open();
+                    previewDocument.write(`
+                        ${html}
+                        <style>${css}</style>
+                        <script>
+                            // Override console methods in the iframe
+                            const originalConsole = {
+                                log: console.log,
+                                error: console.error,
+                                warn: console.warn,
+                                info: console.info
+                            };
                             
-                            if (fileExtension === 'html') editorType = 'html';
-                            else if (fileExtension === 'css') editorType = 'css';
-                            else if (['js', 'javascript'].includes(fileExtension)) editorType = 'js';
-                            else if (fileExtension === 'py') editorType = 'python';
-                            else if (fileExtension === 'php') editorType = 'php';
+                            console.log = function(...args) {
+                                originalConsole.log.apply(console, args);
+                                window.parent.logToConsole(args, 'log');
+                            };
                             
-                            // Activate the appropriate tab
-                            editorTabs.forEach(tab => {
-                                if (tab.getAttribute('data-tab') === editorType) {
-                                    tab.click();
-                                }
-                            });
+                            console.error = function(...args) {
+                                originalConsole.error.apply(console, args);
+                                window.parent.logToConsole(args, 'error');
+                            };
                             
-                            // Set the content in the active editor
-                            editors[editorType].setValue(fileContent);
+                            console.warn = function(...args) {
+                                originalConsole.warn.apply(console, args);
+                                window.parent.logToConsole(args, 'warn');
+                            };
+                            
+                            console.info = function(...args) {
+                                originalConsole.info.apply(console, args);
+                                window.parent.logToConsole(args, 'info');
+                            };
+                        <\/script>
+                        <script>${js}<\/script>
+                    `);
+                    previewDocument.close();
+                    
+                    console.log('Code executed successfully!');
+                } catch (error) {
+                    console.error('Error running code:', error);
+                    showErrorMessage('Failed to run code: ' + error.message);
+                }
+            }
+            
+            function createNewFile() {
+                const nameInput = document.getElementById('new-file-name');
+                const folderInput = document.getElementById('new-file-folder');
+                const selectedType = document.querySelector('.language-option.selected').dataset.type;
+                
+                if (!nameInput.value.trim()) {
+                    showErrorMessage('Please enter a file name');
+                    return;
+                }
+                
+                try {
+                    const file = fileManager.createFile(
+                        nameInput.value.trim(),
+                        selectedType,
+                        folderInput.value.trim()
+                    );
+                    
+                    document.getElementById('new-file-modal').classList.remove('show');
+                    showSuccessMessage(`Created file: ${file.name}`);
+                    
+                    // Open the new file
+                    fileManager.openFile(file);
+                } catch (error) {
+                    showErrorMessage(error.message);
+                }
+            }
+            
+            // Override console methods to capture output
+            const originalConsole = {
+                log: console.log,
+                error: console.error,
+                warn: console.warn,
+                info: console.info
+            };
+            
+            console.log = function(...args) {
+                originalConsole.log.apply(console, args);
+                logToConsole(args, 'log');
+            };
+            
+            console.error = function(...args) {
+                originalConsole.error.apply(console, args);
+                logToConsole(args, 'error');
+            };
+            
+            console.warn = function(...args) {
+                originalConsole.warn.apply(console, args);
+                logToConsole(args, 'warn');
+            };
+            
+            console.info = function(...args) {
+                originalConsole.info.apply(console, args);
+                logToConsole(args, 'info');
+            };
+            
+            function logToConsole(args, type) {
+                const timestamp = new Date().toLocaleTimeString();
+                const message = args.map(arg => {
+                    if (typeof arg === 'object') {
+                        try {
+                            return JSON.stringify(arg);
+                        } catch {
+                            return String(arg);
                         }
                     }
-                });
-            });
-
-            // Git Integration Functions
-            gitInitBtn.addEventListener('click', function() {
-                try {
-                    console.log('Initializing Git repository...');
-                    // Simulate Git init
-                    setTimeout(() => {
-                        currentBranch.textContent = 'main';
-                        gitStatus.innerHTML = '<div class="git-status-item"><span class="git-icon-untracked"></span><span>Initialized empty Git repository</span></div>';
-                        console.log('Git repository initialized successfully.');
-                        showSuccessMessage('Git repository initialized successfully.');
-                    }, 500);
-                } catch (error) {
-                    console.error('Error initializing Git repository:', error);
-                    showErrorMessage('Failed to initialize Git repository: ' + error.message);
-                }
-            });
-
-            gitStatusBtn.addEventListener('click', function() {
-                try {
-                    console.log('Checking Git status...');
-                    // Simulate Git status
-                    const statusItems = [
-                        { status: 'modified', file: 'index.html' },
-                        { status: 'untracked', file: 'style.css' },
-                        { status: 'added', file: 'script.js' }
-                    ];
-                    
-                    gitStatus.innerHTML = '';
-                    statusItems.forEach(item => {
-                        const statusItem = document.createElement('div');
-                        statusItem.classList.add('git-status-item');
-                        statusItem.innerHTML = `<span class="git-icon-${item.status}"></span><span>${item.file} (${item.status})</span>`;
-                        gitStatus.appendChild(statusItem);
-                    });
-                    
-                    console.log('Git status retrieved successfully.');
-                    showSuccessMessage('Git status retrieved successfully.');
-                } catch (error) {
-                    console.error('Error checking Git status:', error);
-                    showErrorMessage('Failed to check Git status: ' + error.message);
-                }
-            });
-
-            gitAddBtn.addEventListener('click', function() {
-                try {
-                    console.log('Adding all files to Git...');
-                    // Simulate Git add
-                    setTimeout(() => {
-                        gitStatus.innerHTML = '<div class="git-status-item"><span class="git-icon-added"></span><span>All changes staged for commit</span></div>';
-                        console.log('All files added to Git successfully.');
-                        showSuccessMessage('All files added to Git successfully.');
-                    }, 500);
-                } catch (error) {
-                    console.error('Error adding files to Git:', error);
-                    showErrorMessage('Failed to add files to Git: ' + error.message);
-                }
-            });
-
-            gitCommitBtn.addEventListener('click', function() {
-                try {
-                    const message = gitCommitMessage.value.trim();
-                    if (!message) {
-                        throw new Error('Please enter a commit message.');
-                    }
-                    
-                    console.log(`Committing changes with message: "${message}"`);
-                    // Simulate Git commit
-                    setTimeout(() => {
-                        gitStatus.innerHTML = '<div class="git-status-item"><span class="git-icon-untracked"></span><span>No changes to commit</span></div>';
-                        gitCommitMessage.value = '';
-                        console.log('Changes committed successfully.');
-                        showSuccessMessage('Changes committed successfully.');
-                    }, 500);
-                } catch (error) {
-                    console.error('Error committing changes:', error);
-                    showErrorMessage('Failed to commit changes: ' + error.message);
-                }
-            });
-
-            gitPushBtn.addEventListener('click', function() {
-                try {
-                    console.log('Pushing to remote repository...');
-                    // Simulate Git push
-                    setTimeout(() => {
-                        console.log('Changes pushed to remote repository successfully.');
-                        showSuccessMessage('Changes pushed to remote repository successfully.');
-                    }, 1000);
-                } catch (error) {
-                    console.error('Error pushing to remote repository:', error);
-                    showErrorMessage('Failed to push to remote repository: ' + error.message);
-                }
-            });
-
-            gitPullBtn.addEventListener('click', function() {
-                try {
-                    console.log('Pulling from remote repository...');
-                    // Simulate Git pull
-                    setTimeout(() => {
-                        console.log('Changes pulled from remote repository successfully.');
-                        showSuccessMessage('Changes pulled from remote repository successfully.');
-                    }, 1000);
-                } catch (error) {
-                    console.error('Error pulling from remote repository:', error);
-                    showErrorMessage('Failed to pull from remote repository: ' + error.message);
-                }
-            });
-
-            // Git repo connection
-            gitRepoBtn.addEventListener('click', function() {
-                gitRepoModal.style.display = 'flex';
-            });
-
-            cancelRepoBtn.addEventListener('click', function() {
-                gitRepoModal.style.display = 'none';
-            });
-
-            connectRepoBtn.addEventListener('click', function() {
-                try {
-                    const repoUrl = document.getElementById('repo-url').value;
-                    const username = document.getElementById('repo-username').value;
-                    const token = document.getElementById('repo-token').value;
-                    const branch = document.getElementById('repo-branch').value || 'main';
-                    
-                    if (!repoUrl || !username || !token) {
-                        throw new Error('Please fill in all required fields.');
-                    }
-                    
-                    console.log(`Connecting to repository: ${repoUrl}`);
-                    // Simulate repository connection
-                    setTimeout(() => {
-                        currentBranch.textContent = branch;
-                        gitRepoModal.style.display = 'none';
-                        console.log('Successfully connected to repository.');
-                        showSuccessMessage('Successfully connected to repository.');
-                    }, 1000);
-                } catch (error) {
-                    console.error('Error connecting to repository:', error);
-                    showErrorMessage('Failed to connect to repository: ' + error.message);
-                }
-            });
-
-            // Utility functions for messages
-            function showErrorMessage(message) {
-                // Remove any existing error messages
-                const existingErrors = document.querySelectorAll('.error-message');
-                existingErrors.forEach(error => error.remove());
+                    return arg;
+                }).join(' ');
                 
-                const errorElement = document.createElement('div');
-                errorElement.classList.add('error-message');
-                errorElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('console-message', `console-${type}`);
                 
-                // Insert after the header
-                const header = document.querySelector('header');
-                header.parentNode.insertBefore(errorElement, header.nextSibling);
+                const timestampElement = document.createElement('span');
+                timestampElement.classList.add('console-timestamp');
+                timestampElement.textContent = `[${timestamp}]`;
                 
-                // Auto-remove after 5 seconds
-                setTimeout(() => {
-                    if (errorElement.parentNode) {
-                        errorElement.parentNode.removeChild(errorElement);
-                    }
-                }, 5000);
+                const contentElement = document.createElement('span');
+                contentElement.textContent = message;
+                
+                messageElement.appendChild(timestampElement);
+                messageElement.appendChild(contentElement);
+                consoleOutput.appendChild(messageElement);
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
             }
             
-            function showSuccessMessage(message) {
-                // Remove any existing success messages
-                const existingSuccess = document.querySelectorAll('.success-message');
-                existingSuccess.forEach(success => success.remove());
-                
-                const successElement = document.createElement('div');
-                successElement.classList.add('success-message');
-                successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-                
-                // Insert after the header
-                const header = document.querySelector('header');
-                header.parentNode.insertBefore(successElement, header.nextSibling);
-                
-                // Auto-remove after 5 seconds
-                setTimeout(() => {
-                    if (successElement.parentNode) {
-                        successElement.parentNode.removeChild(successElement);
-                    }
-                }, 5000);
-            }
-
-            // Load saved code from localStorage
-            if (localStorage.getItem('supremeamer_html')) {
-                editors.html.setValue(localStorage.getItem('supremeamer_html'));
-                editors.css.setValue(localStorage.getItem('supremeamer_css'));
-                editors.js.setValue(localStorage.getItem('supremeamer_js'));
-                console.log('Previously saved code loaded!');
-            }
+            // Run initial code
+            setTimeout(runCode, 1000);
             
-            // Load uploaded files from localStorage
-            const uploadedFiles = JSON.parse(localStorage.getItem('supremeamer_uploaded_files') || '[]');
-            uploadedFiles.forEach(file => {
-                addUploadedFile(file.name, file.content);
-            });
-
-            // Run code on initial load
-            runCode();
-
-            // Add event listeners for Ctrl+S and Ctrl+Enter to run code
+            // Keyboard shortcuts
             document.addEventListener('keydown', function(e) {
                 if ((e.ctrlKey || e.metaKey) && e.key === 's') {
                     e.preventDefault();
-                    saveBtn.click();
+                    fileManager.saveCurrentFile();
                 }
                 
                 if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                     e.preventDefault();
                     runCode();
                 }
+            });
+        });
+        
+        // === PWA FUNCTIONS ===
+        function initPWA() {
+            // Register service worker
+            if ('serviceWorker' in navigator) {
+                const serviceWorkerBlob = new Blob([serviceWorkerScript], { type: 'application/javascript' });
+                const serviceWorkerURL = URL.createObjectURL(serviceWorkerBlob);
                 
-                if (e.key === 'F5') {
-                    e.preventDefault();
-                    runCode();
+                navigator.serviceWorker.register(serviceWorkerURL)
+                    .then(registration => {
+                        console.log('Service Worker registered');
+                        setTimeout(() => URL.revokeObjectURL(serviceWorkerURL), 1000);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            }
+            
+            // Setup install prompt
+            let deferredPrompt;
+            
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                document.getElementById('install-button')?.classList.add('show');
+                document.getElementById('install-banner')?.classList.add('show');
+            });
+            
+            // Install button click
+            document.getElementById('install-button')?.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    deferredPrompt = null;
+                    document.getElementById('install-button')?.classList.remove('show');
+                    document.getElementById('install-banner')?.classList.remove('show');
+                    
+                    if (outcome === 'accepted') {
+                        showSuccessMessage('App installed successfully!');
+                    }
                 }
             });
-
-            // Handle mobile view
-            function handleMobileView() {
-                if (window.innerWidth < 768) {
-                    // Mobile-specific adjustments
-                    document.querySelectorAll('.monaco-editor-container').forEach(editor => {
-                        editor.style.fontSize = '16px'; // Prevent zoom on iOS
-                    });
-                }
+            
+            // Online/Offline detection
+            window.addEventListener('online', () => {
+                document.getElementById('offline-indicator')?.classList.remove('show');
+                document.getElementById('online-status').textContent = 'Online';
+                document.getElementById('online-status').className = 'online';
+                showSuccessMessage('You are back online!');
+            });
+            
+            window.addEventListener('offline', () => {
+                document.getElementById('offline-indicator')?.classList.add('show');
+                document.getElementById('online-status').textContent = 'Offline';
+                document.getElementById('online-status').className = 'offline';
+                showWarningMessage('You are offline. Changes will be saved locally.');
+            });
+            
+            // Set initial online status
+            document.getElementById('online-status').textContent = navigator.onLine ? 'Online' : 'Offline';
+            document.getElementById('online-status').className = navigator.onLine ? 'online' : 'offline';
+            
+            if (!navigator.onLine) {
+                document.getElementById('offline-indicator')?.classList.add('show');
             }
-
-            // Initial call
-            handleMobileView();
-
-            // Listen for resize events
-            window.addEventListener('resize', handleMobileView);
-        });
+        }
+        
+        function showSuccessMessage(message) {
+            const successElement = document.createElement('div');
+            successElement.classList.add('success-message');
+            successElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            
+            const header = document.querySelector('header');
+            header.parentNode.insertBefore(successElement, header.nextSibling);
+            
+            setTimeout(() => {
+                if (successElement.parentNode) {
+                    successElement.parentNode.removeChild(successElement);
+                }
+            }, 5000);
+        }
+        
+        function showErrorMessage(message) {
+            const errorElement = document.createElement('div');
+            errorElement.classList.add('error-message');
+            errorElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+            
+            const header = document.querySelector('header');
+            header.parentNode.insertBefore(errorElement, header.nextSibling);
+            
+            setTimeout(() => {
+                if (errorElement.parentNode) {
+                    errorElement.parentNode.removeChild(errorElement);
+                }
+            }, 5000);
+        }
+        
+        function showWarningMessage(message) {
+            const warningElement = document.createElement('div');
+            warningElement.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+            warningElement.style.cssText = 'color: #856404; background: #fff3cd; border: 1px solid #ffeaa7; padding: 8px; border-radius: 4px; margin: 10px 0;';
+            
+            const header = document.querySelector('header');
+            header.parentNode.insertBefore(warningElement, header.nextSibling);
+            
+            setTimeout(() => {
+                if (warningElement.parentNode) {
+                    warningElement.parentNode.removeChild(warningElement);
+                }
+            }, 5000);
+        }
+        
+        function updateStorageInfo() {
+            if ('storage' in navigator && 'estimate' in navigator.storage) {
+                navigator.storage.estimate().then(estimate => {
+                    const used = (estimate.usage / (1024 * 1024)).toFixed(2);
+                    const quota = (estimate.quota / (1024 * 1024)).toFixed(2);
+                    const percentage = ((estimate.usage / estimate.quota) * 100).toFixed(1);
+                    
+                    const storageInfo = document.getElementById('storage-info');
+                    storageInfo.textContent = `Storage: ${used}MB/${quota}MB (${percentage}%)`;
+                    storageInfo.classList.add('show');
+                    
+                    setTimeout(() => {
+                        storageInfo.classList.remove('show');
+                    }, 5000);
+                });
+            }
+        }
     </script>
 </body>
 </html>
