@@ -1,50 +1,48 @@
+# SupremeAmer IDE Pro - PWA Edition
 
-## Browser Support
-- Chrome 70+ (recommended)
-- Edge 79+
-- Firefox 80+
-- Safari 13.1+ (limited PWA support)
-- Opera 60+
+A fully-featured web-based Integrated Development Environment (IDE) with Progressive Web App (PWA) capabilities and offline functionality.
 
-## Storage
-- **LocalStorage**: Files and settings
-- **Cache API**: Offline assets
-- **IndexedDB**: Future expansion
-- **Quota**: ~5-10MB per origin (can be expanded)
+## Features
 
-## Keyboard Shortcuts
-- `Ctrl/Cmd + S`: Save current file
-- `Ctrl/Cmd + Enter`: Run code
-- `Ctrl/Cmd + F`: Find in editor
-- `Ctrl/Cmd + Z/Y`: Undo/Redo
-- `F5`: Refresh preview
+### 🚀 Core Features
+- **Multi-language Code Editor** with Monaco Editor
+- **Live Preview** with console output
+- **File Management** with local storage
+- **Git Integration** (simulated)
+- **Theme Support** (Light/Dark/High Contrast)
 
-## Development
+### 📱 PWA Features
+- **Installable** as a native app
+- **Offline Support** (90% functionality)
+- **Background Sync**
+- **Push Notifications**
+- **File System Access**
 
-### Customization
-1. Edit `manifest.json` for app metadata
-2. Modify `service-worker.js` for caching strategy
-3. Update `offline.html` for offline experience
-4. Customize icons in `icons/` folder
+### 💾 File Management
+- Create, edit, save files
+- Folder organization
+- Import/Export projects
+- 20+ file types supported
+- Local storage persistence
 
-### Testing PWA
-1. Serve via HTTPS (required for PWA)
-2. Use Chrome DevTools → Application → Service Workers
-3. Test offline mode in DevTools → Network → Offline
-4. Check installability in DevTools → Lighthouse
+## Supported Languages
+- HTML, CSS, JavaScript
+- Python, PHP, Java
+- C, C++, C#, Go, Rust
+- Ruby, Swift, Kotlin
+- TypeScript, JSON, XML
+- Markdown, SQL, TXT
 
-## Privacy & Security
-- No data sent to external servers
-- All files stored locally
-- No analytics/tracking
-- HTTPS required for PWA features
+## Installation
 
-## License
-© 2023 SupremeAmer Application Development Organization. All rights reserved.
+### Local Development
+1. Clone/download all files
+2. Place in a web server directory
+3. Access via `http://localhost/`
 
-## Support
-For issues or questions:
-1. Check browser console for errors
-2. Clear browser cache if needed
-3. Ensure HTTPS is used for PWA
-4. Check storage quota availability
+### PWA Installation
+1. Open in Chrome/Edge
+2. Click "Install" button or use browser menu
+3. App will be added to home screen/dock
+
+## Project Structure
