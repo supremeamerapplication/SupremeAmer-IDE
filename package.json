@@ -1,0 +1,39 @@
+{
+    "name": "supremeamer-ide",
+    "version": "1.0.0",
+    "description": "SupremeAmer IDE Pro - Advanced web-based IDE with PWA capabilities",
+    "main": "index.html",
+    "scripts": {
+        "start": "http-server -p 8080 -c-1",
+        "dev": "live-server --port=8080",
+        "build-icons": "node generate-icons.js",
+        "test": "echo \"No tests specified\" && exit 0",
+        "deploy": "echo 'Deployment script would run here'"
+    },
+    "keywords": [
+        "ide",
+        "pwa",
+        "code-editor",
+        "offline",
+        "web-development"
+    ],
+    "author": "SupremeAmer Application Development Organization",
+    "license": "Proprietary",
+    "dependencies": {},
+    "devDependencies": {
+        "http-server": "^14.1.1",
+        "live-server": "^1.2.2",
+        "pwa-asset-generator": "^6.1.1"
+    },
+    "engines": {
+        "node": ">=14.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yourusername/supremeamer-ide.git"
+    },
+    "bugs": {
+        "url": "https://github.com/yourusername/supremeamer-ide/issues"
+    },
+    "homepage": "https://yourdomain.com/ide"
+}
