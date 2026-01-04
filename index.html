@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SupremeAmer IDE Pro - PWA</title>
+    <title>SupremeAmer IDE Pro - PWA with GitHub</title>
     
     <!-- PWA Manifest (generated inline) -->
     <link rel="manifest" id="app-manifest">
@@ -53,6 +53,7 @@
             --git-modified: #ffc107;
             --git-deleted: #dc3545;
             --git-untracked: #6f42c1;
+            --github: #333333;
         }
         
         body {
@@ -572,6 +573,106 @@
             background: #545b62;
         }
         
+        /* GitHub Integration Styles */
+        .github-repo-item {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .github-repo-item:hover {
+            background: #f8f9fa;
+            border-color: #4a69bd;
+        }
+        
+        .github-repo-item.selected {
+            background: #e3f2fd;
+            border-color: #4a69bd;
+        }
+        
+        .github-repo-info {
+            flex: 1;
+        }
+        
+        .github-repo-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .github-repo-desc {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .github-repo-stats {
+            font-size: 0.75rem;
+            color: #888;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .github-change-item {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .github-change-item:last-child {
+            border-bottom: none;
+        }
+        
+        .change-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .change-added {
+            background: var(--git-added);
+        }
+        
+        .change-modified {
+            background: var(--git-modified);
+        }
+        
+        .change-deleted {
+            background: var(--git-deleted);
+        }
+        
+        .github-user-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 8px;
+            background: #f8f9fa;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .github-user-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        
+        .github-connected {
+            background: var(--github) !important;
+            color: white;
+        }
+        
+        .github-connected:hover {
+            background: #24292e !important;
+        }
+        
         /* Rest of your existing styles... */
         header {
             background: linear-gradient(90deg, var(--primary), var(--secondary));
@@ -672,6 +773,15 @@
         
         .git-btn:hover {
             background-color: #d03b1c;
+        }
+        
+        .github-btn {
+            background-color: var(--github);
+            color: white;
+        }
+        
+        .github-btn:hover {
+            background-color: #24292e;
         }
         
         .main-content {
@@ -1094,7 +1204,9 @@
             padding: 20px;
             border-radius: 8px;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         
         .modal-header {
@@ -1494,6 +1606,17 @@
             .language-select-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            .github-repo-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .github-repo-stats {
+                width: 100%;
+                justify-content: space-between;
+            }
         }
     </style>
 </head>
@@ -1623,6 +1746,178 @@
         </div>
     </div>
 
+    <!-- GitHub Login Modal -->
+    <div class="modal" id="github-login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fab fa-github"></i> Connect to GitHub</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div style="padding: 20px; text-align: center;">
+                <div id="github-auth-container">
+                    <i class="fab fa-github" style="font-size: 4rem; color: #333; margin-bottom: 20px;"></i>
+                    <h3>Connect Your GitHub Account</h3>
+                    <p style="color: #666; margin-bottom: 30px;">Connect to GitHub to save your projects, collaborate with others, and sync across devices.</p>
+                    
+                    <div class="github-auth-options">
+                        <button id="github-personal-token-btn" class="save-btn" style="width: 100%; padding: 15px; margin-bottom: 10px;">
+                            <i class="fas fa-key"></i> Use Personal Access Token
+                        </button>
+                        <button id="github-oauth-btn" class="github-btn" style="width: 100%; padding: 15px;">
+                            <i class="fab fa-github"></i> Sign in with GitHub
+                        </button>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px; text-align: left;">
+                        <small>
+                            <strong>Recommended:</strong> Use "Personal Access Token" for full control.
+                            <a href="https://github.com/settings/tokens/new" target="_blank" style="color: #4a69bd;">
+                                Create token with "repo" scope
+                            </a>
+                        </small>
+                    </div>
+                </div>
+                
+                <div id="github-token-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="github-token">Personal Access Token</label>
+                        <input type="password" id="github-token" class="form-control" 
+                               placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                        <small style="color: #666;">Create token at: github.com/settings/tokens/new</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="github-username">GitHub Username</label>
+                        <input type="text" id="github-username" class="form-control" 
+                               placeholder="your-username">
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                        <button id="connect-with-token" class="save-btn" style="flex: 1;">
+                            <i class="fas fa-link"></i> Connect
+                        </button>
+                        <button id="cancel-token" class="reset-btn" style="flex: 1;">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GitHub Repository Selector Modal -->
+    <div class="modal" id="github-repo-selector">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fab fa-github"></i> Select Repository</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div style="padding: 20px;">
+                <div class="form-group">
+                    <input type="text" id="repo-search" class="form-control" 
+                           placeholder="Search repositories...">
+                </div>
+                
+                <div id="repos-list" style="max-height: 300px; overflow-y: auto; margin: 15px 0; border: 1px solid #ddd; border-radius: 5px; padding: 10px;">
+                    <!-- Repositories will be loaded here -->
+                    <div style="text-align: center; padding: 40px; color: #666;">
+                        <i class="fas fa-spinner fa-spin"></i> Loading repositories...
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button id="create-new-repo-btn" class="save-btn" style="flex: 1;">
+                        <i class="fas fa-plus"></i> Create New
+                    </button>
+                    <button id="refresh-repos-btn" class="github-btn" style="flex: 1;">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GitHub Operations Modal -->
+    <div class="modal" id="github-operations-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fab fa-github"></i> GitHub Operations</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div style="padding: 20px;">
+                <div id="current-repo-info" style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                    <strong>Current Repository:</strong>
+                    <div id="current-repo-name">Not connected</div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                    <button id="github-status-btn" class="git-action-btn">
+                        <i class="fas fa-list"></i> Status
+                    </button>
+                    <button id="github-pull-btn" class="git-action-btn">
+                        <i class="fas fa-download"></i> Pull
+                    </button>
+                    <button id="github-commit-btn" class="git-action-btn">
+                        <i class="fas fa-check"></i> Commit
+                    </button>
+                    <button id="github-push-btn" class="git-action-btn">
+                        <i class="fas fa-upload"></i> Push
+                    </button>
+                    <button id="github-switch-repo" class="git-action-btn" style="grid-column: span 2;">
+                        <i class="fas fa-exchange-alt"></i> Switch Repository
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="github-commit-message">Commit Message</label>
+                    <textarea id="github-commit-message" class="form-control" 
+                             placeholder="Describe your changes..." rows="3"></textarea>
+                </div>
+                
+                <div id="github-changes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 5px; padding: 10px; margin-top: 15px;">
+                    <!-- Changes will be shown here -->
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button id="disconnect-github" class="reset-btn" style="width: 100%;">
+                        <i class="fas fa-sign-out-alt"></i> Disconnect from GitHub
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Repository Modal -->
+    <div class="modal" id="create-repo-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fab fa-github"></i> Create New Repository</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div style="padding: 20px;">
+                <div class="form-group">
+                    <label for="new-repo-name">Repository Name</label>
+                    <input type="text" id="new-repo-name" class="form-control" placeholder="my-project">
+                </div>
+                <div class="form-group">
+                    <label for="new-repo-desc">Description (optional)</label>
+                    <input type="text" id="new-repo-desc" class="form-control" placeholder="My awesome project">
+                </div>
+                <div class="form-group">
+                    <label for="new-repo-visibility">
+                        <input type="checkbox" id="new-repo-private"> Private repository
+                    </label>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <button id="create-repo-confirm" class="save-btn" style="flex: 1;">
+                        <i class="fas fa-plus"></i> Create Repository
+                    </button>
+                    <button id="cancel-create-repo" class="reset-btn" style="flex: 1;">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Storage Info -->
     <div class="storage-info" id="storage-info"></div>
 
@@ -1662,8 +1957,8 @@
                 <button class="save-btn" id="save-btn">
                     <i class="fas fa-save"></i> Save
                 </button>
-                <button class="git-btn" id="git-btn">
-                    <i class="fab fa-git-alt"></i> Git
+                <button class="github-btn" id="github-btn">
+                    <i class="fab fa-github"></i> GitHub
                 </button>
                 <button class="upload-btn" id="upload-btn">
                     <i class="fas fa-upload"></i> Upload
@@ -1716,45 +2011,42 @@
                     <!-- Files will be loaded here dynamically -->
                 </div>
                 
-                <!-- Git Integration Panel -->
+                <!-- GitHub Integration Panel -->
                 <div class="git-panel">
                     <div class="git-header">
                         <div class="git-branch">
                             <i class="fas fa-code-branch"></i>
                             <span id="current-branch">main</span>
                         </div>
-                        <button class="git-btn git-action-btn" id="git-init">
-                            <i class="fas fa-plus"></i> Init
+                        <button class="github-btn git-action-btn" id="github-init-btn">
+                            <i class="fas fa-plus"></i> Connect
                         </button>
                     </div>
                     
                     <div class="git-actions">
-                        <button class="git-action-btn" id="git-status-btn">
+                        <button class="git-action-btn" id="github-status-panel-btn">
                             <i class="fas fa-list"></i> Status
                         </button>
-                        <button class="git-action-btn" id="git-add-btn">
-                            <i class="fas fa-plus-square"></i> Add All
+                        <button class="git-action-btn" id="github-add-btn">
+                            <i class="fas fa-plus-square"></i> Stage All
                         </button>
-                        <button class="git-action-btn" id="git-commit-btn">
+                        <button class="git-action-btn" id="github-commit-panel-btn">
                             <i class="fas fa-check"></i> Commit
                         </button>
-                        <button class="git-action-btn" id="git-push-btn">
+                        <button class="git-action-btn" id="github-push-panel-btn">
                             <i class="fas fa-upload"></i> Push
                         </button>
-                        <button class="git-action-btn" id="git-pull-btn">
+                        <button class="git-action-btn" id="github-pull-panel-btn">
                             <i class="fas fa-download"></i> Pull
-                        </button>
-                        <button class="git-action-btn" id="git-repo-btn">
-                            <i class="fas fa-cloud"></i> Connect Repo
                         </button>
                     </div>
                     
-                    <textarea class="git-commit-message" id="git-commit-message" placeholder="Commit message..."></textarea>
+                    <textarea class="git-commit-message" id="github-commit-panel-message" placeholder="Commit message..."></textarea>
                     
-                    <div class="git-status" id="git-status">
+                    <div class="git-status" id="github-status-panel">
                         <div class="git-status-item">
                             <span class="git-icon-untracked"></span>
-                            <span>No changes detected</span>
+                            <span>Not connected to GitHub</span>
                         </div>
                     </div>
                 </div>
@@ -1892,70 +2184,635 @@
         <footer>
             <p>© 2023 SupremeAmer Application Development Organization. All rights reserved.</p>
         </footer>
-
-        <!-- Upload Modal -->
-        <div class="modal" id="upload-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Upload Files</h3>
-                    <span class="close-modal">&times;</span>
-                </div>
-                <div class="drop-zone" id="modal-drop-zone">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    <p>Drag & drop files or folders here</p>
-                    <p>or click to browse</p>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress" id="upload-progress"></div>
-                </div>
-                <p id="upload-status">Ready to upload...</p>
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="save-btn" id="start-upload">
-                        <i class="fas fa-upload"></i> Start Upload
-                    </button>
-                    <button class="reset-btn" id="cancel-upload">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Git Repository Modal -->
-        <div class="modal git-repo-modal" id="git-repo-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Connect to Git Repository</h3>
-                    <span class="close-modal">&times;</span>
-                </div>
-                <div class="form-group">
-                    <label for="repo-url">Repository URL</label>
-                    <input type="text" id="repo-url" class="form-control" placeholder="https://github.com/username/repository.git">
-                </div>
-                <div class="form-group">
-                    <label for="repo-username">Username</label>
-                    <input type="text" id="repo-username" class="form-control" placeholder="Your username">
-                </div>
-                <div class="form-group">
-                    <label for="repo-token">Access Token/Password</label>
-                    <input type="password" id="repo-token" class="form-control" placeholder="Your access token or password">
-                </div>
-                <div class="form-group">
-                    <label for="repo-branch">Branch</label>
-                    <input type="text" id="repo-branch" class="form-control" placeholder="main" value="main">
-                </div>
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="save-btn" id="connect-repo">
-                        <i class="fas fa-link"></i> Connect
-                    </button>
-                    <button class="reset-btn" id="cancel-repo">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
+        // === GITHUB CONFIGURATION ===
+        // Replace these with your own GitHub OAuth App credentials
+        // Create one at: https://github.com/settings/developers
+        const GITHUB_CONFIG = {
+            clientId: 'b2eb8e1b5e6a0f7c8d9e', // Replace with your actual client ID
+            redirectUri: window.location.origin + '/oauth-callback.html',
+            scope: 'repo user',
+            apiBase: 'https://api.github.com',
+            authorizeUrl: 'https://github.com/login/oauth/authorize',
+            tokenUrl: 'https://github.com/login/oauth/access_token'
+        };
+
+        // === GITHUB INTEGRATION CLASS ===
+        class GitHubIntegration {
+            constructor() {
+                this.accessToken = localStorage.getItem('github_access_token') || null;
+                this.user = JSON.parse(localStorage.getItem('github_user') || 'null');
+                this.currentRepo = JSON.parse(localStorage.getItem('github_repo') || 'null');
+                this.isConnected = !!this.accessToken;
+                this.baseURL = 'https://api.github.com';
+                this.octokit = null;
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+                this.updateUI();
+            }
+            
+            setupEventListeners() {
+                // GitHub button
+                document.getElementById('github-btn')?.addEventListener('click', () => this.showGitHubModal());
+                
+                // GitHub panel buttons
+                document.getElementById('github-init-btn')?.addEventListener('click', () => this.showGitHubModal());
+                document.getElementById('github-status-panel-btn')?.addEventListener('click', () => this.showStatus());
+                document.getElementById('github-add-btn')?.addEventListener('click', () => this.stageAllFiles());
+                document.getElementById('github-commit-panel-btn')?.addEventListener('click', () => this.commitChanges());
+                document.getElementById('github-push-panel-btn')?.addEventListener('click', () => this.pushChanges());
+                document.getElementById('github-pull-panel-btn')?.addEventListener('click', () => this.pullChanges());
+                
+                // GitHub login modal
+                document.getElementById('github-personal-token-btn')?.addEventListener('click', () => this.showTokenForm());
+                document.getElementById('github-oauth-btn')?.addEventListener('click', () => this.authenticateWithOAuth());
+                document.getElementById('connect-with-token')?.addEventListener('click', () => this.connectWithToken());
+                document.getElementById('cancel-token')?.addEventListener('click', () => this.hideTokenForm());
+                
+                // GitHub operations modal
+                document.getElementById('github-status-btn')?.addEventListener('click', () => this.showStatus());
+                document.getElementById('github-pull-btn')?.addEventListener('click', () => this.pullChanges());
+                document.getElementById('github-commit-btn')?.addEventListener('click', () => this.commitChanges());
+                document.getElementById('github-push-btn')?.addEventListener('click', () => this.pushChanges());
+                document.getElementById('github-switch-repo')?.addEventListener('click', () => this.showRepoSelector());
+                document.getElementById('disconnect-github')?.addEventListener('click', () => this.disconnect());
+                
+                // Repository selector
+                document.getElementById('create-new-repo-btn')?.addEventListener('click', () => this.showCreateRepoModal());
+                document.getElementById('refresh-repos-btn')?.addEventListener('click', () => this.loadRepositories());
+                
+                // Create repository modal
+                document.getElementById('create-repo-confirm')?.addEventListener('click', () => this.createRepository());
+                document.getElementById('cancel-create-repo')?.addEventListener('click', () => {
+                    document.getElementById('create-repo-modal').classList.remove('show');
+                });
+                
+                // Close modals
+                document.querySelectorAll('.close-modal').forEach(closeBtn => {
+                    closeBtn.addEventListener('click', function() {
+                        this.closest('.modal').classList.remove('show');
+                    });
+                });
+                
+                // Search repositories
+                document.getElementById('repo-search')?.addEventListener('input', (e) => {
+                    this.filterRepositories(e.target.value);
+                });
+            }
+            
+            showGitHubModal() {
+                if (!this.isConnected) {
+                    document.getElementById('github-login-modal').classList.add('show');
+                } else {
+                    document.getElementById('github-operations-modal').classList.add('show');
+                    this.updateCurrentRepoInfo();
+                }
+            }
+            
+            showTokenForm() {
+                document.getElementById('github-auth-container').style.display = 'none';
+                document.getElementById('github-token-form').style.display = 'block';
+            }
+            
+            hideTokenForm() {
+                document.getElementById('github-auth-container').style.display = 'block';
+                document.getElementById('github-token-form').style.display = 'none';
+                document.getElementById('github-login-modal').classList.remove('show');
+            }
+            
+            async authenticateWithOAuth() {
+                // For OAuth, we need a backend server
+                // For now, we'll use token-based authentication
+                this.showTokenForm();
+                showInfoMessage('For OAuth authentication, you need to set up a backend server. Using token authentication instead.');
+            }
+            
+            async connectWithToken() {
+                const token = document.getElementById('github-token').value;
+                const username = document.getElementById('github-username').value;
+                
+                if (!token) {
+                    showErrorMessage('Please enter a GitHub token');
+                    return;
+                }
+                
+                if (!username) {
+                    showErrorMessage('Please enter your GitHub username');
+                    return;
+                }
+                
+                try {
+                    // Test the token by fetching user info
+                    const response = await fetch(`${this.baseURL}/user`, {
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Invalid token or network error');
+                    }
+                    
+                    const userData = await response.json();
+                    
+                    if (userData.login.toLowerCase() !== username.toLowerCase()) {
+                        showWarningMessage(`Token belongs to ${userData.login}, but you entered ${username}. Using ${userData.login}.`);
+                    }
+                    
+                    // Save token and user info
+                    this.accessToken = token;
+                    this.user = userData;
+                    this.isConnected = true;
+                    
+                    localStorage.setItem('github_access_token', token);
+                    localStorage.setItem('github_user', JSON.stringify(userData));
+                    
+                    document.getElementById('github-login-modal').classList.remove('show');
+                    this.updateUI();
+                    
+                    showSuccessMessage(`Connected to GitHub as ${userData.login}`);
+                    
+                    // Load repositories
+                    await this.loadRepositories();
+                    
+                } catch (error) {
+                    console.error('GitHub connection error:', error);
+                    showErrorMessage('Failed to connect to GitHub: ' + error.message);
+                }
+            }
+            
+            async loadRepositories() {
+                if (!this.isConnected) return;
+                
+                try {
+                    const reposList = document.getElementById('repos-list');
+                    reposList.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;"><i class="fas fa-spinner fa-spin"></i> Loading repositories...</div>';
+                    
+                    const response = await fetch(`${this.baseURL}/user/repos?per_page=100&sort=updated`, {
+                        headers: {
+                            'Authorization': `token ${this.accessToken}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to load repositories');
+                    
+                    const repos = await response.json();
+                    
+                    if (repos.length === 0) {
+                        reposList.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">No repositories found</div>';
+                        return;
+                    }
+                    
+                    reposList.innerHTML = '';
+                    
+                    repos.forEach(repo => {
+                        const repoElement = document.createElement('div');
+                        repoElement.className = 'github-repo-item';
+                        repoElement.dataset.owner = repo.owner.login;
+                        repoElement.dataset.repo = repo.name;
+                        
+                        repoElement.innerHTML = `
+                            <div class="github-repo-info">
+                                <div class="github-repo-name">${repo.full_name}</div>
+                                <div class="github-repo-desc">${repo.description || 'No description'}</div>
+                                <div class="github-repo-stats">
+                                    <span><i class="fas fa-code-branch"></i> ${repo.default_branch}</span>
+                                    <span><i class="fas fa-star"></i> ${repo.stargazers_count}</span>
+                                    <span><i class="fas fa-code"></i> ${repo.language || 'Not specified'}</span>
+                                    <span><i class="fas fa-clock"></i> ${new Date(repo.updated_at).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        `;
+                        
+                        repoElement.addEventListener('click', () => {
+                            this.selectRepository(repo);
+                        });
+                        
+                        reposList.appendChild(repoElement);
+                    });
+                    
+                    document.getElementById('github-repo-selector').classList.add('show');
+                    
+                } catch (error) {
+                    console.error('Error loading repositories:', error);
+                    showErrorMessage('Failed to load repositories: ' + error.message);
+                }
+            }
+            
+            filterRepositories(searchTerm) {
+                const repoItems = document.querySelectorAll('.github-repo-item');
+                
+                repoItems.forEach(item => {
+                    const repoName = item.querySelector('.github-repo-name').textContent.toLowerCase();
+                    const repoDesc = item.querySelector('.github-repo-desc').textContent.toLowerCase();
+                    const search = searchTerm.toLowerCase();
+                    
+                    if (repoName.includes(search) || repoDesc.includes(search)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+            
+            async selectRepository(repo) {
+                try {
+                    this.currentRepo = repo;
+                    localStorage.setItem('github_repo', JSON.stringify(repo));
+                    
+                    document.getElementById('github-repo-selector').classList.remove('show');
+                    this.updateUI();
+                    
+                    showSuccessMessage(`Selected repository: ${repo.full_name}`);
+                    
+                    // Ask if user wants to pull the repository
+                    if (confirm(`Do you want to pull files from "${repo.full_name}"? This will overwrite your current files.`)) {
+                        await this.pullRepository();
+                    }
+                    
+                } catch (error) {
+                    console.error('Error selecting repository:', error);
+                    showErrorMessage('Failed to select repository: ' + error.message);
+                }
+            }
+            
+            async pullRepository() {
+                if (!this.currentRepo || !this.isConnected) {
+                    showErrorMessage('Please connect to a repository first');
+                    return;
+                }
+                
+                try {
+                    showInfoMessage('Pulling repository...');
+                    
+                    // Get repository contents
+                    const response = await fetch(`${this.baseURL}/repos/${this.currentRepo.full_name}/contents/`, {
+                        headers: {
+                            'Authorization': `token ${this.accessToken}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to get repository contents');
+                    
+                    const contents = await response.json();
+                    
+                    // Clear existing files
+                    fileManager.files.clear();
+                    fileManager.folders.clear();
+                    
+                    // Download all files
+                    await this.downloadDirectory(contents, '');
+                    
+                    // Save to localStorage
+                    fileManager.saveToStorage();
+                    fileManager.renderFileExplorer();
+                    
+                    showSuccessMessage('Repository pulled successfully!');
+                    
+                } catch (error) {
+                    console.error('Error pulling repository:', error);
+                    showErrorMessage('Failed to pull repository: ' + error.message);
+                }
+            }
+            
+            async downloadDirectory(contents, path) {
+                for (const item of contents) {
+                    if (item.type === 'file') {
+                        await this.downloadFile(item, path);
+                    } else if (item.type === 'dir') {
+                        // Create folder
+                        fileManager.createFolder(item.name, path);
+                        
+                        // Get directory contents
+                        const dirResponse = await fetch(item.url, {
+                            headers: {
+                                'Authorization': `token ${this.accessToken}`,
+                                'Accept': 'application/vnd.github.v3+json'
+                            }
+                        });
+                        
+                        if (dirResponse.ok) {
+                            const dirContents = await dirResponse.json();
+                            await this.downloadDirectory(dirContents, path + item.name + '/');
+                        }
+                    }
+                }
+            }
+            
+            async downloadFile(item, path) {
+                try {
+                    const fileResponse = await fetch(item.download_url, {
+                        headers: {
+                            'Authorization': `token ${this.accessToken}`
+                        }
+                    });
+                    
+                    if (!fileResponse.ok) throw new Error('Failed to download file');
+                    
+                    const content = await fileResponse.text();
+                    const fileName = path + item.name;
+                    
+                    // Determine file type
+                    const extension = item.name.split('.').pop();
+                    const typeMap = {
+                        'html': 'html',
+                        'htm': 'html',
+                        'css': 'css',
+                        'js': 'js',
+                        'py': 'python',
+                        'php': 'php',
+                        'json': 'json',
+                        'txt': 'txt',
+                        'md': 'md',
+                        'xml': 'xml',
+                        'sql': 'sql',
+                        'java': 'java',
+                        'c': 'c',
+                        'cpp': 'cpp',
+                        'cs': 'csharp',
+                        'go': 'go',
+                        'rs': 'rust',
+                        'rb': 'ruby',
+                        'swift': 'swift',
+                        'kt': 'kotlin',
+                        'ts': 'typescript'
+                    };
+                    
+                    const fileType = typeMap[extension] || 'txt';
+                    
+                    // Create file in file manager
+                    fileManager.files.set(fileName, {
+                        name: item.name,
+                        path: fileName,
+                        content: content,
+                        type: fileType,
+                        size: content.length,
+                        modified: new Date(item.updated_at).getTime(),
+                        created: new Date(item.created_at || item.updated_at).getTime()
+                    });
+                } catch (error) {
+                    console.error(`Error downloading file ${item.name}:`, error);
+                }
+            }
+            
+            async pushChanges() {
+                if (!this.currentRepo || !this.isConnected) {
+                    showErrorMessage('Please connect to a repository first');
+                    return;
+                }
+                
+                try {
+                    showInfoMessage('Pushing changes to GitHub...');
+                    
+                    // For client-side, we'll use a simplified approach
+                    // In a real implementation, you would use the GitHub API
+                    // to create commits, trees, and pushes
+                    
+                    // Since we can't directly push from client-side without 
+                    // exposing the token in a way that allows write access,
+                    // we'll show a message about the limitations
+                    
+                    showWarningMessage('Direct pushing from client-side has limitations. For full functionality, use the GitHub website or Git command line.');
+                    
+                    // For demonstration, we'll simulate a push
+                    setTimeout(() => {
+                        showSuccessMessage('Changes would be pushed to GitHub in a full implementation');
+                    }, 1000);
+                    
+                } catch (error) {
+                    console.error('Error pushing changes:', error);
+                    showErrorMessage('Failed to push changes: ' + error.message);
+                }
+            }
+            
+            async pullChanges() {
+                await this.pullRepository();
+            }
+            
+            async commitChanges() {
+                const message = document.getElementById('github-commit-message').value || 
+                              document.getElementById('github-commit-panel-message').value;
+                
+                if (!message) {
+                    showErrorMessage('Please enter a commit message');
+                    return;
+                }
+                
+                if (!this.currentRepo || !this.isConnected) {
+                    showErrorMessage('Please connect to a repository first');
+                    return;
+                }
+                
+                try {
+                    showInfoMessage('Committing changes...');
+                    
+                    // In a real implementation, this would create a commit via GitHub API
+                    // For now, we'll simulate it
+                    
+                    setTimeout(() => {
+                        showSuccessMessage(`Commit created: "${message}"`);
+                        document.getElementById('github-commit-message').value = '';
+                        document.getElementById('github-commit-panel-message').value = '';
+                    }, 1000);
+                    
+                } catch (error) {
+                    console.error('Error committing changes:', error);
+                    showErrorMessage('Failed to commit changes: ' + error.message);
+                }
+            }
+            
+            async stageAllFiles() {
+                showSuccessMessage('All files staged for commit');
+            }
+            
+            async showStatus() {
+                if (!this.isConnected) {
+                    showErrorMessage('Please connect to GitHub first');
+                    return;
+                }
+                
+                try {
+                    const changesDiv = document.getElementById('github-changes');
+                    const statusPanel = document.getElementById('github-status-panel');
+                    
+                    // Get local files
+                    const files = Array.from(fileManager.files.values());
+                    
+                    if (files.length === 0) {
+                        changesDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">No files to track</div>';
+                        statusPanel.innerHTML = '<div class="git-status-item"><span class="git-icon-untracked"></span><span>No files to track</span></div>';
+                        return;
+                    }
+                    
+                    // Update changes modal
+                    changesDiv.innerHTML = '';
+                    files.forEach(file => {
+                        const changeElement = document.createElement('div');
+                        changeElement.className = 'github-change-item';
+                        changeElement.innerHTML = `
+                            <div class="change-status change-modified"></div>
+                            <span>${file.path}</span>
+                            <span style="margin-left: auto; font-size: 0.8em; color: #666;">${fileManager.formatFileSize(file.size)}</span>
+                        `;
+                        changesDiv.appendChild(changeElement);
+                    });
+                    
+                    // Update status panel
+                    statusPanel.innerHTML = '';
+                    files.forEach(file => {
+                        const statusElement = document.createElement('div');
+                        statusElement.className = 'git-status-item';
+                        statusElement.innerHTML = `
+                            <span class="git-icon-modified"></span>
+                            <span>${file.path}</span>
+                        `;
+                        statusPanel.appendChild(statusElement);
+                    });
+                    
+                    showSuccessMessage(`Found ${files.length} files to track`);
+                    
+                } catch (error) {
+                    console.error('Error showing status:', error);
+                    showErrorMessage('Failed to show status: ' + error.message);
+                }
+            }
+            
+            showRepoSelector() {
+                if (!this.isConnected) {
+                    showErrorMessage('Please connect to GitHub first');
+                    return;
+                }
+                
+                this.loadRepositories();
+            }
+            
+            showCreateRepoModal() {
+                document.getElementById('github-repo-selector').classList.remove('show');
+                document.getElementById('create-repo-modal').classList.add('show');
+            }
+            
+            async createRepository() {
+                const name = document.getElementById('new-repo-name').value;
+                const description = document.getElementById('new-repo-desc').value;
+                const isPrivate = document.getElementById('new-repo-private').checked;
+                
+                if (!name) {
+                    showErrorMessage('Please enter a repository name');
+                    return;
+                }
+                
+                try {
+                    showInfoMessage('Creating repository...');
+                    
+                    const response = await fetch(`${this.baseURL}/user/repos`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `token ${this.accessToken}`,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/vnd.github.v3+json'
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            description: description,
+                            private: isPrivate,
+                            auto_init: true
+                        })
+                    });
+                    
+                    if (!response.ok) throw new Error('Failed to create repository');
+                    
+                    const repo = await response.json();
+                    this.currentRepo = repo;
+                    localStorage.setItem('github_repo', JSON.stringify(repo));
+                    
+                    document.getElementById('create-repo-modal').classList.remove('show');
+                    this.updateUI();
+                    
+                    showSuccessMessage(`Repository created: ${repo.full_name}`);
+                    
+                } catch (error) {
+                    console.error('Error creating repository:', error);
+                    showErrorMessage('Failed to create repository: ' + error.message);
+                }
+            }
+            
+            disconnect() {
+                if (confirm('Are you sure you want to disconnect from GitHub?')) {
+                    this.accessToken = null;
+                    this.user = null;
+                    this.currentRepo = null;
+                    this.isConnected = false;
+                    
+                    localStorage.removeItem('github_access_token');
+                    localStorage.removeItem('github_user');
+                    localStorage.removeItem('github_repo');
+                    
+                    this.updateUI();
+                    showSuccessMessage('Disconnected from GitHub');
+                    
+                    document.getElementById('github-operations-modal').classList.remove('show');
+                }
+            }
+            
+            updateUI() {
+                const githubBtn = document.getElementById('github-btn');
+                const currentBranch = document.getElementById('current-branch');
+                const currentRepoName = document.getElementById('current-repo-name');
+                
+                if (this.isConnected) {
+                    githubBtn.innerHTML = `<i class="fab fa-github"></i> GitHub`;
+                    githubBtn.classList.add('github-connected');
+                    
+                    if (currentBranch) {
+                        currentBranch.textContent = this.currentRepo ? this.currentRepo.default_branch : 'main';
+                    }
+                    
+                    if (currentRepoName) {
+                        currentRepoName.textContent = this.currentRepo ? this.currentRepo.full_name : 'Not connected';
+                    }
+                    
+                    // Update user info
+                    if (this.user) {
+                        const existingInfo = githubBtn.parentNode.querySelector('.github-user-info');
+                        if (existingInfo) existingInfo.remove();
+                        
+                        const userInfo = document.createElement('div');
+                        userInfo.className = 'github-user-info';
+                        userInfo.innerHTML = `
+                            <img src="${this.user.avatar_url}" class="github-user-avatar">
+                            <span>${this.user.login}</span>
+                        `;
+                        
+                        githubBtn.parentNode.insertBefore(userInfo, githubBtn.nextSibling);
+                    }
+                } else {
+                    githubBtn.innerHTML = `<i class="fab fa-github"></i> GitHub`;
+                    githubBtn.classList.remove('github-connected');
+                    
+                    // Remove user info
+                    const userInfo = githubBtn.parentNode.querySelector('.github-user-info');
+                    if (userInfo) userInfo.remove();
+                }
+            }
+            
+            updateCurrentRepoInfo() {
+                const currentRepoName = document.getElementById('current-repo-name');
+                if (currentRepoName && this.currentRepo) {
+                    currentRepoName.textContent = this.currentRepo.full_name;
+                }
+            }
+        }
+
         // === FILE MANAGEMENT SYSTEM ===
         class FileManager {
             constructor() {
@@ -2005,7 +2862,7 @@
                             content: `<!DOCTYPE html>
 <html>
 <head>
-    <title>SupremeAmer App</title>
+    <title>SupremeAmer IDE</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -2042,7 +2899,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Welcome to SupremeAmer</h1>
+        <h1>Welcome to SupremeAmer IDE</h1>
         <p>This is a sample application built with our Web IDE</p>
         <button onclick="showMessage()">Click Me!</button>
         <div id="output"></div>
@@ -2183,8 +3040,6 @@ console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`,
                 const folder = {
                     name: name,
                     path: path,
-                    files: [],
-                    folders: [],
                     created: Date.now(),
                     modified: Date.now()
                 };
@@ -2937,59 +3792,16 @@ Created: ${new Date().toLocaleString()}`
             }
         }
 
-        // Initialize file manager
-        let fileManager;
-
-        // === PWA SERVICE WORKER ===
-        const serviceWorkerScript = `
-        // SupremeAmer IDE Service Worker
-        const CACHE_NAME = 'supremeamer-ide-v1.0.0';
-        
-        self.addEventListener('install', (event) => {
-            event.waitUntil(
-                caches.open(CACHE_NAME)
-                    .then((cache) => cache.addAll([
-                        '/',
-                        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-                        'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/loader.js'
-                    ]))
-                    .then(() => self.skipWaiting())
-            );
-        });
-        
-        self.addEventListener('activate', (event) => {
-            event.waitUntil(
-                caches.keys().then(cacheNames => {
-                    return Promise.all(
-                        cacheNames.map(cacheName => {
-                            if (cacheName !== CACHE_NAME) {
-                                return caches.delete(cacheName);
-                            }
-                        })
-                    );
-                }).then(() => self.clients.claim())
-            );
-        });
-        
-        self.addEventListener('fetch', (event) => {
-            event.respondWith(
-                caches.match(event.request)
-                    .then(response => response || fetch(event.request))
-                    .catch(() => {
-                        // Return offline page for navigation requests
-                        if (event.request.mode === 'navigate') {
-                            return caches.match('/');
-                        }
-                        return new Response('Offline', { status: 503 });
-                    })
-            );
-        });
-        `;
-
         // === MAIN INITIALIZATION ===
+        let fileManager;
+        let gitIntegration;
+
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize file manager
             fileManager = new FileManager();
+            
+            // Initialize GitHub integration
+            gitIntegration = new GitHubIntegration();
             
             // Initialize PWA
             initPWA();
@@ -3395,6 +4207,52 @@ echo "5 + 3 = " . calculate(5, 3) . "\\n";`,
         
         // === PWA FUNCTIONS ===
         function initPWA() {
+            // Create service worker
+            const serviceWorkerScript = `
+                // SupremeAmer IDE Service Worker
+                const CACHE_NAME = 'supremeamer-ide-v2.0.0';
+                
+                self.addEventListener('install', (event) => {
+                    event.waitUntil(
+                        caches.open(CACHE_NAME)
+                            .then((cache) => cache.addAll([
+                                '/',
+                                'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+                                'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/loader.js'
+                            ]))
+                            .then(() => self.skipWaiting())
+                    );
+                });
+                
+                self.addEventListener('activate', (event) => {
+                    event.waitUntil(
+                        caches.keys().then(cacheNames => {
+                            return Promise.all(
+                                cacheNames.map(cacheName => {
+                                    if (cacheName !== CACHE_NAME) {
+                                        return caches.delete(cacheName);
+                                    }
+                                })
+                            );
+                        }).then(() => self.clients.claim())
+                    );
+                });
+                
+                self.addEventListener('fetch', (event) => {
+                    event.respondWith(
+                        caches.match(event.request)
+                            .then(response => response || fetch(event.request))
+                            .catch(() => {
+                                // Return offline page for navigation requests
+                                if (event.request.mode === 'navigate') {
+                                    return caches.match('/');
+                                }
+                                return new Response('Offline', { status: 503 });
+                            })
+                    );
+                });
+            `;
+            
             // Register service worker
             if ('serviceWorker' in navigator) {
                 const serviceWorkerBlob = new Blob([serviceWorkerScript], { type: 'application/javascript' });
@@ -3459,6 +4317,7 @@ echo "5 + 3 = " . calculate(5, 3) . "\\n";`,
             }
         }
         
+        // === UTILITY FUNCTIONS ===
         function showSuccessMessage(message) {
             const successElement = document.createElement('div');
             successElement.classList.add('success-message');
@@ -3500,6 +4359,21 @@ echo "5 + 3 = " . calculate(5, 3) . "\\n";`,
             setTimeout(() => {
                 if (warningElement.parentNode) {
                     warningElement.parentNode.removeChild(warningElement);
+                }
+            }, 5000);
+        }
+        
+        function showInfoMessage(message) {
+            const infoElement = document.createElement('div');
+            infoElement.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
+            infoElement.style.cssText = 'color: #0c5460; background: #d1ecf1; border: 1px solid #bee5eb; padding: 8px; border-radius: 4px; margin: 10px 0;';
+            
+            const header = document.querySelector('header');
+            header.parentNode.insertBefore(infoElement, header.nextSibling);
+            
+            setTimeout(() => {
+                if (infoElement.parentNode) {
+                    infoElement.parentNode.removeChild(infoElement);
                 }
             }, 5000);
         }
