@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SupremeAmer IDE Pro - PWA with GitHub</title>
+    <title>SupremeAmer IDE Pro - PWA</title>
     
     <!-- PWA Manifest (generated inline) -->
     <link rel="manifest" id="app-manifest">
@@ -42,18 +42,18 @@
             --python: #3776ab;
             --php: #777bb4;
             --java: #007396;
-            --ruby: #cc342d;
+            --cplusplus: #00599c;
             --csharp: #239120;
-            --cpp: #00599c;
-            --swift: #fa7343;
             --go: #00add8;
             --rust: #000000;
+            --ruby: #cc342d;
+            --swift: #fa7343;
+            --typescript: #3178c6;
             --sidebar-width: 250px;
             --git-added: #28a745;
             --git-modified: #ffc107;
             --git-deleted: #dc3545;
             --git-untracked: #6f42c1;
-            --github: #333333;
         }
         
         body {
@@ -243,6 +243,58 @@
             margin-left: 8px;
         }
         
+        /* Auto-save Indicator */
+        .auto-save-indicator {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: var(--success);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .auto-save-indicator.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .auto-save-indicator.saving {
+            background: var(--info);
+        }
+        
+        .recovery-notice {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--warning);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .recovery-notice.show {
+            display: flex;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         /* PWA Installation Banner */
         .install-banner {
             display: none;
@@ -318,55 +370,6 @@
         
         .offline-indicator.show {
             display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* PWA Install Guide */
-        .install-guide {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 3000;
-            color: white;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .install-guide.show {
-            display: flex;
-        }
-        
-        .install-steps {
-            background: var(--dark);
-            padding: 30px;
-            border-radius: 10px;
-            max-width: 600px;
-            width: 90%;
-        }
-        
-        .install-step {
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 1.1rem;
-        }
-        
-        .install-step i {
-            font-size: 2rem;
-            color: var(--info);
         }
         
         /* PWA Info Panel */
@@ -474,7 +477,7 @@
             padding: 25px;
             border-radius: 10px;
             width: 90%;
-            max-width: 400px;
+            max-width: 500px;
         }
         
         .new-file-form h3 {
@@ -509,9 +512,15 @@
         
         .language-select-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             margin-top: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .language-select-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
         
         .language-option {
@@ -571,106 +580,6 @@
         
         .cancel-btn:hover {
             background: #545b62;
-        }
-        
-        /* GitHub Integration Styles */
-        .github-repo-item {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .github-repo-item:hover {
-            background: #f8f9fa;
-            border-color: #4a69bd;
-        }
-        
-        .github-repo-item.selected {
-            background: #e3f2fd;
-            border-color: #4a69bd;
-        }
-        
-        .github-repo-info {
-            flex: 1;
-        }
-        
-        .github-repo-name {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        
-        .github-repo-desc {
-            font-size: 0.85rem;
-            color: #666;
-        }
-        
-        .github-repo-stats {
-            font-size: 0.75rem;
-            color: #888;
-            display: flex;
-            gap: 10px;
-        }
-        
-        .github-change-item {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .github-change-item:last-child {
-            border-bottom: none;
-        }
-        
-        .change-status {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        
-        .change-added {
-            background: var(--git-added);
-        }
-        
-        .change-modified {
-            background: var(--git-modified);
-        }
-        
-        .change-deleted {
-            background: var(--git-deleted);
-        }
-        
-        .github-user-info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 8px;
-            background: #f8f9fa;
-            border-radius: 20px;
-            font-size: 0.85rem;
-        }
-        
-        .github-user-avatar {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-        }
-        
-        .github-connected {
-            background: var(--github) !important;
-            color: white;
-        }
-        
-        .github-connected:hover {
-            background: #24292e !important;
         }
         
         /* Rest of your existing styles... */
@@ -764,24 +673,6 @@
         
         .upload-btn:hover {
             background-color: #7d3c98;
-        }
-        
-        .git-btn {
-            background-color: #f1502f;
-            color: white;
-        }
-        
-        .git-btn:hover {
-            background-color: #d03b1c;
-        }
-        
-        .github-btn {
-            background-color: var(--github);
-            color: white;
-        }
-        
-        .github-btn:hover {
-            background-color: #24292e;
         }
         
         .main-content {
@@ -1349,119 +1240,6 @@
             width: 100vw;
         }
         
-        /* Git Integration Styles */
-        .git-panel {
-            border-top: 1px solid #ddd;
-            padding: 15px;
-            background: #f8f9fa;
-        }
-        
-        .git-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        
-        .git-branch {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-        }
-        
-        .git-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .git-action-btn {
-            width: 100%;
-            justify-content: center;
-            padding: 8px;
-            font-size: 0.8rem;
-        }
-        
-        .git-status {
-            margin-top: 15px;
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 10px;
-            background: white;
-        }
-        
-        .git-status-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 5px;
-            font-size: 0.85rem;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .git-status-item:last-child {
-            border-bottom: none;
-        }
-        
-        .git-status-added {
-            color: var(--git-added);
-        }
-        
-        .git-status-modified {
-            color: var(--git-modified);
-        }
-        
-        .git-status-deleted {
-            color: var(--git-deleted);
-        }
-        
-        .git-status-untracked {
-            color: var(--git-untracked);
-        }
-        
-        .git-commit-message {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-top: 10px;
-            resize: vertical;
-            min-height: 60px;
-            font-family: inherit;
-        }
-        
-        /* Git Icon Indicators */
-        .git-icon-added::before {
-            content: "•";
-            color: var(--git-added);
-            font-weight: bold;
-            margin-right: 5px;
-        }
-        
-        .git-icon-modified::before {
-            content: "•";
-            color: var(--git-modified);
-            font-weight: bold;
-            margin-right: 5px;
-        }
-        
-        .git-icon-deleted::before {
-            content: "•";
-            color: var(--git-deleted);
-            font-weight: bold;
-            margin-right: 5px;
-        }
-        
-        .git-icon-untracked::before {
-            content: "•";
-            color: var(--git-untracked);
-            font-weight: bold;
-            margin-right: 5px;
-        }
-        
         /* File upload area */
         .file-upload-area {
             padding: 15px;
@@ -1527,17 +1305,6 @@
             margin: 10px 0;
         }
         
-        /* Git Repository Modal */
-        .git-repo-modal .modal-content {
-            max-width: 600px;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: #4a69bd;
-            box-shadow: 0 0 0 2px rgba(74, 105, 189, 0.2);
-        }
-        
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .container {
@@ -1593,34 +1360,26 @@
                 margin-top: 3px;
             }
             
-            .git-actions {
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-            
-            .git-action-btn {
-                flex: 1;
-                min-width: 120px;
-            }
-            
             .language-select-grid {
                 grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .github-repo-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            
-            .github-repo-stats {
-                width: 100%;
-                justify-content: space-between;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Auto-save Indicator -->
+    <div class="auto-save-indicator" id="auto-save-indicator">
+        <i class="fas fa-save"></i>
+        <span>Auto-saved</span>
+    </div>
+    
+    <!-- Recovery Notice -->
+    <div class="recovery-notice" id="recovery-notice">
+        <i class="fas fa-history"></i>
+        <span>Recovered unsaved changes from previous session</span>
+        <button id="dismiss-recovery" class="file-action-btn" style="margin-left: auto;">Dismiss</button>
+    </div>
+    
     <!-- Offline Indicator -->
     <div class="offline-indicator" id="offline-indicator">
         <i class="fas fa-wifi-slash"></i>
@@ -1636,28 +1395,6 @@
         <div class="banner-actions">
             <button class="install-btn" id="install-button-main">Install</button>
             <button class="dismiss-btn" id="dismiss-button">Later</button>
-        </div>
-    </div>
-    
-    <!-- Add to Home Screen Instructions -->
-    <div class="install-guide" id="install-guide">
-        <div class="install-steps">
-            <h2>How to Install</h2>
-            <div class="install-step">
-                <i class="fas fa-mobile-alt"></i>
-                <span>Tap the Share button <i class="fas fa-share-alt"></i></span>
-            </div>
-            <div class="install-step">
-                <i class="fas fa-plus-square"></i>
-                <span>Select "Add to Home Screen"</span>
-            </div>
-            <div class="install-step">
-                <i class="fas fa-check-circle"></i>
-                <span>Tap "Add" to install the app</span>
-            </div>
-            <button class="close-install-guide" id="close-install-guide" style="margin-top: 20px; padding: 10px 20px; background: var(--info); color: white; border: none; border-radius: 5px; cursor: pointer;">
-                Got it!
-            </button>
         </div>
     </div>
     
@@ -1721,17 +1458,47 @@
                         </div>
                         <div>.py</div>
                     </div>
+                    <div class="language-option" data-type="cpp">
+                        <div class="language-icon" style="color: var(--cplusplus);">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div>.cpp</div>
+                    </div>
                     <div class="language-option" data-type="php">
                         <div class="language-icon" style="color: var(--php);">
                             <i class="fab fa-php"></i>
                         </div>
                         <div>.php</div>
                     </div>
+                    <div class="language-option" data-type="java">
+                        <div class="language-icon" style="color: var(--java);">
+                            <i class="fab fa-java"></i>
+                        </div>
+                        <div>.java</div>
+                    </div>
+                    <div class="language-option" data-type="csharp">
+                        <div class="language-icon" style="color: var(--csharp);">
+                            <i class="fas fa-copyright"></i>
+                        </div>
+                        <div>.cs</div>
+                    </div>
                     <div class="language-option" data-type="json">
                         <div class="language-icon" style="color: var(--info);">
                             <i class="fas fa-code"></i>
                         </div>
                         <div>.json</div>
+                    </div>
+                    <div class="language-option" data-type="txt">
+                        <div class="language-icon" style="color: #666;">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div>.txt</div>
+                    </div>
+                    <div class="language-option" data-type="md">
+                        <div class="language-icon" style="color: #333;">
+                            <i class="fab fa-markdown"></i>
+                        </div>
+                        <div>.md</div>
                     </div>
                 </div>
             </div>
@@ -1742,178 +1509,6 @@
             <div class="modal-buttons">
                 <button class="modal-btn cancel-btn" id="cancel-new-file">Cancel</button>
                 <button class="modal-btn create-btn" id="create-new-file">Create File</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- GitHub Login Modal -->
-    <div class="modal" id="github-login-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fab fa-github"></i> Connect to GitHub</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div style="padding: 20px; text-align: center;">
-                <div id="github-auth-container">
-                    <i class="fab fa-github" style="font-size: 4rem; color: #333; margin-bottom: 20px;"></i>
-                    <h3>Connect Your GitHub Account</h3>
-                    <p style="color: #666; margin-bottom: 30px;">Connect to GitHub to save your projects, collaborate with others, and sync across devices.</p>
-                    
-                    <div class="github-auth-options">
-                        <button id="github-personal-token-btn" class="save-btn" style="width: 100%; padding: 15px; margin-bottom: 10px;">
-                            <i class="fas fa-key"></i> Use Personal Access Token
-                        </button>
-                        <button id="github-oauth-btn" class="github-btn" style="width: 100%; padding: 15px;">
-                            <i class="fab fa-github"></i> Sign in with GitHub
-                        </button>
-                    </div>
-                    
-                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px; text-align: left;">
-                        <small>
-                            <strong>Recommended:</strong> Use "Personal Access Token" for full control.
-                            <a href="https://github.com/settings/tokens/new" target="_blank" style="color: #4a69bd;">
-                                Create token with "repo" scope
-                            </a>
-                        </small>
-                    </div>
-                </div>
-                
-                <div id="github-token-form" style="display: none;">
-                    <div class="form-group">
-                        <label for="github-token">Personal Access Token</label>
-                        <input type="password" id="github-token" class="form-control" 
-                               placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-                        <small style="color: #666;">Create token at: github.com/settings/tokens/new</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="github-username">GitHub Username</label>
-                        <input type="text" id="github-username" class="form-control" 
-                               placeholder="your-username">
-                    </div>
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
-                        <button id="connect-with-token" class="save-btn" style="flex: 1;">
-                            <i class="fas fa-link"></i> Connect
-                        </button>
-                        <button id="cancel-token" class="reset-btn" style="flex: 1;">
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- GitHub Repository Selector Modal -->
-    <div class="modal" id="github-repo-selector">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fab fa-github"></i> Select Repository</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div style="padding: 20px;">
-                <div class="form-group">
-                    <input type="text" id="repo-search" class="form-control" 
-                           placeholder="Search repositories...">
-                </div>
-                
-                <div id="repos-list" style="max-height: 300px; overflow-y: auto; margin: 15px 0; border: 1px solid #ddd; border-radius: 5px; padding: 10px;">
-                    <!-- Repositories will be loaded here -->
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <i class="fas fa-spinner fa-spin"></i> Loading repositories...
-                    </div>
-                </div>
-                
-                <div style="display: flex; gap: 10px;">
-                    <button id="create-new-repo-btn" class="save-btn" style="flex: 1;">
-                        <i class="fas fa-plus"></i> Create New
-                    </button>
-                    <button id="refresh-repos-btn" class="github-btn" style="flex: 1;">
-                        <i class="fas fa-sync-alt"></i> Refresh
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- GitHub Operations Modal -->
-    <div class="modal" id="github-operations-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fab fa-github"></i> GitHub Operations</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div style="padding: 20px;">
-                <div id="current-repo-info" style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
-                    <strong>Current Repository:</strong>
-                    <div id="current-repo-name">Not connected</div>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
-                    <button id="github-status-btn" class="git-action-btn">
-                        <i class="fas fa-list"></i> Status
-                    </button>
-                    <button id="github-pull-btn" class="git-action-btn">
-                        <i class="fas fa-download"></i> Pull
-                    </button>
-                    <button id="github-commit-btn" class="git-action-btn">
-                        <i class="fas fa-check"></i> Commit
-                    </button>
-                    <button id="github-push-btn" class="git-action-btn">
-                        <i class="fas fa-upload"></i> Push
-                    </button>
-                    <button id="github-switch-repo" class="git-action-btn" style="grid-column: span 2;">
-                        <i class="fas fa-exchange-alt"></i> Switch Repository
-                    </button>
-                </div>
-                
-                <div class="form-group">
-                    <label for="github-commit-message">Commit Message</label>
-                    <textarea id="github-commit-message" class="form-control" 
-                             placeholder="Describe your changes..." rows="3"></textarea>
-                </div>
-                
-                <div id="github-changes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; border-radius: 5px; padding: 10px; margin-top: 15px;">
-                    <!-- Changes will be shown here -->
-                </div>
-                
-                <div style="margin-top: 20px;">
-                    <button id="disconnect-github" class="reset-btn" style="width: 100%;">
-                        <i class="fas fa-sign-out-alt"></i> Disconnect from GitHub
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Create Repository Modal -->
-    <div class="modal" id="create-repo-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fab fa-github"></i> Create New Repository</h3>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div style="padding: 20px;">
-                <div class="form-group">
-                    <label for="new-repo-name">Repository Name</label>
-                    <input type="text" id="new-repo-name" class="form-control" placeholder="my-project">
-                </div>
-                <div class="form-group">
-                    <label for="new-repo-desc">Description (optional)</label>
-                    <input type="text" id="new-repo-desc" class="form-control" placeholder="My awesome project">
-                </div>
-                <div class="form-group">
-                    <label for="new-repo-visibility">
-                        <input type="checkbox" id="new-repo-private"> Private repository
-                    </label>
-                </div>
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button id="create-repo-confirm" class="save-btn" style="flex: 1;">
-                        <i class="fas fa-plus"></i> Create Repository
-                    </button>
-                    <button id="cancel-create-repo" class="reset-btn" style="flex: 1;">
-                        Cancel
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -1956,9 +1551,6 @@
                 </button>
                 <button class="save-btn" id="save-btn">
                     <i class="fas fa-save"></i> Save
-                </button>
-                <button class="github-btn" id="github-btn">
-                    <i class="fab fa-github"></i> GitHub
                 </button>
                 <button class="upload-btn" id="upload-btn">
                     <i class="fas fa-upload"></i> Upload
@@ -2011,44 +1603,13 @@
                     <!-- Files will be loaded here dynamically -->
                 </div>
                 
-                <!-- GitHub Integration Panel -->
-                <div class="git-panel">
-                    <div class="git-header">
-                        <div class="git-branch">
-                            <i class="fas fa-code-branch"></i>
-                            <span id="current-branch">main</span>
-                        </div>
-                        <button class="github-btn git-action-btn" id="github-init-btn">
-                            <i class="fas fa-plus"></i> Connect
-                        </button>
+                <!-- Auto-save Status -->
+                <div style="padding: 10px; border-top: 1px solid #ddd; font-size: 0.8rem; color: #666;">
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Auto-save: <span id="auto-save-status">Active</span></span>
                     </div>
-                    
-                    <div class="git-actions">
-                        <button class="git-action-btn" id="github-status-panel-btn">
-                            <i class="fas fa-list"></i> Status
-                        </button>
-                        <button class="git-action-btn" id="github-add-btn">
-                            <i class="fas fa-plus-square"></i> Stage All
-                        </button>
-                        <button class="git-action-btn" id="github-commit-panel-btn">
-                            <i class="fas fa-check"></i> Commit
-                        </button>
-                        <button class="git-action-btn" id="github-push-panel-btn">
-                            <i class="fas fa-upload"></i> Push
-                        </button>
-                        <button class="git-action-btn" id="github-pull-panel-btn">
-                            <i class="fas fa-download"></i> Pull
-                        </button>
-                    </div>
-                    
-                    <textarea class="git-commit-message" id="github-commit-panel-message" placeholder="Commit message..."></textarea>
-                    
-                    <div class="git-status" id="github-status-panel">
-                        <div class="git-status-item">
-                            <span class="git-icon-untracked"></span>
-                            <span>Not connected to GitHub</span>
-                        </div>
-                    </div>
+                    <small>Files are automatically saved every 30 seconds</small>
                 </div>
                 
                 <!-- File Upload Area -->
@@ -2074,12 +1635,10 @@
                         <option value="css">CSS</option>
                         <option value="js">JavaScript</option>
                         <option value="python">Python</option>
+                        <option value="cpp">C++</option>
                         <option value="php">PHP</option>
                         <option value="java">Java</option>
-                        <option value="ruby">Ruby</option>
                         <option value="csharp">C#</option>
-                        <option value="cpp">C++</option>
-                        <option value="swift">Swift</option>
                     </select>
                     <div class="editor-tabs">
                         <div class="editor-tab active" data-tab="html">
@@ -2094,6 +1653,9 @@
                         <div class="editor-tab" data-tab="python">
                             <i class="fab fa-python" style="color: var(--python);"></i> Python
                         </div>
+                        <div class="editor-tab" data-tab="cpp">
+                            <i class="fas fa-code" style="color: var(--cplusplus);"></i> C++
+                        </div>
                         <div class="editor-tab" data-tab="php">
                             <i class="fab fa-php" style="color: var(--php);"></i> PHP
                         </div>
@@ -2103,6 +1665,7 @@
                         <div class="mobile-tab" data-tab="css">CSS</div>
                         <div class="mobile-tab" data-tab="js">JS</div>
                         <div class="mobile-tab" data-tab="python">Python</div>
+                        <div class="mobile-tab" data-tab="cpp">C++</div>
                         <div class="mobile-tab" data-tab="php">PHP</div>
                     </div>
                     <div class="editor-content">
@@ -2137,6 +1700,12 @@
                                 <span><i class="fab fa-python" style="color: var(--python);"></i> Python</span>
                             </div>
                             <div id="python-editor" class="monaco-editor-container"></div>
+                        </div>
+                        <div class="code-editor cpp-editor" style="display: none;">
+                            <div class="editor-header">
+                                <span><i class="fas fa-code" style="color: var(--cplusplus);"></i> C++</span>
+                            </div>
+                            <div id="cpp-editor" class="monaco-editor-container"></div>
                         </div>
                         <div class="code-editor php-editor" style="display: none;">
                             <div class="editor-header">
@@ -2187,633 +1756,7 @@
     </div>
 
     <script>
-        // === GITHUB CONFIGURATION ===
-        // Replace these with your own GitHub OAuth App credentials
-        // Create one at: https://github.com/settings/developers
-        const GITHUB_CONFIG = {
-            clientId: 'b2eb8e1b5e6a0f7c8d9e', // Replace with your actual client ID
-            redirectUri: window.location.origin + '/oauth-callback.html',
-            scope: 'repo user',
-            apiBase: 'https://api.github.com',
-            authorizeUrl: 'https://github.com/login/oauth/authorize',
-            tokenUrl: 'https://github.com/login/oauth/access_token'
-        };
-
-        // === GITHUB INTEGRATION CLASS ===
-        class GitHubIntegration {
-            constructor() {
-                this.accessToken = localStorage.getItem('github_access_token') || null;
-                this.user = JSON.parse(localStorage.getItem('github_user') || 'null');
-                this.currentRepo = JSON.parse(localStorage.getItem('github_repo') || 'null');
-                this.isConnected = !!this.accessToken;
-                this.baseURL = 'https://api.github.com';
-                this.octokit = null;
-                
-                this.init();
-            }
-            
-            init() {
-                this.setupEventListeners();
-                this.updateUI();
-            }
-            
-            setupEventListeners() {
-                // GitHub button
-                document.getElementById('github-btn')?.addEventListener('click', () => this.showGitHubModal());
-                
-                // GitHub panel buttons
-                document.getElementById('github-init-btn')?.addEventListener('click', () => this.showGitHubModal());
-                document.getElementById('github-status-panel-btn')?.addEventListener('click', () => this.showStatus());
-                document.getElementById('github-add-btn')?.addEventListener('click', () => this.stageAllFiles());
-                document.getElementById('github-commit-panel-btn')?.addEventListener('click', () => this.commitChanges());
-                document.getElementById('github-push-panel-btn')?.addEventListener('click', () => this.pushChanges());
-                document.getElementById('github-pull-panel-btn')?.addEventListener('click', () => this.pullChanges());
-                
-                // GitHub login modal
-                document.getElementById('github-personal-token-btn')?.addEventListener('click', () => this.showTokenForm());
-                document.getElementById('github-oauth-btn')?.addEventListener('click', () => this.authenticateWithOAuth());
-                document.getElementById('connect-with-token')?.addEventListener('click', () => this.connectWithToken());
-                document.getElementById('cancel-token')?.addEventListener('click', () => this.hideTokenForm());
-                
-                // GitHub operations modal
-                document.getElementById('github-status-btn')?.addEventListener('click', () => this.showStatus());
-                document.getElementById('github-pull-btn')?.addEventListener('click', () => this.pullChanges());
-                document.getElementById('github-commit-btn')?.addEventListener('click', () => this.commitChanges());
-                document.getElementById('github-push-btn')?.addEventListener('click', () => this.pushChanges());
-                document.getElementById('github-switch-repo')?.addEventListener('click', () => this.showRepoSelector());
-                document.getElementById('disconnect-github')?.addEventListener('click', () => this.disconnect());
-                
-                // Repository selector
-                document.getElementById('create-new-repo-btn')?.addEventListener('click', () => this.showCreateRepoModal());
-                document.getElementById('refresh-repos-btn')?.addEventListener('click', () => this.loadRepositories());
-                
-                // Create repository modal
-                document.getElementById('create-repo-confirm')?.addEventListener('click', () => this.createRepository());
-                document.getElementById('cancel-create-repo')?.addEventListener('click', () => {
-                    document.getElementById('create-repo-modal').classList.remove('show');
-                });
-                
-                // Close modals
-                document.querySelectorAll('.close-modal').forEach(closeBtn => {
-                    closeBtn.addEventListener('click', function() {
-                        this.closest('.modal').classList.remove('show');
-                    });
-                });
-                
-                // Search repositories
-                document.getElementById('repo-search')?.addEventListener('input', (e) => {
-                    this.filterRepositories(e.target.value);
-                });
-            }
-            
-            showGitHubModal() {
-                if (!this.isConnected) {
-                    document.getElementById('github-login-modal').classList.add('show');
-                } else {
-                    document.getElementById('github-operations-modal').classList.add('show');
-                    this.updateCurrentRepoInfo();
-                }
-            }
-            
-            showTokenForm() {
-                document.getElementById('github-auth-container').style.display = 'none';
-                document.getElementById('github-token-form').style.display = 'block';
-            }
-            
-            hideTokenForm() {
-                document.getElementById('github-auth-container').style.display = 'block';
-                document.getElementById('github-token-form').style.display = 'none';
-                document.getElementById('github-login-modal').classList.remove('show');
-            }
-            
-            async authenticateWithOAuth() {
-                // For OAuth, we need a backend server
-                // For now, we'll use token-based authentication
-                this.showTokenForm();
-                showInfoMessage('For OAuth authentication, you need to set up a backend server. Using token authentication instead.');
-            }
-            
-            async connectWithToken() {
-                const token = document.getElementById('github-token').value;
-                const username = document.getElementById('github-username').value;
-                
-                if (!token) {
-                    showErrorMessage('Please enter a GitHub token');
-                    return;
-                }
-                
-                if (!username) {
-                    showErrorMessage('Please enter your GitHub username');
-                    return;
-                }
-                
-                try {
-                    // Test the token by fetching user info
-                    const response = await fetch(`${this.baseURL}/user`, {
-                        headers: {
-                            'Authorization': `token ${token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error('Invalid token or network error');
-                    }
-                    
-                    const userData = await response.json();
-                    
-                    if (userData.login.toLowerCase() !== username.toLowerCase()) {
-                        showWarningMessage(`Token belongs to ${userData.login}, but you entered ${username}. Using ${userData.login}.`);
-                    }
-                    
-                    // Save token and user info
-                    this.accessToken = token;
-                    this.user = userData;
-                    this.isConnected = true;
-                    
-                    localStorage.setItem('github_access_token', token);
-                    localStorage.setItem('github_user', JSON.stringify(userData));
-                    
-                    document.getElementById('github-login-modal').classList.remove('show');
-                    this.updateUI();
-                    
-                    showSuccessMessage(`Connected to GitHub as ${userData.login}`);
-                    
-                    // Load repositories
-                    await this.loadRepositories();
-                    
-                } catch (error) {
-                    console.error('GitHub connection error:', error);
-                    showErrorMessage('Failed to connect to GitHub: ' + error.message);
-                }
-            }
-            
-            async loadRepositories() {
-                if (!this.isConnected) return;
-                
-                try {
-                    const reposList = document.getElementById('repos-list');
-                    reposList.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;"><i class="fas fa-spinner fa-spin"></i> Loading repositories...</div>';
-                    
-                    const response = await fetch(`${this.baseURL}/user/repos?per_page=100&sort=updated`, {
-                        headers: {
-                            'Authorization': `token ${this.accessToken}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    });
-                    
-                    if (!response.ok) throw new Error('Failed to load repositories');
-                    
-                    const repos = await response.json();
-                    
-                    if (repos.length === 0) {
-                        reposList.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;">No repositories found</div>';
-                        return;
-                    }
-                    
-                    reposList.innerHTML = '';
-                    
-                    repos.forEach(repo => {
-                        const repoElement = document.createElement('div');
-                        repoElement.className = 'github-repo-item';
-                        repoElement.dataset.owner = repo.owner.login;
-                        repoElement.dataset.repo = repo.name;
-                        
-                        repoElement.innerHTML = `
-                            <div class="github-repo-info">
-                                <div class="github-repo-name">${repo.full_name}</div>
-                                <div class="github-repo-desc">${repo.description || 'No description'}</div>
-                                <div class="github-repo-stats">
-                                    <span><i class="fas fa-code-branch"></i> ${repo.default_branch}</span>
-                                    <span><i class="fas fa-star"></i> ${repo.stargazers_count}</span>
-                                    <span><i class="fas fa-code"></i> ${repo.language || 'Not specified'}</span>
-                                    <span><i class="fas fa-clock"></i> ${new Date(repo.updated_at).toLocaleDateString()}</span>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        `;
-                        
-                        repoElement.addEventListener('click', () => {
-                            this.selectRepository(repo);
-                        });
-                        
-                        reposList.appendChild(repoElement);
-                    });
-                    
-                    document.getElementById('github-repo-selector').classList.add('show');
-                    
-                } catch (error) {
-                    console.error('Error loading repositories:', error);
-                    showErrorMessage('Failed to load repositories: ' + error.message);
-                }
-            }
-            
-            filterRepositories(searchTerm) {
-                const repoItems = document.querySelectorAll('.github-repo-item');
-                
-                repoItems.forEach(item => {
-                    const repoName = item.querySelector('.github-repo-name').textContent.toLowerCase();
-                    const repoDesc = item.querySelector('.github-repo-desc').textContent.toLowerCase();
-                    const search = searchTerm.toLowerCase();
-                    
-                    if (repoName.includes(search) || repoDesc.includes(search)) {
-                        item.style.display = 'flex';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            }
-            
-            async selectRepository(repo) {
-                try {
-                    this.currentRepo = repo;
-                    localStorage.setItem('github_repo', JSON.stringify(repo));
-                    
-                    document.getElementById('github-repo-selector').classList.remove('show');
-                    this.updateUI();
-                    
-                    showSuccessMessage(`Selected repository: ${repo.full_name}`);
-                    
-                    // Ask if user wants to pull the repository
-                    if (confirm(`Do you want to pull files from "${repo.full_name}"? This will overwrite your current files.`)) {
-                        await this.pullRepository();
-                    }
-                    
-                } catch (error) {
-                    console.error('Error selecting repository:', error);
-                    showErrorMessage('Failed to select repository: ' + error.message);
-                }
-            }
-            
-            async pullRepository() {
-                if (!this.currentRepo || !this.isConnected) {
-                    showErrorMessage('Please connect to a repository first');
-                    return;
-                }
-                
-                try {
-                    showInfoMessage('Pulling repository...');
-                    
-                    // Get repository contents
-                    const response = await fetch(`${this.baseURL}/repos/${this.currentRepo.full_name}/contents/`, {
-                        headers: {
-                            'Authorization': `token ${this.accessToken}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    });
-                    
-                    if (!response.ok) throw new Error('Failed to get repository contents');
-                    
-                    const contents = await response.json();
-                    
-                    // Clear existing files
-                    fileManager.files.clear();
-                    fileManager.folders.clear();
-                    
-                    // Download all files
-                    await this.downloadDirectory(contents, '');
-                    
-                    // Save to localStorage
-                    fileManager.saveToStorage();
-                    fileManager.renderFileExplorer();
-                    
-                    showSuccessMessage('Repository pulled successfully!');
-                    
-                } catch (error) {
-                    console.error('Error pulling repository:', error);
-                    showErrorMessage('Failed to pull repository: ' + error.message);
-                }
-            }
-            
-            async downloadDirectory(contents, path) {
-                for (const item of contents) {
-                    if (item.type === 'file') {
-                        await this.downloadFile(item, path);
-                    } else if (item.type === 'dir') {
-                        // Create folder
-                        fileManager.createFolder(item.name, path);
-                        
-                        // Get directory contents
-                        const dirResponse = await fetch(item.url, {
-                            headers: {
-                                'Authorization': `token ${this.accessToken}`,
-                                'Accept': 'application/vnd.github.v3+json'
-                            }
-                        });
-                        
-                        if (dirResponse.ok) {
-                            const dirContents = await dirResponse.json();
-                            await this.downloadDirectory(dirContents, path + item.name + '/');
-                        }
-                    }
-                }
-            }
-            
-            async downloadFile(item, path) {
-                try {
-                    const fileResponse = await fetch(item.download_url, {
-                        headers: {
-                            'Authorization': `token ${this.accessToken}`
-                        }
-                    });
-                    
-                    if (!fileResponse.ok) throw new Error('Failed to download file');
-                    
-                    const content = await fileResponse.text();
-                    const fileName = path + item.name;
-                    
-                    // Determine file type
-                    const extension = item.name.split('.').pop();
-                    const typeMap = {
-                        'html': 'html',
-                        'htm': 'html',
-                        'css': 'css',
-                        'js': 'js',
-                        'py': 'python',
-                        'php': 'php',
-                        'json': 'json',
-                        'txt': 'txt',
-                        'md': 'md',
-                        'xml': 'xml',
-                        'sql': 'sql',
-                        'java': 'java',
-                        'c': 'c',
-                        'cpp': 'cpp',
-                        'cs': 'csharp',
-                        'go': 'go',
-                        'rs': 'rust',
-                        'rb': 'ruby',
-                        'swift': 'swift',
-                        'kt': 'kotlin',
-                        'ts': 'typescript'
-                    };
-                    
-                    const fileType = typeMap[extension] || 'txt';
-                    
-                    // Create file in file manager
-                    fileManager.files.set(fileName, {
-                        name: item.name,
-                        path: fileName,
-                        content: content,
-                        type: fileType,
-                        size: content.length,
-                        modified: new Date(item.updated_at).getTime(),
-                        created: new Date(item.created_at || item.updated_at).getTime()
-                    });
-                } catch (error) {
-                    console.error(`Error downloading file ${item.name}:`, error);
-                }
-            }
-            
-            async pushChanges() {
-                if (!this.currentRepo || !this.isConnected) {
-                    showErrorMessage('Please connect to a repository first');
-                    return;
-                }
-                
-                try {
-                    showInfoMessage('Pushing changes to GitHub...');
-                    
-                    // For client-side, we'll use a simplified approach
-                    // In a real implementation, you would use the GitHub API
-                    // to create commits, trees, and pushes
-                    
-                    // Since we can't directly push from client-side without 
-                    // exposing the token in a way that allows write access,
-                    // we'll show a message about the limitations
-                    
-                    showWarningMessage('Direct pushing from client-side has limitations. For full functionality, use the GitHub website or Git command line.');
-                    
-                    // For demonstration, we'll simulate a push
-                    setTimeout(() => {
-                        showSuccessMessage('Changes would be pushed to GitHub in a full implementation');
-                    }, 1000);
-                    
-                } catch (error) {
-                    console.error('Error pushing changes:', error);
-                    showErrorMessage('Failed to push changes: ' + error.message);
-                }
-            }
-            
-            async pullChanges() {
-                await this.pullRepository();
-            }
-            
-            async commitChanges() {
-                const message = document.getElementById('github-commit-message').value || 
-                              document.getElementById('github-commit-panel-message').value;
-                
-                if (!message) {
-                    showErrorMessage('Please enter a commit message');
-                    return;
-                }
-                
-                if (!this.currentRepo || !this.isConnected) {
-                    showErrorMessage('Please connect to a repository first');
-                    return;
-                }
-                
-                try {
-                    showInfoMessage('Committing changes...');
-                    
-                    // In a real implementation, this would create a commit via GitHub API
-                    // For now, we'll simulate it
-                    
-                    setTimeout(() => {
-                        showSuccessMessage(`Commit created: "${message}"`);
-                        document.getElementById('github-commit-message').value = '';
-                        document.getElementById('github-commit-panel-message').value = '';
-                    }, 1000);
-                    
-                } catch (error) {
-                    console.error('Error committing changes:', error);
-                    showErrorMessage('Failed to commit changes: ' + error.message);
-                }
-            }
-            
-            async stageAllFiles() {
-                showSuccessMessage('All files staged for commit');
-            }
-            
-            async showStatus() {
-                if (!this.isConnected) {
-                    showErrorMessage('Please connect to GitHub first');
-                    return;
-                }
-                
-                try {
-                    const changesDiv = document.getElementById('github-changes');
-                    const statusPanel = document.getElementById('github-status-panel');
-                    
-                    // Get local files
-                    const files = Array.from(fileManager.files.values());
-                    
-                    if (files.length === 0) {
-                        changesDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;">No files to track</div>';
-                        statusPanel.innerHTML = '<div class="git-status-item"><span class="git-icon-untracked"></span><span>No files to track</span></div>';
-                        return;
-                    }
-                    
-                    // Update changes modal
-                    changesDiv.innerHTML = '';
-                    files.forEach(file => {
-                        const changeElement = document.createElement('div');
-                        changeElement.className = 'github-change-item';
-                        changeElement.innerHTML = `
-                            <div class="change-status change-modified"></div>
-                            <span>${file.path}</span>
-                            <span style="margin-left: auto; font-size: 0.8em; color: #666;">${fileManager.formatFileSize(file.size)}</span>
-                        `;
-                        changesDiv.appendChild(changeElement);
-                    });
-                    
-                    // Update status panel
-                    statusPanel.innerHTML = '';
-                    files.forEach(file => {
-                        const statusElement = document.createElement('div');
-                        statusElement.className = 'git-status-item';
-                        statusElement.innerHTML = `
-                            <span class="git-icon-modified"></span>
-                            <span>${file.path}</span>
-                        `;
-                        statusPanel.appendChild(statusElement);
-                    });
-                    
-                    showSuccessMessage(`Found ${files.length} files to track`);
-                    
-                } catch (error) {
-                    console.error('Error showing status:', error);
-                    showErrorMessage('Failed to show status: ' + error.message);
-                }
-            }
-            
-            showRepoSelector() {
-                if (!this.isConnected) {
-                    showErrorMessage('Please connect to GitHub first');
-                    return;
-                }
-                
-                this.loadRepositories();
-            }
-            
-            showCreateRepoModal() {
-                document.getElementById('github-repo-selector').classList.remove('show');
-                document.getElementById('create-repo-modal').classList.add('show');
-            }
-            
-            async createRepository() {
-                const name = document.getElementById('new-repo-name').value;
-                const description = document.getElementById('new-repo-desc').value;
-                const isPrivate = document.getElementById('new-repo-private').checked;
-                
-                if (!name) {
-                    showErrorMessage('Please enter a repository name');
-                    return;
-                }
-                
-                try {
-                    showInfoMessage('Creating repository...');
-                    
-                    const response = await fetch(`${this.baseURL}/user/repos`, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `token ${this.accessToken}`,
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/vnd.github.v3+json'
-                        },
-                        body: JSON.stringify({
-                            name: name,
-                            description: description,
-                            private: isPrivate,
-                            auto_init: true
-                        })
-                    });
-                    
-                    if (!response.ok) throw new Error('Failed to create repository');
-                    
-                    const repo = await response.json();
-                    this.currentRepo = repo;
-                    localStorage.setItem('github_repo', JSON.stringify(repo));
-                    
-                    document.getElementById('create-repo-modal').classList.remove('show');
-                    this.updateUI();
-                    
-                    showSuccessMessage(`Repository created: ${repo.full_name}`);
-                    
-                } catch (error) {
-                    console.error('Error creating repository:', error);
-                    showErrorMessage('Failed to create repository: ' + error.message);
-                }
-            }
-            
-            disconnect() {
-                if (confirm('Are you sure you want to disconnect from GitHub?')) {
-                    this.accessToken = null;
-                    this.user = null;
-                    this.currentRepo = null;
-                    this.isConnected = false;
-                    
-                    localStorage.removeItem('github_access_token');
-                    localStorage.removeItem('github_user');
-                    localStorage.removeItem('github_repo');
-                    
-                    this.updateUI();
-                    showSuccessMessage('Disconnected from GitHub');
-                    
-                    document.getElementById('github-operations-modal').classList.remove('show');
-                }
-            }
-            
-            updateUI() {
-                const githubBtn = document.getElementById('github-btn');
-                const currentBranch = document.getElementById('current-branch');
-                const currentRepoName = document.getElementById('current-repo-name');
-                
-                if (this.isConnected) {
-                    githubBtn.innerHTML = `<i class="fab fa-github"></i> GitHub`;
-                    githubBtn.classList.add('github-connected');
-                    
-                    if (currentBranch) {
-                        currentBranch.textContent = this.currentRepo ? this.currentRepo.default_branch : 'main';
-                    }
-                    
-                    if (currentRepoName) {
-                        currentRepoName.textContent = this.currentRepo ? this.currentRepo.full_name : 'Not connected';
-                    }
-                    
-                    // Update user info
-                    if (this.user) {
-                        const existingInfo = githubBtn.parentNode.querySelector('.github-user-info');
-                        if (existingInfo) existingInfo.remove();
-                        
-                        const userInfo = document.createElement('div');
-                        userInfo.className = 'github-user-info';
-                        userInfo.innerHTML = `
-                            <img src="${this.user.avatar_url}" class="github-user-avatar">
-                            <span>${this.user.login}</span>
-                        `;
-                        
-                        githubBtn.parentNode.insertBefore(userInfo, githubBtn.nextSibling);
-                    }
-                } else {
-                    githubBtn.innerHTML = `<i class="fab fa-github"></i> GitHub`;
-                    githubBtn.classList.remove('github-connected');
-                    
-                    // Remove user info
-                    const userInfo = githubBtn.parentNode.querySelector('.github-user-info');
-                    if (userInfo) userInfo.remove();
-                }
-            }
-            
-            updateCurrentRepoInfo() {
-                const currentRepoName = document.getElementById('current-repo-name');
-                if (currentRepoName && this.currentRepo) {
-                    currentRepoName.textContent = this.currentRepo.full_name;
-                }
-            }
-        }
-
-        // === FILE MANAGEMENT SYSTEM ===
+        // === FILE MANAGEMENT SYSTEM WITH AUTO-SAVE ===
         class FileManager {
             constructor() {
                 this.files = new Map();
@@ -2821,13 +1764,19 @@
                 this.currentFile = null;
                 this.selectedFile = null;
                 this.contextMenuFile = null;
+                this.autoSaveTimer = null;
+                this.isAutoSaving = false;
+                this.unsavedChanges = new Map(); // Track unsaved changes
+                this.recoveryData = null; // For crash recovery
                 this.init();
             }
             
             init() {
                 this.loadFromStorage();
+                this.checkForRecovery();
                 this.renderFileExplorer();
                 this.setupEventListeners();
+                this.startAutoSave();
             }
             
             loadFromStorage() {
@@ -2849,6 +1798,101 @@
                 } catch (error) {
                     console.error('Error loading files from storage:', error);
                     this.createDefaultFiles();
+                }
+            }
+            
+            checkForRecovery() {
+                // Check for unsaved recovery data
+                const recoveryData = localStorage.getItem('supremeamer_recovery');
+                const lastSaveTime = localStorage.getItem('supremeamer_last_save');
+                
+                if (recoveryData) {
+                    try {
+                        this.recoveryData = JSON.parse(recoveryData);
+                        const recoveryTime = new Date(parseInt(lastSaveTime || '0'));
+                        const now = new Date();
+                        const diffMinutes = (now - recoveryTime) / (1000 * 60);
+                        
+                        // Only show recovery if data is less than 1 hour old
+                        if (diffMinutes < 60 && this.recoveryData.files && this.recoveryData.files.length > 0) {
+                            setTimeout(() => {
+                                document.getElementById('recovery-notice').classList.add('show');
+                            }, 1000);
+                        } else {
+                            // Clear old recovery data
+                            localStorage.removeItem('supremeamer_recovery');
+                        }
+                    } catch (error) {
+                        console.error('Error parsing recovery data:', error);
+                    }
+                }
+            }
+            
+            saveRecoveryData() {
+                // Save current state for recovery
+                const recoveryState = {
+                    timestamp: Date.now(),
+                    files: Array.from(this.files.values()),
+                    folders: Array.from(this.folders.values()),
+                    currentFile: this.currentFile ? this.currentFile.path : null
+                };
+                
+                localStorage.setItem('supremeamer_recovery', JSON.stringify(recoveryState));
+                localStorage.setItem('supremeamer_last_save', Date.now().toString());
+            }
+            
+            startAutoSave() {
+                // Auto-save every 30 seconds
+                this.autoSaveTimer = setInterval(() => {
+                    this.autoSave();
+                }, 30000); // 30 seconds
+                
+                // Also save on page visibility change (when user switches tabs or minimizes)
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden) {
+                        this.autoSave();
+                    }
+                });
+                
+                // Save on page unload (browser/tab close)
+                window.addEventListener('beforeunload', (e) => {
+                    this.autoSave();
+                    // Don't prevent unload, just save
+                });
+            }
+            
+            autoSave() {
+                if (this.isAutoSaving) return;
+                
+                this.isAutoSaving = true;
+                const indicator = document.getElementById('auto-save-indicator');
+                
+                // Show saving indicator
+                indicator.classList.add('show', 'saving');
+                indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Saving...</span>';
+                
+                try {
+                    // Save all files to storage
+                    this.saveToStorage();
+                    
+                    // Save recovery data
+                    this.saveRecoveryData();
+                    
+                    // Update indicator
+                    indicator.classList.remove('saving');
+                    indicator.innerHTML = '<i class="fas fa-save"></i><span>Auto-saved</span>';
+                    
+                    // Hide indicator after 2 seconds
+                    setTimeout(() => {
+                        indicator.classList.remove('show');
+                    }, 2000);
+                    
+                } catch (error) {
+                    console.error('Auto-save error:', error);
+                    indicator.classList.remove('saving');
+                    indicator.innerHTML = '<i class="fas fa-exclamation-triangle"></i><span>Save failed</span>';
+                } finally {
+                    this.isAutoSaving = false;
                 }
             }
             
@@ -2969,6 +2013,47 @@ console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`,
                             size: 0,
                             modified: Date.now(),
                             created: Date.now()
+                        },
+                        'main.cpp': {
+                            name: 'main.cpp',
+                            path: 'main.cpp',
+                            content: `// C++ example code
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello from C++ in SupremeAmer IDE!" << endl;
+    cout << "This is a sample C++ program." << endl;
+    
+    // Simple calculation
+    int a = 5, b = 3;
+    int sum = a + b;
+    cout << a << " + " << b << " = " << sum << endl;
+    
+    return 0;
+}`,
+                            type: 'cpp',
+                            size: 0,
+                            modified: Date.now(),
+                            created: Date.now()
+                        },
+                        'hello.py': {
+                            name: 'hello.py',
+                            path: 'hello.py',
+                            content: `# Python example
+print("Hello from Python in SupremeAmer IDE!")
+
+def calculate(a, b):
+    return a + b
+
+if __name__ == "__main__":
+    result = calculate(5, 3)
+    print(f"5 + 3 = {result}")
+    print("Python is running successfully!")`,
+                            type: 'python',
+                            size: 0,
+                            modified: Date.now(),
+                            created: Date.now()
                         }
                     };
                     
@@ -3004,8 +2089,15 @@ console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`,
                 const fileName = name.endsWith(extension) ? name : name + extension;
                 const path = folder ? `${folder}/${fileName}` : fileName;
                 
-                if (this.files.has(path)) {
-                    throw new Error(`File "${fileName}" already exists in this location`);
+                // Check for duplicate name and add number if needed
+                let finalPath = path;
+                let counter = 1;
+                while (this.files.has(finalPath)) {
+                    const nameWithoutExt = name.endsWith(extension) ? name.slice(0, -extension.length) : name;
+                    finalPath = folder ? 
+                        `${folder}/${nameWithoutExt} (${counter})${extension}` : 
+                        `${nameWithoutExt} (${counter})${extension}`;
+                    counter++;
                 }
                 
                 // Default content based on file type
@@ -3014,8 +2106,8 @@ console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`,
                 }
                 
                 const file = {
-                    name: fileName,
-                    path: path,
+                    name: finalPath.split('/').pop(),
+                    path: finalPath,
                     content: content,
                     type: type,
                     size: new Blob([content]).size,
@@ -3023,7 +2115,7 @@ console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`,
                     created: Date.now()
                 };
                 
-                this.files.set(path, file);
+                this.files.set(finalPath, file);
                 this.saveToStorage();
                 this.renderFileExplorer();
                 
@@ -3033,18 +2125,24 @@ console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`,
             createFolder(name, parentFolder = '') {
                 const path = parentFolder ? `${parentFolder}/${name}` : name;
                 
-                if (this.folders.has(path)) {
-                    throw new Error(`Folder "${name}" already exists`);
+                // Check for duplicate name and add number if needed
+                let finalPath = path;
+                let counter = 1;
+                while (this.folders.has(finalPath)) {
+                    finalPath = parentFolder ? 
+                        `${parentFolder}/${name} (${counter})` : 
+                        `${name} (${counter})`;
+                    counter++;
                 }
                 
                 const folder = {
-                    name: name,
-                    path: path,
+                    name: finalPath.split('/').pop(),
+                    path: finalPath,
                     created: Date.now(),
                     modified: Date.now()
                 };
                 
-                this.folders.set(path, folder);
+                this.folders.set(finalPath, folder);
                 this.saveToStorage();
                 this.renderFileExplorer();
                 
@@ -3067,7 +2165,9 @@ console.log('Sample calculation: 5 + 3 =', calculate(5, 3));`,
                     'java': '.java',
                     'c': '.c',
                     'cpp': '.cpp',
+                    'cplusplus': '.cpp',
                     'cs': '.cs',
+                    'csharp': '.cs',
                     'go': '.go',
                     'rust': '.rs',
                     'ruby': '.rb',
@@ -3164,6 +2264,21 @@ def main():
 
 if __name__ == "__main__":
     main()`,
+                    'cpp': `// ${fileName} - C++ Program
+#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello from ${fileName}!" << endl;
+    cout << "C++ is running successfully." << endl;
+    
+    // Add your C++ code here
+    int a = 5, b = 3;
+    int sum = a + b;
+    cout << a << " + " << b << " = " << sum << endl;
+    
+    return 0;
+}`,
                     'php': `<?php
 // ${fileName} - PHP Script
 
@@ -3177,6 +2292,32 @@ echo "5 + 3 = " . \$result . "\\n";
 // Database connection example (commented out)
 // \$conn = new mysqli('localhost', 'username', 'password', 'database');
 ?>`,
+                    'java': `// ${fileName} - Java Program
+public class ${fileName.replace('.java', '').replace('.', '_')} {
+    public static void main(String[] args) {
+        System.out.println("Hello from ${fileName}!");
+        System.out.println("Java is running successfully.");
+        
+        // Add your Java code here
+        int a = 5, b = 3;
+        int sum = a + b;
+        System.out.println(a + " + " + b + " = " + sum);
+    }
+}`,
+                    'csharp': `// ${fileName} - C# Program
+using System;
+
+class Program {
+    static void Main() {
+        Console.WriteLine("Hello from ${fileName}!");
+        Console.WriteLine("C# is running successfully.");
+        
+        // Add your C# code here
+        int a = 5, b = 3;
+        int sum = a + b;
+        Console.WriteLine($"{a} + {b} = {sum}");
+    }
+}`,
                     'json': `{
     "name": "${fileName.replace('.json', '')}",
     "version": "1.0.0",
@@ -3337,7 +2478,16 @@ Created: ${new Date().toLocaleString()}`
                 file.size = new Blob([content]).size;
                 file.modified = Date.now();
                 
-                this.saveToStorage();
+                // Track unsaved change
+                this.unsavedChanges.set(path, Date.now());
+                
+                // Auto-save after significant changes (every 10 seconds of editing)
+                setTimeout(() => {
+                    if (this.unsavedChanges.has(path)) {
+                        this.saveToStorage();
+                        this.unsavedChanges.delete(path);
+                    }
+                }, 10000);
                 
                 return file;
             }
@@ -3445,6 +2595,11 @@ Created: ${new Date().toLocaleString()}`
                 
                 // Update delete button visibility
                 this.updateDeleteButton();
+                
+                // Show file count
+                const fileCount = this.files.size;
+                const folderCount = this.folders.size;
+                console.log(`Rendered ${fileCount} files and ${folderCount} folders`);
             }
             
             createFolderElement(path, folder, filesByFolder) {
@@ -3535,6 +2690,8 @@ Created: ${new Date().toLocaleString()}`
                     'javascript': { class: 'fab fa-js-square', color: 'var(--js)' },
                     'python': { class: 'fab fa-python', color: 'var(--python)' },
                     'php': { class: 'fab fa-php', color: 'var(--php)' },
+                    'cpp': { class: 'fas fa-code', color: 'var(--cplusplus)' },
+                    'cplusplus': { class: 'fas fa-code', color: 'var(--cplusplus)' },
                     'json': { class: 'fas fa-code', color: 'var(--info)' },
                     'txt': { class: 'fas fa-file-alt', color: '#666' },
                     'md': { class: 'fab fa-markdown', color: '#333' },
@@ -3542,8 +2699,8 @@ Created: ${new Date().toLocaleString()}`
                     'sql': { class: 'fas fa-database', color: '#00758f' },
                     'java': { class: 'fab fa-java', color: '#007396' },
                     'c': { class: 'fas fa-file-code', color: '#555' },
-                    'cpp': { class: 'fas fa-file-code', color: '#00599c' },
-                    'cs': { class: 'fab fa-microsoft', color: '#239120' },
+                    'cs': { class: 'fas fa-copyright', color: '#239120' },
+                    'csharp': { class: 'fas fa-copyright', color: '#239120' },
                     'go': { class: 'fab fa-golang', color: '#00add8' },
                     'rust': { class: 'fas fa-cog', color: '#000' },
                     'ruby': { class: 'fas fa-gem', color: '#cc342d' },
@@ -3617,9 +2774,14 @@ Created: ${new Date().toLocaleString()}`
                     'javascript': 'js',
                     'python': 'python',
                     'php': 'php',
+                    'cpp': 'cpp',
+                    'cplusplus': 'cpp',
                     'json': 'js', // JSON in JS editor
                     'txt': 'js',  // Text in JS editor
-                    'md': 'js'    // Markdown in JS editor
+                    'md': 'js',   // Markdown in JS editor
+                    'java': 'js', // Java in JS editor for now
+                    'csharp': 'js', // C# in JS editor for now
+                    'c': 'cpp'    // C in C++ editor
                 };
                 
                 return mapping[fileType] || 'js';
@@ -3632,6 +2794,7 @@ Created: ${new Date().toLocaleString()}`
                 if (window.editors && window.editors[editorType]) {
                     const content = window.editors[editorType].getValue();
                     this.updateFileContent(this.currentFile.path, content);
+                    this.saveToStorage(); // Force save immediately
                     showSuccessMessage(`Saved: ${this.currentFile.name}`);
                 }
             }
@@ -3721,6 +2884,54 @@ Created: ${new Date().toLocaleString()}`
                         this.saveCurrentFile();
                     }
                 });
+                
+                // Dismiss recovery notice
+                document.getElementById('dismiss-recovery')?.addEventListener('click', () => {
+                    document.getElementById('recovery-notice').classList.remove('show');
+                    localStorage.removeItem('supremeamer_recovery');
+                });
+                
+                // Apply recovery data
+                document.getElementById('recovery-notice')?.addEventListener('click', (e) => {
+                    if (e.target.id === 'recovery-notice' && this.recoveryData) {
+                        if (confirm('Apply recovered files? This will overwrite current files.')) {
+                            this.applyRecoveryData();
+                        }
+                    }
+                });
+            }
+            
+            applyRecoveryData() {
+                if (!this.recoveryData) return;
+                
+                // Clear existing files
+                this.files.clear();
+                this.folders.clear();
+                
+                // Apply recovered files
+                this.recoveryData.files.forEach(file => {
+                    this.files.set(file.path, file);
+                });
+                
+                // Apply recovered folders
+                this.recoveryData.folders.forEach(folder => {
+                    this.folders.set(folder.path, folder);
+                });
+                
+                this.saveToStorage();
+                this.renderFileExplorer();
+                
+                // Open recovered current file
+                if (this.recoveryData.currentFile) {
+                    const file = this.files.get(this.recoveryData.currentFile);
+                    if (file) {
+                        this.openFile(file);
+                    }
+                }
+                
+                document.getElementById('recovery-notice').classList.remove('show');
+                localStorage.removeItem('supremeamer_recovery');
+                showSuccessMessage('Recovery data applied successfully!');
             }
             
             showNewFileModal() {
@@ -3794,14 +3005,10 @@ Created: ${new Date().toLocaleString()}`
 
         // === MAIN INITIALIZATION ===
         let fileManager;
-        let gitIntegration;
 
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize file manager
             fileManager = new FileManager();
-            
-            // Initialize GitHub integration
-            gitIntegration = new GitHubIntegration();
             
             // Initialize PWA
             initPWA();
@@ -3814,12 +3021,8 @@ Created: ${new Date().toLocaleString()}`
             
             require(['vs/editor/editor.main'], function() {
                 // Initialize editors
-                const defaultHTML = fileManager.getFileByPath('index.html')?.content || '';
-                const defaultCSS = fileManager.getFileByPath('style.css')?.content || '';
-                const defaultJS = fileManager.getFileByPath('script.js')?.content || '';
-                
                 editors.html = monaco.editor.create(document.getElementById('html-editor'), {
-                    value: defaultHTML,
+                    value: '',
                     language: 'html',
                     theme: currentTheme,
                     automaticLayout: true,
@@ -3827,7 +3030,7 @@ Created: ${new Date().toLocaleString()}`
                 });
                 
                 editors.css = monaco.editor.create(document.getElementById('css-editor'), {
-                    value: defaultCSS,
+                    value: '',
                     language: 'css',
                     theme: currentTheme,
                     automaticLayout: true,
@@ -3835,7 +3038,7 @@ Created: ${new Date().toLocaleString()}`
                 });
                 
                 editors.js = monaco.editor.create(document.getElementById('js-editor'), {
-                    value: defaultJS,
+                    value: '',
                     language: 'javascript',
                     theme: currentTheme,
                     automaticLayout: true,
@@ -3843,39 +3046,23 @@ Created: ${new Date().toLocaleString()}`
                 });
                 
                 editors.python = monaco.editor.create(document.getElementById('python-editor'), {
-                    value: `# Python code example
-
-def welcome_message():
-    return "Hello from Python in SupremeAmer IDE!"
-
-def calculate(a, b):
-    return a + b
-
-# Main execution
-if __name__ == "__main__":
-    print(welcome_message())
-    print("5 + 3 =", calculate(5, 3))`,
+                    value: '',
                     language: 'python',
                     theme: currentTheme,
                     automaticLayout: true,
                     minimap: { enabled: false }
                 });
                 
+                editors.cpp = monaco.editor.create(document.getElementById('cpp-editor'), {
+                    value: '',
+                    language: 'cpp',
+                    theme: currentTheme,
+                    automaticLayout: true,
+                    minimap: { enabled: false }
+                });
+                
                 editors.php = monaco.editor.create(document.getElementById('php-editor'), {
-                    value: `<?php
-
-// PHP code example
-function welcomeMessage() {
-    return "Hello from PHP in SupremeAmer IDE!";
-}
-
-function calculate($a, $b) {
-    return $a + $b;
-}
-
-// Main execution
-echo welcomeMessage() . "\\n";
-echo "5 + 3 = " . calculate(5, 3) . "\\n";`,
+                    value: '',
                     language: 'php',
                     theme: currentTheme,
                     automaticLayout: true,
@@ -3886,6 +3073,16 @@ echo "5 + 3 = " . calculate(5, 3) . "\\n";`,
                 document.getElementById('theme').addEventListener('change', function() {
                     currentTheme = this.value;
                     monaco.editor.setTheme(currentTheme);
+                });
+                
+                // Auto-save on editor change
+                Object.values(editors).forEach(editor => {
+                    editor.onDidChangeModelContent(() => {
+                        if (fileManager.currentFile) {
+                            const content = editor.getValue();
+                            fileManager.updateFileContent(fileManager.currentFile.path, content);
+                        }
+                    });
                 });
             });
             
@@ -3933,10 +3130,14 @@ echo "5 + 3 = " . calculate(5, 3) . "\\n";`,
             // Reset editor
             resetBtn.addEventListener('click', () => {
                 if (confirm('Reset all editors to default? This will not delete your files.')) {
-                    editors.html.setValue(fileManager.getFileByPath('index.html')?.content || '');
-                    editors.css.setValue(fileManager.getFileByPath('style.css')?.content || '');
-                    editors.js.setValue(fileManager.getFileByPath('script.js')?.content || '');
-                    showSuccessMessage('Editors reset to default content');
+                    // Reset to empty
+                    editors.html.setValue('');
+                    editors.css.setValue('');
+                    editors.js.setValue('');
+                    editors.python.setValue('');
+                    editors.cpp.setValue('');
+                    editors.php.setValue('');
+                    showSuccessMessage('Editors reset to empty');
                 }
             });
             
@@ -4188,8 +3389,15 @@ echo "5 + 3 = " . calculate(5, 3) . "\\n";`,
                 consoleOutput.scrollTop = consoleOutput.scrollHeight;
             }
             
-            // Run initial code
-            setTimeout(runCode, 1000);
+            // Run initial code with default files
+            setTimeout(() => {
+                // Open first file if exists
+                const firstFile = Array.from(fileManager.files.values())[0];
+                if (firstFile) {
+                    fileManager.openFile(firstFile);
+                    runCode();
+                }
+            }, 1000);
             
             // Keyboard shortcuts
             document.addEventListener('keydown', function(e) {
@@ -4291,6 +3499,11 @@ echo "5 + 3 = " . calculate(5, 3) . "\\n";`,
                         showSuccessMessage('App installed successfully!');
                     }
                 }
+            });
+            
+            // Dismiss install banner
+            document.getElementById('dismiss-button')?.addEventListener('click', () => {
+                document.getElementById('install-banner')?.classList.remove('show');
             });
             
             // Online/Offline detection
