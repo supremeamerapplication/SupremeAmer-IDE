@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SupremeAmer IDE Pro - PWA</title>
     
-    <!-- PWA Manifest (generated inline) -->
+    <!-- PWA Manifest -->
     <link rel="manifest" id="app-manifest">
     
     <!-- iOS PWA Support -->
@@ -50,10 +50,6 @@
             --swift: #fa7343;
             --typescript: #3178c6;
             --sidebar-width: 250px;
-            --git-added: #28a745;
-            --git-modified: #ffc107;
-            --git-deleted: #dc3545;
-            --git-untracked: #6f42c1;
         }
         
         body {
@@ -1766,8 +1762,8 @@
                 this.contextMenuFile = null;
                 this.autoSaveTimer = null;
                 this.isAutoSaving = false;
-                this.unsavedChanges = new Map(); // Track unsaved changes
-                this.recoveryData = null; // For crash recovery
+                this.unsavedChanges = new Map();
+                this.recoveryData = null;
                 this.init();
             }
             
@@ -1784,12 +1780,10 @@
                     const savedFiles = JSON.parse(localStorage.getItem('supremeamer_files') || '{}');
                     const savedFolders = JSON.parse(localStorage.getItem('supremeamer_folders') || '{}');
                     
-                    // Load files
                     Object.entries(savedFiles).forEach(([path, file]) => {
                         this.files.set(path, file);
                     });
                     
-                    // Load folders
                     Object.entries(savedFolders).forEach(([path, folder]) => {
                         this.folders.set(path, folder);
                     });
@@ -1802,7 +1796,6 @@
             }
             
             checkForRecovery() {
-                // Check for unsaved recovery data
                 const recoveryData = localStorage.getItem('supremeamer_recovery');
                 const lastSaveTime = localStorage.getItem('supremeamer_last_save');
                 
@@ -1813,13 +1806,11 @@
                         const now = new Date();
                         const diffMinutes = (now - recoveryTime) / (1000 * 60);
                         
-                        // Only show recovery if data is less than 1 hour old
                         if (diffMinutes < 60 && this.recoveryData.files && this.recoveryData.files.length > 0) {
                             setTimeout(() => {
                                 document.getElementById('recovery-notice').classList.add('show');
                             }, 1000);
                         } else {
-                            // Clear old recovery data
                             localStorage.removeItem('supremeamer_recovery');
                         }
                     } catch (error) {
@@ -1829,7 +1820,6 @@
             }
             
             saveRecoveryData() {
-                // Save current state for recovery
                 const recoveryState = {
                     timestamp: Date.now(),
                     files: Array.from(this.files.values()),
@@ -1842,22 +1832,18 @@
             }
             
             startAutoSave() {
-                // Auto-save every 30 seconds
                 this.autoSaveTimer = setInterval(() => {
                     this.autoSave();
-                }, 30000); // 30 seconds
+                }, 30000);
                 
-                // Also save on page visibility change (when user switches tabs or minimizes)
                 document.addEventListener('visibilitychange', () => {
                     if (document.hidden) {
                         this.autoSave();
                     }
                 });
                 
-                // Save on page unload (browser/tab close)
                 window.addEventListener('beforeunload', (e) => {
                     this.autoSave();
-                    // Don't prevent unload, just save
                 });
             }
             
@@ -1867,22 +1853,16 @@
                 this.isAutoSaving = true;
                 const indicator = document.getElementById('auto-save-indicator');
                 
-                // Show saving indicator
                 indicator.classList.add('show', 'saving');
                 indicator.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Saving...</span>';
                 
                 try {
-                    // Save all files to storage
                     this.saveToStorage();
-                    
-                    // Save recovery data
                     this.saveRecoveryData();
                     
-                    // Update indicator
                     indicator.classList.remove('saving');
                     indicator.innerHTML = '<i class="fas fa-save"></i><span>Auto-saved</span>';
                     
-                    // Hide indicator after 2 seconds
                     setTimeout(() => {
                         indicator.classList.remove('show');
                     }, 2000);
@@ -1897,7 +1877,6 @@
             }
             
             createDefaultFiles() {
-                // Create default files if none exist
                 if (this.files.size === 0) {
                     const defaultFiles = {
                         'index.html': {
@@ -2076,7 +2055,6 @@ if __name__ == "__main__":
                     
                     console.log(`Saved ${this.files.size} files and ${this.folders.size} folders to storage`);
                     
-                    // Update storage info
                     updateStorageInfo();
                 } catch (error) {
                     console.error('Error saving files to storage:', error);
@@ -2089,7 +2067,6 @@ if __name__ == "__main__":
                 const fileName = name.endsWith(extension) ? name : name + extension;
                 const path = folder ? `${folder}/${fileName}` : fileName;
                 
-                // Check for duplicate name and add number if needed
                 let finalPath = path;
                 let counter = 1;
                 while (this.files.has(finalPath)) {
@@ -2100,7 +2077,6 @@ if __name__ == "__main__":
                     counter++;
                 }
                 
-                // Default content based on file type
                 if (!content) {
                     content = this.getDefaultContent(type, fileName);
                 }
@@ -2125,7 +2101,6 @@ if __name__ == "__main__":
             createFolder(name, parentFolder = '') {
                 const path = parentFolder ? `${parentFolder}/${name}` : name;
                 
-                // Check for duplicate name and add number if needed
                 let finalPath = path;
                 let counter = 1;
                 while (this.folders.has(finalPath)) {
@@ -2366,16 +2341,13 @@ Created: ${new Date().toLocaleString()}`
                     throw new Error(`File "${newName}" already exists`);
                 }
                 
-                // Update file
                 file.name = newName;
                 file.path = newPath;
                 file.modified = Date.now();
                 
-                // Remove old entry and add new one
                 this.files.delete(oldPath);
                 this.files.set(newPath, file);
                 
-                // Update current file if it was renamed
                 if (this.currentFile && this.currentFile.path === oldPath) {
                     this.currentFile = file;
                 }
@@ -2393,7 +2365,6 @@ Created: ${new Date().toLocaleString()}`
                 
                 this.files.delete(path);
                 
-                // Clear current file if it was deleted
                 if (this.currentFile && this.currentFile.path === path) {
                     this.currentFile = null;
                 }
@@ -2409,7 +2380,6 @@ Created: ${new Date().toLocaleString()}`
                     throw new Error('Folder not found');
                 }
                 
-                // Delete all files in this folder
                 const filesToDelete = [];
                 for (const [filePath, file] of this.files.entries()) {
                     if (filePath.startsWith(path + '/')) {
@@ -2421,7 +2391,6 @@ Created: ${new Date().toLocaleString()}`
                     this.files.delete(filePath);
                 });
                 
-                // Delete the folder
                 this.folders.delete(path);
                 
                 this.saveToStorage();
@@ -2478,10 +2447,8 @@ Created: ${new Date().toLocaleString()}`
                 file.size = new Blob([content]).size;
                 file.modified = Date.now();
                 
-                // Track unsaved change
                 this.unsavedChanges.set(path, Date.now());
                 
-                // Auto-save after significant changes (every 10 seconds of editing)
                 setTimeout(() => {
                     if (this.unsavedChanges.has(path)) {
                         this.saveToStorage();
@@ -2533,16 +2500,13 @@ Created: ${new Date().toLocaleString()}`
                 try {
                     const project = JSON.parse(jsonData);
                     
-                    // Clear existing files
                     this.files.clear();
                     this.folders.clear();
                     
-                    // Import files
                     Object.entries(project.files || {}).forEach(([path, file]) => {
                         this.files.set(path, file);
                     });
                     
-                    // Import folders
                     Object.entries(project.folders || {}).forEach(([path, folder]) => {
                         this.folders.set(path, folder);
                     });
@@ -2562,11 +2526,9 @@ Created: ${new Date().toLocaleString()}`
                 
                 explorer.innerHTML = '';
                 
-                // Get root files and folders
                 const rootFiles = [];
                 const rootFolders = [];
                 
-                // Group files by folder
                 const filesByFolder = new Map();
                 
                 for (const [path, file] of this.files.entries()) {
@@ -2581,25 +2543,17 @@ Created: ${new Date().toLocaleString()}`
                     }
                 }
                 
-                // Create folder structure
                 for (const [path, folder] of this.folders.entries()) {
                     const folderElement = this.createFolderElement(path, folder, filesByFolder);
                     explorer.appendChild(folderElement);
                 }
                 
-                // Add root files
                 rootFiles.forEach(file => {
                     const fileElement = this.createFileElement(file);
                     explorer.appendChild(fileElement);
                 });
                 
-                // Update delete button visibility
                 this.updateDeleteButton();
-                
-                // Show file count
-                const fileCount = this.files.size;
-                const folderCount = this.folders.size;
-                console.log(`Rendered ${fileCount} files and ${folderCount} folders`);
             }
             
             createFolderElement(path, folder, filesByFolder) {
@@ -2615,13 +2569,11 @@ Created: ${new Date().toLocaleString()}`
                 contentsDiv.className = 'folder-contents';
                 contentsDiv.style.display = 'none';
                 
-                // Add files in this folder
                 const folderFiles = filesByFolder.get(path) || [];
                 folderFiles.forEach(file => {
                     contentsDiv.appendChild(this.createFileElement(file));
                 });
                 
-                // Add subfolders
                 for (const [subPath, subFolder] of this.folders.entries()) {
                     if (subPath.startsWith(path + '/') && subPath.split('/').length === path.split('/').length + 1) {
                         contentsDiv.appendChild(this.createFolderElement(subPath, subFolder, filesByFolder));
@@ -2724,9 +2676,9 @@ Created: ${new Date().toLocaleString()}`
                 const now = new Date();
                 const diff = now - date;
                 
-                if (diff < 86400000) { // Less than 1 day
+                if (diff < 86400000) {
                     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                } else if (diff < 604800000) { // Less than 1 week
+                } else if (diff < 604800000) {
                     return date.toLocaleDateString([], { weekday: 'short' });
                 } else {
                     return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
@@ -2734,12 +2686,10 @@ Created: ${new Date().toLocaleString()}`
             }
             
             selectFile(file) {
-                // Remove active class from all files
                 document.querySelectorAll('.file-item').forEach(item => {
                     item.classList.remove('active');
                 });
                 
-                // Add active class to selected file
                 const fileElement = document.querySelector(`.file-item[data-path="${file.path}"]`);
                 if (fileElement) {
                     fileElement.classList.add('active');
@@ -2751,14 +2701,12 @@ Created: ${new Date().toLocaleString()}`
             openFile(file) {
                 this.currentFile = file;
                 
-                // Switch to appropriate editor tab
                 const editorType = this.getEditorType(file.type);
                 const tab = document.querySelector(`.editor-tab[data-tab="${editorType}"]`);
                 if (tab) {
                     tab.click();
                 }
                 
-                // Set editor content
                 if (window.editors && window.editors[editorType]) {
                     window.editors[editorType].setValue(file.content);
                 }
@@ -2776,12 +2724,12 @@ Created: ${new Date().toLocaleString()}`
                     'php': 'php',
                     'cpp': 'cpp',
                     'cplusplus': 'cpp',
-                    'json': 'js', // JSON in JS editor
-                    'txt': 'js',  // Text in JS editor
-                    'md': 'js',   // Markdown in JS editor
-                    'java': 'js', // Java in JS editor for now
-                    'csharp': 'js', // C# in JS editor for now
-                    'c': 'cpp'    // C in C++ editor
+                    'json': 'js',
+                    'txt': 'js',
+                    'md': 'js',
+                    'java': 'js',
+                    'csharp': 'js',
+                    'c': 'cpp'
                 };
                 
                 return mapping[fileType] || 'js';
@@ -2794,7 +2742,7 @@ Created: ${new Date().toLocaleString()}`
                 if (window.editors && window.editors[editorType]) {
                     const content = window.editors[editorType].getValue();
                     this.updateFileContent(this.currentFile.path, content);
-                    this.saveToStorage(); // Force save immediately
+                    this.saveToStorage();
                     showSuccessMessage(`Saved: ${this.currentFile.name}`);
                 }
             }
@@ -2806,7 +2754,6 @@ Created: ${new Date().toLocaleString()}`
                 contextMenu.style.top = e.pageY + 'px';
                 contextMenu.classList.add('show');
                 
-                // Close context menu when clicking elsewhere
                 const closeMenu = () => {
                     contextMenu.classList.remove('show');
                     document.removeEventListener('click', closeMenu);
@@ -2825,24 +2772,20 @@ Created: ${new Date().toLocaleString()}`
             }
             
             setupEventListeners() {
-                // New file button
                 document.getElementById('new-file-btn')?.addEventListener('click', () => {
                     this.showNewFileModal();
                 });
                 
-                // New folder button
                 document.getElementById('new-folder-btn')?.addEventListener('click', () => {
                     this.showNewFolderModal();
                 });
                 
-                // Delete selected button
                 document.getElementById('delete-selected-btn')?.addEventListener('click', () => {
                     if (this.selectedFile) {
                         this.deleteSelectedFile();
                     }
                 });
                 
-                // Context menu actions
                 document.getElementById('context-rename')?.addEventListener('click', () => {
                     if (this.contextMenuFile) {
                         this.renameFilePrompt(this.contextMenuFile);
@@ -2877,7 +2820,6 @@ Created: ${new Date().toLocaleString()}`
                     }
                 });
                 
-                // Save current file on Ctrl+S
                 document.addEventListener('keydown', (e) => {
                     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
                         e.preventDefault();
@@ -2885,13 +2827,11 @@ Created: ${new Date().toLocaleString()}`
                     }
                 });
                 
-                // Dismiss recovery notice
                 document.getElementById('dismiss-recovery')?.addEventListener('click', () => {
                     document.getElementById('recovery-notice').classList.remove('show');
                     localStorage.removeItem('supremeamer_recovery');
                 });
                 
-                // Apply recovery data
                 document.getElementById('recovery-notice')?.addEventListener('click', (e) => {
                     if (e.target.id === 'recovery-notice' && this.recoveryData) {
                         if (confirm('Apply recovered files? This will overwrite current files.')) {
@@ -2904,16 +2844,13 @@ Created: ${new Date().toLocaleString()}`
             applyRecoveryData() {
                 if (!this.recoveryData) return;
                 
-                // Clear existing files
                 this.files.clear();
                 this.folders.clear();
                 
-                // Apply recovered files
                 this.recoveryData.files.forEach(file => {
                     this.files.set(file.path, file);
                 });
                 
-                // Apply recovered folders
                 this.recoveryData.folders.forEach(folder => {
                     this.folders.set(folder.path, folder);
                 });
@@ -2921,7 +2858,6 @@ Created: ${new Date().toLocaleString()}`
                 this.saveToStorage();
                 this.renderFileExplorer();
                 
-                // Open recovered current file
                 if (this.recoveryData.currentFile) {
                     const file = this.files.get(this.recoveryData.currentFile);
                     if (file) {
@@ -2938,17 +2874,14 @@ Created: ${new Date().toLocaleString()}`
                 const modal = document.getElementById('new-file-modal');
                 modal.classList.add('show');
                 
-                // Reset form
                 document.getElementById('new-file-name').value = 'newfile';
                 document.getElementById('new-file-folder').value = '';
                 
-                // Reset language selection
                 document.querySelectorAll('.language-option').forEach(option => {
                     option.classList.remove('selected');
                 });
                 document.querySelector('.language-option[data-type="html"]').classList.add('selected');
                 
-                // Focus on file name
                 setTimeout(() => {
                     document.getElementById('new-file-name').focus();
                     document.getElementById('new-file-name').select();
@@ -3007,20 +2940,16 @@ Created: ${new Date().toLocaleString()}`
         let fileManager;
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize file manager
             fileManager = new FileManager();
             
-            // Initialize PWA
             initPWA();
             
-            // Initialize Monaco Editor
             require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs' }});
             
             let editors = {};
             let currentTheme = 'vs';
             
             require(['vs/editor/editor.main'], function() {
-                // Initialize editors
                 editors.html = monaco.editor.create(document.getElementById('html-editor'), {
                     value: '',
                     language: 'html',
@@ -3069,13 +2998,11 @@ Created: ${new Date().toLocaleString()}`
                     minimap: { enabled: false }
                 });
                 
-                // Theme selector
                 document.getElementById('theme').addEventListener('change', function() {
                     currentTheme = this.value;
                     monaco.editor.setTheme(currentTheme);
                 });
                 
-                // Auto-save on editor change
                 Object.values(editors).forEach(editor => {
                     editor.onDidChangeModelContent(() => {
                         if (fileManager.currentFile) {
@@ -3086,7 +3013,6 @@ Created: ${new Date().toLocaleString()}`
                 });
             });
             
-            // === DOM ELEMENTS ===
             const runBtn = document.getElementById('run-btn');
             const saveBtn = document.getElementById('save-btn');
             const exportBtn = document.getElementById('export-btn');
@@ -3106,18 +3032,13 @@ Created: ${new Date().toLocaleString()}`
             const previewFrame = document.getElementById('preview-frame');
             const consoleOutput = document.getElementById('console-output');
             
-            // === EVENT LISTENERS ===
-            
-            // Run code
             runBtn.addEventListener('click', runCode);
             refreshBtn.addEventListener('click', runCode);
             
-            // Save current file
             saveBtn.addEventListener('click', () => {
                 fileManager.saveCurrentFile();
             });
             
-            // Export all files
             exportBtn.addEventListener('click', () => {
                 try {
                     fileManager.exportAllFiles();
@@ -3127,10 +3048,8 @@ Created: ${new Date().toLocaleString()}`
                 }
             });
             
-            // Reset editor
             resetBtn.addEventListener('click', () => {
                 if (confirm('Reset all editors to default? This will not delete your files.')) {
-                    // Reset to empty
                     editors.html.setValue('');
                     editors.css.setValue('');
                     editors.js.setValue('');
@@ -3141,12 +3060,10 @@ Created: ${new Date().toLocaleString()}`
                 }
             });
             
-            // Clear console
             clearConsoleBtn.addEventListener('click', () => {
                 consoleOutput.innerHTML = '';
             });
             
-            // Tab switching
             editorTabs.forEach(tab => {
                 tab.addEventListener('click', function() {
                     const tabName = this.getAttribute('data-tab');
@@ -3166,26 +3083,21 @@ Created: ${new Date().toLocaleString()}`
             });
             
             function switchTab(tabName) {
-                // Update tabs
                 editorTabs.forEach(t => t.classList.remove('active'));
                 mobileTabs.forEach(t => t.classList.remove('active'));
                 
                 document.querySelector(`.editor-tab[data-tab="${tabName}"]`)?.classList.add('active');
                 document.querySelector(`.mobile-tab[data-tab="${tabName}"]`)?.classList.add('active');
                 
-                // Update language select
                 languageSelect.value = tabName;
                 
-                // Show editor
                 codeEditors.forEach(editor => editor.style.display = 'none');
                 document.querySelector(`.${tabName}-editor`).style.display = 'flex';
             }
             
-            // Sidebar toggle
             sidebarToggle.addEventListener('click', () => sidebar.classList.add('open'));
             closeSidebar.addEventListener('click', () => sidebar.classList.remove('open'));
             
-            // Theme toggle
             themeToggle.addEventListener('click', function() {
                 document.body.classList.toggle('dark-mode');
                 if (document.body.classList.contains('dark-mode')) {
@@ -3197,7 +3109,6 @@ Created: ${new Date().toLocaleString()}`
                 }
             });
             
-            // Device preview toggle
             deviceToggle.addEventListener('click', function() {
                 const previewFrame = document.getElementById('preview-frame');
                 if (previewFrame.style.width === '375px') {
@@ -3211,7 +3122,6 @@ Created: ${new Date().toLocaleString()}`
                 }
             });
             
-            // Full screen preview toggle
             let isFullScreen = false;
             fullscreenToggle.addEventListener('click', function() {
                 const container = document.querySelector('.container');
@@ -3226,13 +3136,11 @@ Created: ${new Date().toLocaleString()}`
                 }
             });
             
-            // New file modal
             document.getElementById('create-new-file')?.addEventListener('click', createNewFile);
             document.getElementById('cancel-new-file')?.addEventListener('click', () => {
                 document.getElementById('new-file-modal').classList.remove('show');
             });
             
-            // Language selection in new file modal
             document.querySelectorAll('.language-option').forEach(option => {
                 option.addEventListener('click', function() {
                     document.querySelectorAll('.language-option').forEach(opt => {
@@ -3242,14 +3150,11 @@ Created: ${new Date().toLocaleString()}`
                 });
             });
             
-            // Run code on Enter in new file modal
             document.getElementById('new-file-name')?.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     createNewFile();
                 }
             });
-            
-            // === FUNCTIONS ===
             
             function runCode() {
                 try {
@@ -3266,7 +3171,6 @@ Created: ${new Date().toLocaleString()}`
                         ${html}
                         <style>${css}</style>
                         <script>
-                            // Override console methods in the iframe
                             const originalConsole = {
                                 log: console.log,
                                 error: console.error,
@@ -3325,14 +3229,12 @@ Created: ${new Date().toLocaleString()}`
                     document.getElementById('new-file-modal').classList.remove('show');
                     showSuccessMessage(`Created file: ${file.name}`);
                     
-                    // Open the new file
                     fileManager.openFile(file);
                 } catch (error) {
                     showErrorMessage(error.message);
                 }
             }
             
-            // Override console methods to capture output
             const originalConsole = {
                 log: console.log,
                 error: console.error,
@@ -3389,9 +3291,7 @@ Created: ${new Date().toLocaleString()}`
                 consoleOutput.scrollTop = consoleOutput.scrollHeight;
             }
             
-            // Run initial code with default files
             setTimeout(() => {
-                // Open first file if exists
                 const firstFile = Array.from(fileManager.files.values())[0];
                 if (firstFile) {
                     fileManager.openFile(firstFile);
@@ -3399,7 +3299,6 @@ Created: ${new Date().toLocaleString()}`
                 }
             }, 1000);
             
-            // Keyboard shortcuts
             document.addEventListener('keydown', function(e) {
                 if ((e.ctrlKey || e.metaKey) && e.key === 's') {
                     e.preventDefault();
@@ -3413,11 +3312,8 @@ Created: ${new Date().toLocaleString()}`
             });
         });
         
-        // === PWA FUNCTIONS ===
         function initPWA() {
-            // Create service worker
             const serviceWorkerScript = `
-                // SupremeAmer IDE Service Worker
                 const CACHE_NAME = 'supremeamer-ide-v2.0.0';
                 
                 self.addEventListener('install', (event) => {
@@ -3451,7 +3347,6 @@ Created: ${new Date().toLocaleString()}`
                         caches.match(event.request)
                             .then(response => response || fetch(event.request))
                             .catch(() => {
-                                // Return offline page for navigation requests
                                 if (event.request.mode === 'navigate') {
                                     return caches.match('/');
                                 }
@@ -3461,7 +3356,6 @@ Created: ${new Date().toLocaleString()}`
                 });
             `;
             
-            // Register service worker
             if ('serviceWorker' in navigator) {
                 const serviceWorkerBlob = new Blob([serviceWorkerScript], { type: 'application/javascript' });
                 const serviceWorkerURL = URL.createObjectURL(serviceWorkerBlob);
@@ -3476,7 +3370,6 @@ Created: ${new Date().toLocaleString()}`
                     });
             }
             
-            // Setup install prompt
             let deferredPrompt;
             
             window.addEventListener('beforeinstallprompt', (e) => {
@@ -3486,7 +3379,6 @@ Created: ${new Date().toLocaleString()}`
                 document.getElementById('install-banner')?.classList.add('show');
             });
             
-            // Install button click
             document.getElementById('install-button')?.addEventListener('click', async () => {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
@@ -3501,12 +3393,10 @@ Created: ${new Date().toLocaleString()}`
                 }
             });
             
-            // Dismiss install banner
             document.getElementById('dismiss-button')?.addEventListener('click', () => {
                 document.getElementById('install-banner')?.classList.remove('show');
             });
             
-            // Online/Offline detection
             window.addEventListener('online', () => {
                 document.getElementById('offline-indicator')?.classList.remove('show');
                 document.getElementById('online-status').textContent = 'Online';
@@ -3521,7 +3411,6 @@ Created: ${new Date().toLocaleString()}`
                 showWarningMessage('You are offline. Changes will be saved locally.');
             });
             
-            // Set initial online status
             document.getElementById('online-status').textContent = navigator.onLine ? 'Online' : 'Offline';
             document.getElementById('online-status').className = navigator.onLine ? 'online' : 'offline';
             
@@ -3530,7 +3419,6 @@ Created: ${new Date().toLocaleString()}`
             }
         }
         
-        // === UTILITY FUNCTIONS ===
         function showSuccessMessage(message) {
             const successElement = document.createElement('div');
             successElement.classList.add('success-message');
