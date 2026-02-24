@@ -29,7 +29,7 @@
     
     <!-- Core Styles -->
     <style>
-        /* CSS Variables */
+        /* CSS Variables - Fix variable definitions */
         :root {
             --primary: #2c3e50;
             --primary-dark: #1e2b37;
@@ -920,6 +920,17 @@
             }
         }
 
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
         /* Progress Bar */
         .progress-bar {
             height: 4px;
@@ -1033,6 +1044,58 @@
         .auto-save-indicator.show {
             display: flex;
             animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Context Menu */
+        .context-menu {
+            position: fixed;
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 5000;
+            min-width: 150px;
+            display: none;
+        }
+
+        .dark-mode .context-menu {
+            background: var(--gray-800);
+            border-color: var(--gray-700);
+            color: var(--gray-200);
+        }
+
+        .context-menu-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .context-menu-item:hover {
+            background: var(--gray-200);
+        }
+
+        .dark-mode .context-menu-item:hover {
+            background: var(--gray-700);
+        }
+
+        .context-menu-divider {
+            height: 1px;
+            background: var(--gray-300);
+            margin: 5px 0;
         }
 
         /* Responsive */
@@ -1163,6 +1226,14 @@
 
         .p-4 {
             padding: 16px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-gray-500 {
+            color: var(--gray-500);
         }
     </style>
 </head>
@@ -1474,7 +1545,7 @@
                 </div>
                 
                 <div class="form-group">
-                <label>Font Size</label>
+                    <label>Font Size</label>
                     <input type="number" id="setting-font-size" class="form-control" min="10" max="24" value="14">
                 </div>
                 
@@ -1536,7 +1607,7 @@
     </div>
 
     <!-- Context Menu -->
-    <div id="context-menu" class="context-menu" style="display: none; position: fixed; background: white; border: 1px solid var(--gray-300); border-radius: 4px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 5000; min-width: 150px;">
+    <div id="context-menu" class="context-menu">
         <div class="context-menu-item" data-action="open">
             <i class="fas fa-folder-open"></i> Open
         </div>
@@ -1597,6 +1668,24 @@
                 this.container = document.getElementById('notification-container');
                 this.notifications = new Map();
                 this.counter = 0;
+                
+                // Add slideOut animation if not exists
+                if (!document.querySelector('#slideOut')) {
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes slideOut {
+                            from {
+                                transform: translateX(0);
+                                opacity: 1;
+                            }
+                            to {
+                                transform: translateX(100%);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
             }
 
             show(message, type = 'info', title = '', duration = 5000) {
@@ -1618,7 +1707,7 @@
                         <div class="notification-title">${title || type.charAt(0).toUpperCase() + type.slice(1)}</div>
                         <div class="notification-message">${message}</div>
                     </div>
-                    <span class="notification-close" onclick="notifications.remove(${id})">&times;</span>
+                    <span class="notification-close" onclick="window.notifications.remove(${id})">&times;</span>
                 `;
 
                 this.container.appendChild(notification);
@@ -1669,6 +1758,12 @@
 
             async init() {
                 try {
+                    // Check if idb is available
+                    if (typeof idb === 'undefined') {
+                        console.error('idb library not loaded');
+                        return false;
+                    }
+                    
                     this.db = await idb.openDB(CONFIG.DB_NAME, CONFIG.DB_VERSION, {
                         upgrade(db) {
                             if (!db.objectStoreNames.contains('files')) {
@@ -1834,9 +1929,13 @@
                 let usage = totalSize;
                 
                 if (navigator.storage && navigator.storage.estimate) {
-                    const estimate = await navigator.storage.estimate();
-                    quota = estimate.quota || quota;
-                    usage = estimate.usage || usage;
+                    try {
+                        const estimate = await navigator.storage.estimate();
+                        quota = estimate.quota || quota;
+                        usage = estimate.usage || usage;
+                    } catch (e) {
+                        console.warn('Could not get storage estimate', e);
+                    }
                 }
                 
                 return {
@@ -2075,7 +2174,7 @@
                     this.switchToEditor(file.type);
                     
                     // Load content into editor
-                    const editor = editors[file.type];
+                    const editor = window.editors[file.type];
                     if (editor) {
                         editor.setValue(fullFile.content || '');
                     }
@@ -2099,7 +2198,7 @@
                 if (!file) return;
                 
                 try {
-                    const editor = editors[file.type];
+                    const editor = window.editors[file.type];
                     if (editor) {
                         file.content = editor.getValue();
                     }
@@ -2224,7 +2323,7 @@
                             await this.openFile(nextFile);
                         } else {
                             // Clear editor
-                            Object.values(editors).forEach(e => e.setValue(''));
+                            Object.values(window.editors).forEach(e => e && e.setValue && e.setValue(''));
                             this.updateEditorTabs();
                         }
                     }
@@ -2574,7 +2673,7 @@ if __name__ == "__main__":
                     tab.innerHTML = `
                         <i class="${language.icon}" style="color: ${language.color};"></i>
                         <span class="tab-name">${file.name}</span>
-                        <span class="tab-close" onclick="fileManager.closeFile('${path}')">&times;</span>
+                        <span class="tab-close" onclick="window.fileManager.closeFile('${path}')">&times;</span>
                     `;
                     
                     tab.addEventListener('click', (e) => {
@@ -2603,7 +2702,7 @@ if __name__ == "__main__":
                         await this.openFile(nextFile);
                     } else {
                         this.currentFile = null;
-                        Object.values(editors).forEach(e => e.setValue(''));
+                        Object.values(window.editors).forEach(e => e && e.setValue && e.setValue(''));
                     }
                 }
                 
@@ -2674,6 +2773,7 @@ if __name__ == "__main__":
                             const { target, type } = this.contextMenuTarget;
                             this.handleFileAction(action, target);
                         }
+                        document.getElementById('context-menu').style.display = 'none';
                     });
                 });
                 
@@ -2725,53 +2825,58 @@ if __name__ == "__main__":
             }
 
             createEditors() {
-                this.editors.html = monaco.editor.create(document.getElementById('html-editor'), {
-                    value: '',
-                    language: 'html',
-                    theme: this.currentTheme,
-                    automaticLayout: true,
-                    minimap: { enabled: false },
-                    fontSize: 14,
-                    wordWrap: 'on',
-                    lineNumbers: 'on',
-                    renderWhitespace: 'selection',
-                    bracketPairColorization: { enabled: true },
-                    guides: { bracketPairs: true }
-                });
-                
-                this.editors.css = monaco.editor.create(document.getElementById('css-editor'), {
-                    value: '',
-                    language: 'css',
-                    theme: this.currentTheme,
-                    automaticLayout: true,
-                    minimap: { enabled: false }
-                });
-                
-                this.editors.javascript = monaco.editor.create(document.getElementById('js-editor'), {
-                    value: '',
-                    language: 'javascript',
-                    theme: this.currentTheme,
-                    automaticLayout: true,
-                    minimap: { enabled: false }
-                });
-                
-                this.editors.python = monaco.editor.create(document.getElementById('python-editor'), {
-                    value: '',
-                    language: 'python',
-                    theme: this.currentTheme,
-                    automaticLayout: true,
-                    minimap: { enabled: false }
-                });
-                
-                // Add change listeners
-                Object.entries(this.editors).forEach(([lang, editor]) => {
-                    editor.onDidChangeModelContent(() => {
-                        if (fileManager && fileManager.currentFile && fileManager.currentFile.type === lang) {
-                            fileManager.modifiedFiles.add(fileManager.currentFile.path);
-                            fileManager.updateEditorTabs();
-                        }
+                try {
+                    this.editors.html = monaco.editor.create(document.getElementById('html-editor'), {
+                        value: '',
+                        language: 'html',
+                        theme: this.currentTheme,
+                        automaticLayout: true,
+                        minimap: { enabled: false },
+                        fontSize: 14,
+                        wordWrap: 'on',
+                        lineNumbers: 'on',
+                        renderWhitespace: 'selection',
+                        bracketPairColorization: { enabled: true },
+                        guides: { bracketPairs: true }
                     });
-                });
+                    
+                    this.editors.css = monaco.editor.create(document.getElementById('css-editor'), {
+                        value: '',
+                        language: 'css',
+                        theme: this.currentTheme,
+                        automaticLayout: true,
+                        minimap: { enabled: false }
+                    });
+                    
+                    this.editors.javascript = monaco.editor.create(document.getElementById('js-editor'), {
+                        value: '',
+                        language: 'javascript',
+                        theme: this.currentTheme,
+                        automaticLayout: true,
+                        minimap: { enabled: false }
+                    });
+                    
+                    this.editors.python = monaco.editor.create(document.getElementById('python-editor'), {
+                        value: '',
+                        language: 'python',
+                        theme: this.currentTheme,
+                        automaticLayout: true,
+                        minimap: { enabled: false }
+                    });
+                    
+                    // Add change listeners
+                    Object.entries(this.editors).forEach(([lang, editor]) => {
+                        editor.onDidChangeModelContent(() => {
+                            if (window.fileManager && window.fileManager.currentFile && window.fileManager.currentFile.type === lang) {
+                                window.fileManager.modifiedFiles.add(window.fileManager.currentFile.path);
+                                window.fileManager.updateEditorTabs();
+                            }
+                        });
+                    });
+                    
+                } catch (error) {
+                    console.error('Error creating editors:', error);
+                }
             }
 
             setupThemes() {
@@ -2826,9 +2931,9 @@ if __name__ == "__main__":
                 }
                 
                 if (errors.length > 0) {
-                    notifications.warning(errors.join('\n'), 'Lint Warnings');
+                    window.notifications.warning(errors.join('\n'), 'Lint Warnings');
                 } else {
-                    notifications.success('No linting issues found');
+                    window.notifications.success('No linting issues found');
                 }
             }
         }
@@ -2839,7 +2944,6 @@ if __name__ == "__main__":
                 this.frame = document.getElementById('preview-frame');
                 this.isMobile = false;
                 this.isFullscreen = false;
-                this.originalConsole = { ...console };
             }
 
             async update(html, css, js) {
@@ -2903,7 +3007,7 @@ if __name__ == "__main__":
                     
                 } catch (error) {
                     console.error('Preview update failed:', error);
-                    notifications.error('Failed to update preview');
+                    window.notifications.error('Failed to update preview');
                 }
             }
 
@@ -2935,7 +3039,7 @@ if __name__ == "__main__":
                 window.addEventListener('message', (event) => {
                     if (event.data.type === 'console') {
                         const { method, args } = event.data;
-                        consoleManager.addMessage(method, args);
+                        window.consoleManager.addMessage(method, args);
                     }
                 });
             }
@@ -3005,7 +3109,7 @@ if __name__ == "__main__":
                         // Check for updates
                         this.swRegistration.addEventListener('updatefound', () => {
                             const newWorker = this.swRegistration.installing;
-                            notifications.info('New version available!');
+                            window.notifications.info('New version available!');
                         });
                         
                     } catch (error) {
@@ -3021,7 +3125,7 @@ if __name__ == "__main__":
                 
                 window.addEventListener('appinstalled', () => {
                     this.deferredPrompt = null;
-                    notifications.success('App installed successfully!');
+                    window.notifications.success('App installed successfully!');
                 });
                 
                 this.setupOfflineDetection();
@@ -3030,16 +3134,14 @@ if __name__ == "__main__":
             setupOfflineDetection() {
                 const updateOnlineStatus = () => {
                     const status = document.getElementById('online-status');
-                    const indicator = document.getElementById('offline-indicator');
                     
                     if (navigator.onLine) {
                         status.className = 'status-indicator online';
                         status.innerHTML = '<i class="fas fa-circle"></i><span>Online</span>';
-                        if (indicator) indicator.style.display = 'none';
                     } else {
                         status.className = 'status-indicator offline';
                         status.innerHTML = '<i class="fas fa-circle"></i><span>Offline</span>';
-                        notifications.warning('You are offline. Changes will be saved locally.');
+                        window.notifications.warning('You are offline. Changes will be saved locally.');
                     }
                 };
                 
@@ -3050,7 +3152,7 @@ if __name__ == "__main__":
 
             async install() {
                 if (!this.deferredPrompt) {
-                    notifications.info('App already installed or not installable');
+                    window.notifications.info('App already installed or not installable');
                     return;
                 }
                 
@@ -3058,7 +3160,7 @@ if __name__ == "__main__":
                 const { outcome } = await this.deferredPrompt.userChoice;
                 
                 if (outcome === 'accepted') {
-                    notifications.success('Installing app...');
+                    window.notifications.success('Installing app...');
                 }
                 
                 this.deferredPrompt = null;
@@ -3066,15 +3168,15 @@ if __name__ == "__main__":
 
             async checkForUpdates() {
                 if (!this.swRegistration) {
-                    notifications.warning('Service Worker not registered');
+                    window.notifications.warning('Service Worker not registered');
                     return;
                 }
                 
                 try {
                     await this.swRegistration.update();
-                    notifications.success('Checking for updates...');
+                    window.notifications.success('Checking for updates...');
                 } catch (error) {
-                    notifications.error('Failed to check for updates');
+                    window.notifications.error('Failed to check for updates');
                 }
             }
 
@@ -3084,20 +3186,21 @@ if __name__ == "__main__":
                     await Promise.all(
                         cacheNames.map(name => caches.delete(name))
                     );
-                    notifications.success('Cache cleared');
+                    window.notifications.success('Cache cleared');
                 }
             }
         }
 
         // ==================== Global State ====================
-        const notifications = new NotificationSystem();
-        let db;
-        let fileManager;
-        let editorManager;
-        let previewManager;
-        let consoleManager;
-        let pwaManager;
-        let editors = {};
+        // Make instances globally available
+        window.notifications = new NotificationSystem();
+        window.db = null;
+        window.fileManager = null;
+        window.editorManager = null;
+        window.previewManager = null;
+        window.consoleManager = null;
+        window.pwaManager = null;
+        window.editors = {};
 
         // ==================== UI Helpers ====================
         function showModal(modalId) {
@@ -3111,22 +3214,22 @@ if __name__ == "__main__":
         // ==================== Main Initialization ====================
         async function initApp() {
             try {
-                notifications.info('Initializing SupremeAmer IDE Pro...');
+                window.notifications.info('Initializing SupremeAmer IDE Pro...');
                 
                 // Initialize database
-                db = new DatabaseService();
-                await db.init();
+                window.db = new DatabaseService();
+                await window.db.init();
                 
                 // Initialize managers
-                editorManager = new EditorManager();
-                await editorManager.initPromise;
-                editors = editorManager.editors;
+                window.editorManager = new EditorManager();
+                await window.editorManager.initPromise;
+                window.editors = window.editorManager.editors;
                 
-                consoleManager = new ConsoleManager();
-                previewManager = new PreviewManager();
-                pwaManager = new PWAManager();
+                window.consoleManager = new ConsoleManager();
+                window.previewManager = new PreviewManager();
+                window.pwaManager = new PWAManager();
                 
-                fileManager = new FileManager(db, notifications);
+                window.fileManager = new FileManager(window.db, window.notifications);
                 
                 // Setup event listeners
                 setupEventListeners();
@@ -3143,11 +3246,14 @@ if __name__ == "__main__":
                 // Start auto-save
                 startAutoSave();
                 
-                notifications.success('IDE initialized successfully!');
+                // Setup preview message listener
+                window.previewManager.setupMessageListener();
+                
+                window.notifications.success('IDE initialized successfully!');
                 
             } catch (error) {
                 console.error('Initialization failed:', error);
-                notifications.error('Failed to initialize IDE: ' + error.message);
+                window.notifications.error('Failed to initialize IDE: ' + error.message);
             }
         }
 
@@ -3156,7 +3262,7 @@ if __name__ == "__main__":
             document.getElementById('run-code')?.addEventListener('click', runCode);
             
             // Save file
-            document.getElementById('save-file')?.addEventListener('click', () => fileManager.saveFile());
+            document.getElementById('save-file')?.addEventListener('click', () => window.fileManager.saveFile());
             
             // New file
             document.getElementById('new-file')?.addEventListener('click', () => showModal('new-file-modal'));
@@ -3172,7 +3278,7 @@ if __name__ == "__main__":
             });
             
             // Export project
-            document.getElementById('export-project')?.addEventListener('click', () => fileManager.exportProject());
+            document.getElementById('export-project')?.addEventListener('click', () => window.fileManager.exportProject());
             
             // Theme toggle
             document.getElementById('toggle-theme')?.addEventListener('click', toggleTheme);
@@ -3185,12 +3291,12 @@ if __name__ == "__main__":
             document.getElementById('close-sidebar')?.addEventListener('click', toggleSidebar);
             
             // Preview controls
-            document.getElementById('refresh-preview')?.addEventListener('click', () => previewManager.refresh());
-            document.getElementById('toggle-device')?.addEventListener('click', () => previewManager.toggleMobile());
-            document.getElementById('toggle-preview-fullscreen')?.addEventListener('click', () => previewManager.toggleFullscreen());
+            document.getElementById('refresh-preview')?.addEventListener('click', () => window.previewManager.refresh());
+            document.getElementById('toggle-device')?.addEventListener('click', () => window.previewManager.toggleMobile());
+            document.getElementById('toggle-preview-fullscreen')?.addEventListener('click', () => window.previewManager.toggleFullscreen());
             
             // Console
-            document.getElementById('clear-console')?.addEventListener('click', () => consoleManager.clear());
+            document.getElementById('clear-console')?.addEventListener('click', () => window.consoleManager.clear());
             
             // Create file modal
             document.getElementById('create-file-btn')?.addEventListener('click', createNewFile);
@@ -3205,38 +3311,40 @@ if __name__ == "__main__":
             document.getElementById('save-settings')?.addEventListener('click', saveSettings);
             
             // Format buttons
-            document.getElementById('format-html')?.addEventListener('click', () => editorManager.format('html'));
-            document.getElementById('format-css')?.addEventListener('click', () => editorManager.format('css'));
-            document.getElementById('format-js')?.addEventListener('click', () => editorManager.format('javascript'));
+            document.getElementById('format-html')?.addEventListener('click', () => window.editorManager.format('html'));
+            document.getElementById('format-css')?.addEventListener('click', () => window.editorManager.format('css'));
+            document.getElementById('format-js')?.addEventListener('click', () => window.editorManager.format('javascript'));
             
             // Lint JS
-            document.getElementById('lint-js')?.addEventListener('click', () => editorManager.lintJavaScript());
+            document.getElementById('lint-js')?.addEventListener('click', () => window.editorManager.lintJavaScript());
             
             // Theme selector
             document.getElementById('html-theme')?.addEventListener('change', (e) => {
-                editorManager.setTheme(e.target.value);
+                window.editorManager.setTheme(e.target.value);
             });
             
-            // Preview message listener
-            previewManager.setupMessageListener();
+            // PWA buttons
+            document.getElementById('install-pwa')?.addEventListener('click', () => window.pwaManager.install());
+            document.getElementById('check-updates')?.addEventListener('click', () => window.pwaManager.checkForUpdates());
+            document.getElementById('clear-cache')?.addEventListener('click', () => window.pwaManager.clearCache());
         }
 
         async function runCode() {
             try {
-                const html = await editorManager.getValue('html');
-                const css = await editorManager.getValue('css');
-                const js = await editorManager.getValue('javascript');
+                const html = await window.editorManager.getValue('html');
+                const css = await window.editorManager.getValue('css');
+                const js = await window.editorManager.getValue('javascript');
                 
-                consoleManager.clear();
-                consoleManager.addMessage('info', 'Running code...');
+                window.consoleManager.clear();
+                window.consoleManager.addMessage('info', 'Running code...');
                 
-                await previewManager.update(html, css, js);
+                await window.previewManager.update(html, css, js);
                 
-                consoleManager.addMessage('success', 'Code executed successfully');
+                window.consoleManager.addMessage('success', 'Code executed successfully');
                 
             } catch (error) {
                 console.error('Run error:', error);
-                consoleManager.addMessage('error', 'Error: ' + error.message);
+                window.consoleManager.addMessage('error', 'Error: ' + error.message);
             }
         }
 
@@ -3246,23 +3354,23 @@ if __name__ == "__main__":
             const selectedLang = document.querySelector('#language-grid .language-option.selected');
             
             if (!name) {
-                notifications.error('Please enter a file name');
+                window.notifications.error('Please enter a file name');
                 return;
             }
             
             const type = selectedLang?.dataset.type || 'plaintext';
             
-            const file = await fileManager.createFile(name, type, folder);
+            const file = await window.fileManager.createFile(name, type, folder);
             if (file) {
                 hideModal('new-file-modal');
-                await fileManager.openFile(file);
+                await window.fileManager.openFile(file);
             }
         }
 
         async function createNewFolder() {
             const name = prompt('Enter folder name:');
             if (name && name.trim()) {
-                await fileManager.createFolder(name.trim());
+                await window.fileManager.createFolder(name.trim());
             }
         }
 
@@ -3270,27 +3378,24 @@ if __name__ == "__main__":
             const files = event.target.files;
             if (!files || files.length === 0) return;
             
-            notifications.info(`Uploading ${files.length} files...`);
+            window.notifications.info(`Uploading ${files.length} files...`);
             
             for (const file of files) {
                 try {
                     const content = await file.text();
                     const extension = file.name.split('.').pop();
                     const type = CONFIG.SUPPORTED_LANGUAGES.find(l => l.extension === `.${extension}`)?.id || 'plaintext';
+                    const name = file.name.replace(`.${extension}`, '');
                     
-                    await fileManager.createFile(
-                        file.name.replace(`.${extension}`, ''),
-                        type,
-                        '',
-                        content
-                    );
+                    await window.fileManager.createFile(name, type, '', content);
                     
                 } catch (error) {
                     console.error('Error uploading file:', error);
                 }
             }
             
-            notifications.success('Files uploaded successfully');
+            window.notifications.success('Files uploaded successfully');
+            event.target.value = ''; // Reset input
         }
 
         function setupDropZone() {
@@ -3363,7 +3468,7 @@ if __name__ == "__main__":
                 const type = CONFIG.SUPPORTED_LANGUAGES.find(l => l.extension === `.${extension}`)?.id || 'plaintext';
                 const name = file.name.replace(`.${extension}`, '');
                 
-                await fileManager.createFile(name, type, folder, content);
+                await window.fileManager.createFile(name, type, folder, content);
                 
             } catch (error) {
                 console.error('Error handling uploaded file:', error);
@@ -3379,12 +3484,12 @@ if __name__ == "__main__":
             if (document.body.classList.contains('dark-mode')) {
                 icon.className = 'fas fa-sun';
                 span.textContent = 'Light';
-                editorManager.setTheme('vs-dark');
+                window.editorManager.setTheme('vs-dark');
                 document.getElementById('theme-color').setAttribute('content', '#1a1a2e');
             } else {
                 icon.className = 'fas fa-moon';
                 span.textContent = 'Dark';
-                editorManager.setTheme('vs');
+                window.editorManager.setTheme('vs');
                 document.getElementById('theme-color').setAttribute('content', '#2c3e50');
             }
         }
@@ -3394,16 +3499,18 @@ if __name__ == "__main__":
         }
 
         async function loadSettings() {
-            const fontSize = await db.getSetting('fontSize', 14);
-            const tabSize = await db.getSetting('tabSize', 4);
-            const wordWrap = await db.getSetting('wordWrap', true);
+            const fontSize = await window.db.getSetting('fontSize', 14);
+            const tabSize = await window.db.getSetting('tabSize', 4);
+            const wordWrap = await window.db.getSetting('wordWrap', true);
             
-            Object.values(editors).forEach(editor => {
-                editor.updateOptions({
-                    fontSize,
-                    tabSize,
-                    wordWrap: wordWrap ? 'on' : 'off'
-                });
+            Object.values(window.editors).forEach(editor => {
+                if (editor && editor.updateOptions) {
+                    editor.updateOptions({
+                        fontSize,
+                        tabSize,
+                        wordWrap: wordWrap ? 'on' : 'off'
+                    });
+                }
             });
             
             document.getElementById('setting-font-size').value = fontSize;
@@ -3418,27 +3525,29 @@ if __name__ == "__main__":
             const autoSave = document.getElementById('setting-auto-save').checked;
             const autoSaveInterval = parseInt(document.getElementById('setting-auto-save-interval').value);
             
-            await db.saveSetting('fontSize', fontSize);
-            await db.saveSetting('tabSize', tabSize);
-            await db.saveSetting('wordWrap', wordWrap);
-            await db.saveSetting('autoSave', autoSave);
-            await db.saveSetting('autoSaveInterval', autoSaveInterval);
+            await window.db.saveSetting('fontSize', fontSize);
+            await window.db.saveSetting('tabSize', tabSize);
+            await window.db.saveSetting('wordWrap', wordWrap);
+            await window.db.saveSetting('autoSave', autoSave);
+            await window.db.saveSetting('autoSaveInterval', autoSaveInterval);
             
-            Object.values(editors).forEach(editor => {
-                editor.updateOptions({
-                    fontSize,
-                    tabSize,
-                    wordWrap: wordWrap ? 'on' : 'off'
-                });
+            Object.values(window.editors).forEach(editor => {
+                if (editor && editor.updateOptions) {
+                    editor.updateOptions({
+                        fontSize,
+                        tabSize,
+                        wordWrap: wordWrap ? 'on' : 'off'
+                    });
+                }
             });
             
             hideModal('settings-modal');
-            notifications.success('Settings saved');
+            window.notifications.success('Settings saved');
         }
 
         async function updateStorageInfo() {
             try {
-                const stats = await db.getStorageStats();
+                const stats = await window.db.getStorageStats();
                 const usedMB = (stats.usage / (1024 * 1024)).toFixed(2);
                 const quotaMB = (stats.quota / (1024 * 1024)).toFixed(2);
                 
@@ -3452,14 +3561,14 @@ if __name__ == "__main__":
 
         async function checkRecoverySession() {
             try {
-                const session = await db.getLatestSession();
+                const session = await window.db.getLatestSession();
                 if (session && (Date.now() - session.timestamp) < 24 * 60 * 60 * 1000) {
                     if (confirm('Found unsaved session from last time. Would you like to recover it?')) {
                         // Recover session
                         for (const file of session.files || []) {
-                            await fileManager.openFile(file);
+                            await window.fileManager.openFile(file);
                         }
-                        notifications.success('Session recovered');
+                        window.notifications.success('Session recovered');
                     }
                 }
             } catch (error) {
@@ -3473,11 +3582,11 @@ if __name__ == "__main__":
                 indicator.classList.add('show');
                 
                 try {
-                    await fileManager.saveAllFiles();
+                    await window.fileManager.saveAllFiles();
                     
                     // Save session
-                    const files = await db.getAllFiles();
-                    await db.saveSession({ files, timestamp: Date.now() });
+                    const files = await window.db.getAllFiles();
+                    await window.db.saveSession({ files, timestamp: Date.now() });
                     
                     await updateStorageInfo();
                     
@@ -3491,6 +3600,11 @@ if __name__ == "__main__":
                     setTimeout(() => {
                         indicator.classList.remove('show');
                     }, 3000);
+                    
+                    // Reset indicator text after failure
+                    setTimeout(() => {
+                        indicator.innerHTML = '<i class="fas fa-save"></i><span>Saving...</span>';
+                    }, 3500);
                 }
             }, CONFIG.AUTO_SAVE_INTERVAL);
         }
